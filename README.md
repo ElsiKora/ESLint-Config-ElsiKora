@@ -123,69 +123,21 @@ enforce coding best practices and style consistency in their projects.
 To configure ESLint for your project, first install the necessary package(s) based on your project type. Then, create
 a `.eslintrc.json` file in your project root (if you haven't already) and add the corresponding configuration:
 
-- **For JavaScript projects:**
+> **For JavaScript projects:**
+>
+>  ```json
+>  {
+>    "extends": "@elsikora/elsikora"
+>  }
+> ```
 
-  ```json
-  {
-    "extends": "@elsikora/elsikora"
-  }
-  ```
-
-- **For TypeScript projects:**
-
-  ```json
-  {
-    "extends": "@elsikora/elsikora/typescript"
-  }
-  ```
-
-- **For NestJS projects:**
-
-  ```json
-  {
-    "extends": "@elsikora/elsikora/nest"
-  }
-  ```
-
-- **For React projects:**
-
-  ```json
-  {
-    "extends": "@elsikora/elsikora/react"
-  }
-  ```
-
-- **For Next.js projects:**
-
-  ```json
-  {
-    "extends": "@elsikora/elsikora/next"
-  }
-  ```
-
-- **For Vue.js projects:**
-
-  ```json
-  {
-    "extends": "@elsikora/elsikora/vue"
-  }
-  ```
-
-- **For Angular projects:**
-
-  ```json
-  {
-    "extends": "@elsikora/elsikora/angular"
-  }
-  ```
-
-- **For Svelte projects:**
-
-  ```json
-  {
-    "extends": "@elsikora/elsikora/svelte"
-  }
-  ```
+> **For NestJS projects:**
+>
+>  ```json
+>  {
+>    "extends": "@elsikora/elsikora/nest"
+>  }
+> ```
 
 ## Project Roadmap
 
