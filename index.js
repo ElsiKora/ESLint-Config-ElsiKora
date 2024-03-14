@@ -6,7 +6,7 @@ module.exports = {
 	extends: [
 		"eslint:recommended",
 		"plugin:unicorn/recommended",
-		"plugin:prettier/recommended", // Ensures your codebase adheres to Prettier's formatting rules, promoting consistency across your code.
+		"plugin:prettier/recommended", // Ensures your codebase adheres to Prettier formatting rules, promoting consistency across your code.
 		"prettier",
 	],
 	plugins: ["unicorn"],
