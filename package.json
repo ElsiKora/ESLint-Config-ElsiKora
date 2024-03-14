@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
+    "patch": "changeset",
     "release": "changeset publish"
   },
   "repository": {
