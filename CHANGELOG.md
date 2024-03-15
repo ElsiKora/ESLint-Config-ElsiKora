@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 1.1.1
+
+### Patch Changes
+
+- de6cf23: Remove specific parserOptions and settings in typescript.js
+
 ## 1.1.0
 
 ### Minor Changes
