@@ -8,10 +8,10 @@
     <em>Crafting Consistency, Nesting Best Practices, Enhancing Code Quality</em>
 </p>
 <p align="center">
-	<img src="https://img.shields.io/github/license/ElsiKora/ESLint-Config-ElsiKora?style=flat&logo=opensourceinitiative&logoColor=white&color=0080ff" alt="license">
-	<img src="https://img.shields.io/github/last-commit/ElsiKora/ESLint-Config-ElsiKora?style=flat&logo=git&logoColor=white&color=0080ff" alt="last-commit">
-	<img src="https://img.shields.io/github/languages/top/ElsiKora/ESLint-Config-ElsiKora?style=flat&color=0080ff" alt="repo-top-language">
-	<img src="https://img.shields.io/github/languages/count/ElsiKora/ESLint-Config-ElsiKora?style=flat&color=0080ff" alt="repo-language-count">
+	<img src="https://img.shields.io/github/license/ElsiKora/ESLint-Config?style=flat&logo=opensourceinitiative&logoColor=white&color=0080ff" alt="license">
+	<img src="https://img.shields.io/github/last-commit/ElsiKora/ESLint-Config?style=flat&logo=git&logoColor=white&color=0080ff" alt="last-commit">
+	<img src="https://img.shields.io/github/languages/top/ElsiKora/ESLint-Config?style=flat&color=0080ff" alt="repo-top-language">
+	<img src="https://img.shields.io/github/languages/count/ElsiKora/ESLint-Config?style=flat&color=0080ff" alt="repo-language-count">
 <p>
 <p align="center">
 		<em>Developed with the software and tools below.</em>
@@ -49,11 +49,11 @@
 
 ## Overview
 
-The ESLint-Config-ElsiKora is a meticulously designed ESLint configuration repository that aims to enhance code quality
+The ESLint-Config is a meticulously designed ESLint configuration repository that aims to enhance code quality
 and ensure consistency across JavaScript and TypeScript projects. Its core functionalities include custom ESLint rules,
 integration with popular plugins like Prettier and Unicorn, and specialized support for NestJS environments. By
 outlining standards for filename conventions and the use of modern JavaScript features, alongside automating the release
-process for streamlined updates, ESLint-Config-ElsiKora offers a comprehensive solution for developers seeking to
+process for streamlined updates, ESLint-Config offers a comprehensive solution for developers seeking to
 enforce coding best practices and style consistency in their projects.
 
 ---
@@ -62,7 +62,7 @@ enforce coding best practices and style consistency in their projects.
 
 |     | Feature           | Description                                                                                       |
 |-----|-------------------|---------------------------------------------------------------------------------------------------|
-| ⚙️  | **Architecture**  | ESLint-Config-ElsiKora is designed for JS/TS projects, integrating Prettier and Unicorn plugins.  |
+| ⚙️  | **Architecture**  | ESLint-Config is designed for JS/TS projects, integrating Prettier and Unicorn plugins.           |
 | 🔩  | **Code Quality**  | Focuses on consistency & best practices by leveraging eslint, prettier, and custom ESLint rules.  |
 | 📄  | **Documentation** | Has basic documentation within code files and `package.json`, outlining usage and contributions.  |
 | 🔌  | **Integrations**  | Integrates with GitHub Actions for CI/CD, and uses `@changesets/cli` for release management.      |
@@ -80,7 +80,7 @@ enforce coding best practices and style consistency in their projects.
 ##  Repository Structure
 
 ```sh
-└── ESLint-Config-ElsiKora/
+└── ESLint-Config/
     ├── .github
     │   └── workflows
     ├── CHANGELOG.md
@@ -94,10 +94,10 @@ enforce coding best practices and style consistency in their projects.
 
 ## Modules
 
-| File                                                                                    | Summary                                                                                                                                                                                                                                                                                                                 |
-|-----------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [index.js](https://github.com/ElsiKora/ESLint-Config-ElsiKora.git/blob/master/index.js) | Defines and customizes ESLint rules for the ESLint-Config-ElsiKora repository, focusing on ensuring code consistency while providing flexibility in filename conventions and the use of top-level await, by integrating popular ESLint configurations and plugins like Prettier and Unicorn.                            |
-| [nest.js](https://github.com/ElsiKora/ESLint-Config-ElsiKora.git/blob/master/nest.js)   | Defines the ESLint configuration specifically for NestJS projects within the ESLint-Config-ElsiKora repository. It selects an environment supporting ES2021 and Node.js, extending recommended settings from a custom plugin designed to enforce typing conventions and best practices tailored for NestJS development. |
+| File                                                                           | Summary                                                                                                                                                                                                                                                                                                        |
+|--------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [index.js](https://github.com/ElsiKora/ESLint-Config.git/blob/master/index.js) | Defines and customizes ESLint rules for the ESLint-Config repository, focusing on ensuring code consistency while providing flexibility in filename conventions and the use of top-level await, by integrating popular ESLint configurations and plugins like Prettier and Unicorn.                            |
+| [nest.js](https://github.com/ElsiKora/ESLint-Config.git/blob/master/nest.js)   | Defines the ESLint configuration specifically for NestJS projects within the ESLint-Config repository. It selects an environment supporting ES2021 and Node.js, extending recommended settings from a custom plugin designed to enforce typing conventions and best practices tailored for NestJS development. |
 
 ---
 
@@ -113,7 +113,7 @@ enforce coding best practices and style consistency in their projects.
 > Install configuration from the repository using the command below:
 >
 > ```bash
-> $ npm install @elsikora/eslint-config-elsikora --save-dev
+> $ npm install @elsikora/eslint-config --save-dev
 > ```
 
 ---
@@ -151,11 +151,11 @@ a `.eslintrc.json` file in your project root (if you haven't already) and add th
 
 Contributions are welcome! Here are several ways you can contribute:
 
-- **[Report Issues](https://github.com/ElsiKora/ESLint-Config-ElsiKora.git/issues)**: Submit bugs found or log feature
-  requests for the `ESLint-Config-ElsiKora` project.
-- **[Submit Pull Requests](https://github.com/ElsiKora/ESLint-Config-ElsiKora.git/blob/main/CONTRIBUTING.md)**: Review
+- **[Report Issues](https://github.com/ElsiKora/ESLint-Config.git/issues)**: Submit bugs found or log feature
+  requests for the `ESLint-Config` project.
+- **[Submit Pull Requests](https://github.com/ElsiKora/ESLint-Config.git/blob/main/CONTRIBUTING.md)**: Review
   open PRs, and submit your own PRs.
-- **[Join the Discussions](https://github.com/ElsiKora/ESLint-Config-ElsiKora.git/discussions)**: Share your insights,
+- **[Join the Discussions](https://github.com/ElsiKora/ESLint-Config.git/discussions)**: Share your insights,
   provide feedback, or ask questions.
 
 <details closed>
@@ -164,7 +164,7 @@ Contributions are welcome! Here are several ways you can contribute:
 1. **Fork the Repository**: Start by forking the project repository to your GitHub account.
 2. **Clone Locally**: Clone the forked repository to your local machine using a git client.
    ```sh
-   git clone https://github.com/ElsiKora/ESLint-Config-ElsiKora.git
+   git clone https://github.com/ElsiKora/ESLint-Config.git
    ```
 3. **Create a New Branch**: Always work on a new branch, giving it a descriptive name.
    ```sh
