@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 1.1.0
+
+### Minor Changes
+
+- 951eaec: Add detailed linting rules and configurations
+
 ## 1.0.2
 
 ### Patch Changes
