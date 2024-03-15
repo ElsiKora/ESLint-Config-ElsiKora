@@ -1,34 +1,49 @@
 {
-  "name": "@elsikora/eslint-config-elsikora",
-  "version": "1.0.2",
-  "description": "",
-  "main": "index.js",
-  "type": "commonjs",
-  "scripts": {
-    "patch": "changeset",
-    "release": "changeset publish"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ElsiKora/ESLint-Config-ElsiKora.git"
-  },
-  "author": "ElsiKora",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ElsiKora/ESLint-Config-ElsiKora/issues"
-  },
-  "homepage": "https://github.com/ElsiKora/ESLint-Config-ElsiKora#readme",
-  "devDependencies": {
-    "@elsikora/eslint-plugin-nestjs-typed": "^1.0.25",
-    "@typescript-eslint/eslint-plugin": "^7.2.0",
-    "@typescript-eslint/parser": "^7.2.0",
-    "eslint": "^8.57.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.1.3",
-    "eslint-plugin-unicorn": "^51.0.1",
-    "prettier": "^3.2.5"
-  },
-  "dependencies": {
-    "@changesets/cli": "^2.27.1"
-  }
+	"name": "@elsikora/eslint-config",
+	"version": "1.0.2",
+	"description": "ESLint configuration vision of ElsiKora",
+	"homepage": "https://github.com/ElsiKora/ESLint-Config#readme",
+	"bugs": {
+		"url": "https://github.com/ElsiKora/ESLint-Config/issues"
+	},
+	"repository": "ElsiKora/ESLint-Config",
+	"license": "MIT",
+	"author": "ElsiKora",
+	"type": "commonjs",
+	"main": "index.js",
+	"scripts": {
+		"format": "prettier --write \"**/*.{js,json}\"",
+		"lint": "eslint . --ext .js,.json --fix",
+		"patch": "changeset",
+		"release": "changeset publish"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.24.0",
+		"@babel/eslint-parser": "^7.23.10",
+		"@changesets/cli": "^2.27.1",
+		"@elsikora/eslint-plugin-nestjs-typed": "^1.0.26",
+		"@elsikora/eslint-plugin-sort-decorators": "^0.2.8",
+		"@stylistic/eslint-plugin": "^1.7.0",
+		"@stylistic/eslint-plugin-ts": "^1.7.0",
+		"@typescript-eslint/eslint-plugin": "^7.2.0",
+		"@typescript-eslint/parser": "^7.2.0",
+		"eslint": "^8.57.0",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-check-file": "^2.7.1",
+		"eslint-plugin-import": "^2.29.1",
+		"eslint-plugin-jsonc": "^2.13.0",
+		"eslint-plugin-ng-module-sort": "^1.1.1",
+		"eslint-plugin-package-json": "^0.10.4",
+		"eslint-plugin-perfectionist": "^2.7.0",
+		"eslint-plugin-prettier": "^5.1.3",
+		"eslint-plugin-sonarjs": "^0.24.0",
+		"eslint-plugin-typeorm-typescript": "^0.2.4",
+		"eslint-plugin-unicorn": "^51.0.1",
+		"eslint-plugin-unused-imports": "^3.1.0",
+		"eslint-plugin-yml": "^1.12.2",
+		"jsonc-eslint-parser": "^2.4.0",
+		"prettier": "^3.2.5",
+		"typescript": "^5.4.2",
+		"yaml-eslint-parser": "^1.2.2"
+	}
 }
