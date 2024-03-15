@@ -17,6 +17,9 @@
 		"patch": "changeset",
 		"release": "changeset publish"
 	},
+	"publishConfig": {
+		"access": "public"
+	},
 	"devDependencies": {
 		"@babel/core": "^7.24.0",
 		"@babel/eslint-parser": "^7.23.10",

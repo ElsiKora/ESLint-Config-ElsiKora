@@ -12,12 +12,6 @@ module.exports = {
 			],
 			files: ["*.ts", "*.tsx"], // Applies the TypeScript configuration to TypeScript files only.
 			parser: "@typescript-eslint/parser", // Specifies the ESLint parser for TypeScript files, ensuring that TypeScript syntax is parsed correctly.
-			parserOptions: {
-				ecmaVersion: "latest",
-				project: "tsconfig.json",
-				sourceType: "module",
-				tsconfigRootDir: __dirname,
-			},
 			plugins: [
 				"@typescript-eslint", // Provides linting rules for TypeScript, including type-specific checks and TypeScript syntax.
 				"typeorm-typescript", // Provides linting rules for TypeORM usage with TypeScript, ensuring proper usage of the ORM.
@@ -151,17 +145,6 @@ module.exports = {
 				], // Enforce type definitions in various situations to ensure code clarity and maintainability. This includes variables, function parameters, and class members among others, with an exception for functions in variable declarations.
 				"typeorm-typescript/enforce-column-types": "error", // Enforce explicit column types in TypeORM to ensure database consistency and readability.
 				"typeorm-typescript/enforce-relation-types": "error", // Enforce explicit relation types in TypeORM for clear ORM mapping and database integrity.
-			},
-			settings: {
-				"import/parsers": {
-					"@typescript-eslint/parser": [".ts", ".tsx"], // Specifies the parser for TypeScript files when using ESLint's import plugin.
-				},
-				"import/resolver": {
-					typescript: {
-						alwaysTryTypes: true, // Ensures that ESLint always resolves types from TypeScript files, promoting consistency in type resolution.
-						project: "./tsconfig.json", // Specifies the path to the TypeScript configuration file for the project, allowing ESLint to resolve TypeScript modules and types.
-					},
-				},
 			},
 		},
 	],
