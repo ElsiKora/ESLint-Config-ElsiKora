@@ -1,6 +1,6 @@
 {
 	"name": "@elsikora/eslint-config",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"description": "ESLint configuration vision of ElsiKora",
 	"homepage": "https://github.com/ElsiKora/ESLint-Config#readme",
 	"bugs": {
