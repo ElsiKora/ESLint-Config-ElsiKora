@@ -55,6 +55,7 @@ module.exports = {
 				"**/*.models.ts": "*.model.ts",
 				"**/*.tests.ts": "*.test.ts",
 				"**/*.types.ts": "*.type.ts",
+				"**/*.util.ts": "*.utility.ts",
 			},
 		], // Disallow specific filename patterns to enforce a consistent naming convention across the project. For example, preferring `*.enum.ts` over `*.enums.ts`.
 		"check-file/filename-naming-convention": [
@@ -69,9 +70,10 @@ module.exports = {
 				"**/interceptor/**/*.{js,ts}": "KEBAB_CASE",
 				"**/interface/**/*.{js,ts}": "KEBAB_CASE",
 				"**/middleware/**/*.{js,ts}": "KEBAB_CASE",
-				"**/modules/*/*.{js,ts}": "FLAT_CASE",
-				"**/subscriber/*/*.{js,ts}": "KEBAB_CASE",
+				"**/modules/*/*.{js,ts}": "KEBAB_CASE",
+				"**/subscriber/**/*.{js,ts}": "KEBAB_CASE",
 				"**/type/*/*.{js,ts}": "KEBAB_CASE",
+				"**/utility/**/*.{js,ts}": "KEBAB_CASE",
 				"**/validator/**/*.{js,ts}": "KEBAB_CASE",
 			},
 			{ ignoreMiddleExtensions: true },
@@ -91,13 +93,14 @@ module.exports = {
 				"*.middleware.{js,jsx,ts,tsx}": "**/middleware/**",
 				"*.subscriber.{js,jsx,ts,tsx}": "**/subscriber/**",
 				"*.type.{js,jsx,ts,tsx}": "**/type/**",
+				"*.utility.{js,jsx,ts,tsx}": "**/utility/**",
 				"*.validator.{js,jsx,ts,tsx}": "**/validator/**",
 			},
 		], // Enforce a naming convention that requires files to be located in folders matching their type (e.g., API files in /api, DTOs in /dto) to ensure a clear and consistent project structure.
 		"check-file/folder-naming-convention": [
 			"error",
 			{
-				"src/**": "FLAT_CASE",
+				"src/**": "KEBAB_CASE",
 			},
 		], // Require all files and folders under the `src` directory to use flat case naming (e.g., `my_directory`), promoting consistency in file system organization.
 		"import/newline-after-import": "error", // Enforce a newline after import statements to separate imports from the rest of the code logically, improving readability.
