@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 1.1.2
+
+### Patch Changes
+
+- 68069a5: Update filename and folder naming conventions in configuration
+
 ## 1.1.1
 
 ### Patch Changes
