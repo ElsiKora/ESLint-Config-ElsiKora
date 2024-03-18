@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 2.0.1
+
+### Patch Changes
+
+- 909b60d: Optimize build script and update files list in package.json
+
 ## 2.0.0
 
 ### Major Changes
