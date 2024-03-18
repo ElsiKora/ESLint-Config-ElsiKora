@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 2.0.0
+
+### Major Changes
+
+- 053c4d9: Refactor package structure and improve build process
+
 ## 1.2.0
 
 ### Minor Changes
