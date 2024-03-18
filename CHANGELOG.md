@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 2.0.4
+
+### Patch Changes
+
+- 4ea686c: Add peer dependency and refactor README paths
+
 ## 2.0.3
 
 ### Patch Changes
