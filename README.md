@@ -178,11 +178,11 @@ a `.eslintrc.json` file in your project root (if you haven't already) and add th
     "node": true
   },
   "extends": [
-    "@elsikora/eslint-config/dist",
-    "@elsikora/eslint-config/dist/typescript",
-    "@elsikora/eslint-config/dist/nest",
-    "@elsikora/eslint-config/dist/json",
-    "@elsikora/eslint-config/dist/yml"
+    "@elsikora/eslint-config",
+    "@elsikora/eslint-config/typescript",
+    "@elsikora/eslint-config/nest",
+    "@elsikora/eslint-config/json",
+    "@elsikora/eslint-config/yml"
   ],
   "ignorePatterns": [
     ".eslintrc.json"
