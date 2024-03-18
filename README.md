@@ -31,18 +31,18 @@
 <details>
   <summary>Table of Contents</summary><br>
 
-- [ Overview](#-overview)
-- [ Features](#-features)
-- [ Repository Structure](#-repository-structure)
-- [ Modules](#-modules)
-- [ Getting Started](#-getting-started)
-    - [ Installation](#-installation)
-    - [ Usage](#-usage)
-    - [ Tests](#-tests)
-- [ Project Roadmap](#-project-roadmap)
-- [ Contributing](#-contributing)
-- [ License](#-license)
-- [ Acknowledgments](#-acknowledgments)
+- [ Overview](#overview)
+- [ Features](#features)
+- [ Repository Structure](#repository-structure)
+- [ Modules](#modules)
+- [ Getting Started](#getting-started)
+    - [ Installation](#installation)
+    - [ Usage](#usage)
+    - [ Tests](#tests)
+- [ Project Roadmap](#project-roadmap)
+- [ Contributing](#contributing)
+- [ License](#license)
+- [ Acknowledgments](#acknowledgments)
 
 </details>
 <hr>
@@ -164,6 +164,63 @@ a `.eslintrc.json` file in your project root (if you haven't already) and add th
 >  }
 > ```
 
+---
+
+## Example Config
+
+> > **.eslintrc.json:**
+
+```json
+{
+  "env": {
+    "es6": true,
+    "jest": true,
+    "node": true
+  },
+  "extends": [
+    "@elsikora/eslint-config/dist",
+    "@elsikora/eslint-config/dist/typescript",
+    "@elsikora/eslint-config/dist/nest",
+    "@elsikora/eslint-config/dist/json",
+    "@elsikora/eslint-config/dist/yml"
+  ],
+  "ignorePatterns": [
+    ".eslintrc.json"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module",
+        "project": "tsconfig.json",
+        "tsconfigRootDir": "./"
+      }
+    }
+  ],
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [
+        ".ts",
+        ".tsx"
+      ]
+    },
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true,
+        "project": "./tsconfig.json"
+      }
+    }
+  },
+  "root": true
+}
+```
+
+---
+
 ## Project Roadmap
 
 - [X] `► NestJS Configuration`
@@ -215,7 +272,7 @@ Contributions are welcome! Here are several ways you can contribute:
 
 ## License
 
-This project is protected under the [SELECT-A-LICENSE](https://choosealicense.com/licenses) License. For more details,
+This project is protected under the MIT License. For more details,
 refer to the [LICENSE](https://choosealicense.com/licenses/) file.
 
 ---
