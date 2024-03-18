@@ -72,7 +72,7 @@
 	},
 	"repository": "ElsiKora/ESLint-Config",
 	"scripts": {
-		"build": "npx babel-cli src --out-dir dist",
+		"build": "npx babel src --out-dir dist",
 		"format": "prettier --write \"**/*.{js,json}\"",
 		"lint": "eslint ./src --ext .js,.json --fix",
 		"patch": "changeset",
