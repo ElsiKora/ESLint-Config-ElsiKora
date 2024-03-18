@@ -5,8 +5,10 @@
 	},
 	"description": "ESLint configuration vision of ElsiKora",
 	"devDependencies": {
+		"@babel/cli": "^7.23.9",
 		"@babel/core": "^7.24.0",
 		"@babel/eslint-parser": "^7.23.10",
+		"@babel/preset-env": "^7.24.0",
 		"@changesets/cli": "^2.27.1",
 		"@elsikora/eslint-plugin-nestjs-typed": "^1.0.26",
 		"@elsikora/eslint-plugin-sort-decorators": "^0.2.8",
@@ -14,6 +16,7 @@
 		"@stylistic/eslint-plugin-ts": "^1.7.0",
 		"@typescript-eslint/eslint-plugin": "^7.2.0",
 		"@typescript-eslint/parser": "^7.2.0",
+		"babel-plugin-add-module-exports": "^1.0.4",
 		"eslint": "^8.57.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-check-file": "^2.7.1",
@@ -69,7 +72,7 @@
 	},
 	"repository": "ElsiKora/ESLint-Config",
 	"scripts": {
-		"build": "npx babel src --out-dir dist",
+		"build": "npx babel-cli src --out-dir dist",
 		"format": "prettier --write \"**/*.{js,json}\"",
 		"lint": "eslint ./src --ext .js,.json --fix",
 		"patch": "changeset",
