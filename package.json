@@ -80,7 +80,7 @@
 		"format": "prettier --write \"**/*.{js,json}\"",
 		"lint": "eslint ./src --ext .js,.json --fix",
 		"patch": "changeset",
-		"postbuild": "mv dist/* ./",
+		"postbuild": "mv ./dist/* ./",
 		"prebuild": "rimraf dist",
 		"release": "npm install && npm run build && changeset publish"
 	},
