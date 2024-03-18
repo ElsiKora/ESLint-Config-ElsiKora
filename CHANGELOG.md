@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 2.0.2
+
+### Patch Changes
+
+- 8cce705: Update postbuild script and README with detailed configs
+
 ## 2.0.1
 
 ### Patch Changes
