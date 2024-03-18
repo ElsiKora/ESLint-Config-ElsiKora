@@ -37,7 +37,11 @@
 		"yaml-eslint-parser": "^1.2.2"
 	},
 	"files": [
-		"dist"
+		"index.js",
+		"json.js",
+		"nest.js",
+		"typescript.js",
+		"yml.js"
 	],
 	"homepage": "https://github.com/ElsiKora/ESLint-Config#readme",
 	"keywords": [
@@ -72,10 +76,12 @@
 	},
 	"repository": "ElsiKora/ESLint-Config",
 	"scripts": {
-		"build": "npx babel src --out-dir dist",
+		"build": "npm run prebuild && npx babel src --out-dir dist && npm run postbuild",
 		"format": "prettier --write \"**/*.{js,json}\"",
 		"lint": "eslint ./src --ext .js,.json --fix",
 		"patch": "changeset",
+		"postbuild": "mv dist/* ./",
+		"prebuild": "rimraf dist",
 		"release": "npm install && npm run build && changeset publish"
 	},
 	"type": "commonjs",
