@@ -1,0 +1,5 @@
+/.github/
+/.changeset/
+.eslintrc.json
+.prettierrc.json
+babel.config.json

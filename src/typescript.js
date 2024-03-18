@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	overrides: [
 		{
 			env: {
@@ -33,6 +33,7 @@ module.exports = {
 				"@typescript-eslint/naming-convention": [
 					"error",
 					{
+						// eslint-disable-next-line unicorn/no-null
 						format: null, // Disables any format enforcement by default, allowing for flexibility unless specifically overridden.
 						selector: "default",
 					},
