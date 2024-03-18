@@ -1,25 +1,9 @@
 {
-	"name": "@elsikora/eslint-config",
-	"version": "1.1.1",
-	"description": "ESLint configuration vision of ElsiKora",
-	"homepage": "https://github.com/ElsiKora/ESLint-Config#readme",
+	"author": "ElsiKora",
 	"bugs": {
 		"url": "https://github.com/ElsiKora/ESLint-Config/issues"
 	},
-	"repository": "ElsiKora/ESLint-Config",
-	"license": "MIT",
-	"author": "ElsiKora",
-	"type": "commonjs",
-	"main": "index.js",
-	"scripts": {
-		"format": "prettier --write \"**/*.{js,json}\"",
-		"lint": "eslint . --ext .js,.json --fix",
-		"patch": "changeset",
-		"release": "changeset publish"
-	},
-	"publishConfig": {
-		"access": "public"
-	},
+	"description": "ESLint configuration vision of ElsiKora",
 	"devDependencies": {
 		"@babel/core": "^7.24.0",
 		"@babel/eslint-parser": "^7.23.10",
@@ -48,5 +32,49 @@
 		"prettier": "^3.2.5",
 		"typescript": "^5.4.2",
 		"yaml-eslint-parser": "^1.2.2"
-	}
+	},
+	"files": [
+		"dist"
+	],
+	"homepage": "https://github.com/ElsiKora/ESLint-Config#readme",
+	"keywords": [
+		"eslint",
+		"eslint-config",
+		"eslint-plugin",
+		"typescript",
+		"nestjs",
+		"decorator",
+		"sort",
+		"import",
+		"package.json",
+		"perfectionist",
+		"sonarjs",
+		"typeorm",
+		"unicorn",
+		"unused-imports",
+		"yml",
+		"jsonc",
+		"yaml"
+	],
+	"license": "MIT",
+	"main": "index.js",
+	"name": "@elsikora/eslint-config",
+	"peerDependencies": {
+		"eslint": "^8.0.0",
+		"prettier": "^2.0.0",
+		"typescript": "^4.0.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": "ElsiKora/ESLint-Config",
+	"scripts": {
+		"build": "npx babel src --out-dir dist",
+		"format": "prettier --write \"**/*.{js,json}\"",
+		"lint": "eslint ./src --ext .js,.json --fix",
+		"patch": "changeset",
+		"release": "npm install && npm run build && changeset publish"
+	},
+	"type": "commonjs",
+	"version": "1.1.1"
 }
