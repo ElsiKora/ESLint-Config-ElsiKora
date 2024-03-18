@@ -57,7 +57,7 @@
 		"yaml"
 	],
 	"license": "MIT",
-	"main": "index.js",
+	"main": "dist/index.js",
 	"name": "@elsikora/eslint-config",
 	"peerDependencies": {
 		"eslint": "^8.0.0",
