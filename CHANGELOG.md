@@ -1,5 +1,12 @@
 # @elsikora/eslint-config-elsikora
 
+## 2.0.3
+
+### Patch Changes
+
+- 4855b6a: Update main file and fix README links
+- 4855b6a: Update main file and fix README links
+
 ## 2.0.2
 
 ### Patch Changes
