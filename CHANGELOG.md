@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 1.2.0
+
+### Minor Changes
+
+- 1cb8e4c: Convert project to use ECMAScript modules
+
 ## 1.1.2
 
 ### Patch Changes
