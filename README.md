@@ -127,7 +127,15 @@ a `.eslintrc.json` file in your project root (if you haven't already) and add th
 >
 >  ```json
 >  {
->    "extends": "@elsikora/elsikora"
+>    "extends": "@elsikora/eslint-config"
+>  }
+> ```
+
+> > **For TypeScript projects:**
+>
+>  ```json
+>  {
+>    "extends": "@elsikora/eslint-config/typescript"
 >  }
 > ```
 
@@ -135,7 +143,24 @@ a `.eslintrc.json` file in your project root (if you haven't already) and add th
 >
 >  ```json
 >  {
->    "extends": "@elsikora/elsikora/nest"
+>    "extends": "@elsikora/eslint-config/nest"
+>  }
+> ```
+
+> > **For JSON:**
+>
+>  ```json
+>  {
+>    "extends": "@elsikora/eslint-config/json"
+>  }
+> 
+> ``` 
+
+> > **For Yaml:**
+>
+>  ```json
+>  {
+>    "extends": "@elsikora/eslint-config/yaml"
 >  }
 > ```
 
