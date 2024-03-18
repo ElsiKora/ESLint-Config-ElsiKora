@@ -76,11 +76,10 @@
 	},
 	"repository": "ElsiKora/ESLint-Config",
 	"scripts": {
-		"build": "npm run prebuild && npx babel src --out-dir dist && npm run postbuild",
+		"build": "npm run prebuild && npx babel src --out-dir .",
 		"format": "prettier --write \"**/*.{js,json}\"",
 		"lint": "eslint ./src --ext .js,.json --fix",
 		"patch": "changeset",
-		"postbuild": "mv ./dist/* ./",
 		"prebuild": "rimraf dist",
 		"release": "npm install && npm run build && changeset publish"
 	},
