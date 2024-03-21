@@ -103,7 +103,14 @@ export default {
 				"@typescript-eslint/no-import-type-side-effects": "error", // Prohibit imports that can have side effects when only importing types, ensuring cleaner and safer code.
 				"@typescript-eslint/no-loop-func": "error", // Forbid the creation of functions within loops to prevent errors due to the use of loop variables inside closures.
 				"@typescript-eslint/no-loss-of-precision": "error", // Prevent literal numbers that lose precision when converted to JavaScript Number type.
-				"@typescript-eslint/no-magic-numbers": ["error", { detectObjects: true, ignoreEnums: true }], // Disallow magic numbers to make code more readable and maintainable, with exceptions for enums and object properties.
+				"@typescript-eslint/no-magic-numbers": [
+					"error",
+					{
+						detectObjects: true,
+						ignore: [0, 1, -1],
+						ignoreEnums: true,
+					},
+				], // Disallow magic numbers to make code more readable and maintainable, with exceptions for enums and object properties.
 				"@typescript-eslint/no-misused-promises": "error", // Ensure promises are used and awaited correctly, preventing logical errors in async operations.
 				"@typescript-eslint/no-mixed-enums": "error", // Prevent enums from being mixed in nonsensical ways, ensuring that they are used as intended.
 				"@typescript-eslint/no-redeclare": "error", // Disallow redeclaration of variables to prevent confusion and potential errors from shadowed variables.
