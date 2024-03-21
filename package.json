@@ -68,7 +68,7 @@
 	"name": "@elsikora/eslint-config",
 	"peerDependencies": {
 		"@elsikora/eslint-plugin-nestjs-typed": ">1.0.0",
-		"@elsikora/eslint-plugin-sort-decorators": ">0.0.0",
+		"@elsikora/eslint-plugin-sort-decorators": ">0.1.0",
 		"@stylistic/eslint-plugin": ">1.0.0",
 		"@stylistic/eslint-plugin-ts": ">1.0.0",
 		"@typescript-eslint/eslint-plugin": ">7.0.0",
