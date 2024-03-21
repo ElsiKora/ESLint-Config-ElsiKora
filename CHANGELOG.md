@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 2.0.6
+
+### Patch Changes
+
+- f39fafb: Update dependency version and eslint format for Readonly properties
+
 ## 2.0.5
 
 ### Patch Changes
