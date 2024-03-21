@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 2.0.5
+
+### Patch Changes
+
+- bacf14c: Add Snyk, Qodana, and CodeCommit workflows; update eslint rules
+
 ## 2.0.4
 
 ### Patch Changes
