@@ -66,7 +66,7 @@ export default {
 						selector: "typeLike",
 					},
 					{
-						format: ["PascalCase"], // Readonly properties should use PascalCase.
+						format: ["UPPER_CASE"], // Readonly properties should use PascalCase.
 						modifiers: ["readonly"],
 						selector: "property",
 					},
