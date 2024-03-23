@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 2.0.7
+
+### Patch Changes
+
+- d1397a2: Add TypeScript resolver to eslint configuration
+
 ## 2.0.6
 
 ### Patch Changes
