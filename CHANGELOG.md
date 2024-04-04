@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 2.1.0
+
+### Minor Changes
+
+- 8ed4d7b: Add support for React in eslint configuration
+
 ## 2.0.7
 
 ### Patch Changes

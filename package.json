@@ -109,5 +109,5 @@
 		"release": "npm install && npm run build && changeset publish"
 	},
 	"type": "commonjs",
-	"version": "2.0.7"
+	"version": "2.1.0"
 }
