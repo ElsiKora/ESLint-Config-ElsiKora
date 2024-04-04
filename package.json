@@ -43,7 +43,8 @@
 		"json.js",
 		"nest.js",
 		"typescript.js",
-		"yml.js"
+		"yml.js",
+		"react.js"
 	],
 	"homepage": "https://github.com/ElsiKora/ESLint-Config#readme",
 	"keywords": [
