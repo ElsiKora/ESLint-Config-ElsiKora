@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 2.1.2
+
+### Patch Changes
+
+- 41904f8: Update src/react.js with new configurations
+
 ## 2.1.1
 
 ### Patch Changes
