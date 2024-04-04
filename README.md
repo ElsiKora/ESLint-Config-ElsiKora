@@ -147,6 +147,14 @@ a `.eslintrc.json` file in your project root (if you haven't already) and add th
 >  }
 > ```
 
+> **For React projects:**
+>
+>  ```json
+>  {
+>    "extends": "@elsikora/eslint-config/react"
+>  }
+> ```
+>
 > > **For JSON:**
 >
 >  ```json
@@ -181,6 +189,7 @@ a `.eslintrc.json` file in your project root (if you haven't already) and add th
     "@elsikora/eslint-config",
     "@elsikora/eslint-config/typescript",
     "@elsikora/eslint-config/nest",
+    "@elsikora/eslint-config/react",
     "@elsikora/eslint-config/json",
     "@elsikora/eslint-config/yml"
   ],
@@ -224,7 +233,7 @@ a `.eslintrc.json` file in your project root (if you haven't already) and add th
 ## Project Roadmap
 
 - [X] `► NestJS Configuration`
-- [ ] `► React Configuration`
+- [X] `► React Configuration`
 - [ ] `► Next.js Configuration`
 
 ---
