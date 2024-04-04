@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 2.1.1
+
+### Patch Changes
+
+- b7e4114: Add react.js to package.json
+
 ## 2.1.0
 
 ### Minor Changes
