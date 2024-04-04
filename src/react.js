@@ -8,11 +8,19 @@ export default {
 			},
 			extends: [
 				"plugin:react/recommended", // Enforces best practices and standard conventions for React projects, ensuring consistency and maintainability.
+				"plugin:import/react", // Enforces best practices and standard conventions for React projects, ensuring consistency and maintainability.
 			],
 			files: ["*.jsx"], // Applies the yml plugin to YAML files only.
 			parserOptions: {
 				ecmaFeatures: {
 					jsx: true, // Enables JSX parsing for React components.
+				},
+			},
+			settings: {
+				"import/resolver": {
+					node: {
+						extensions: [".js", ".jsx"], // Resolves .js and .jsx files when importing modules.
+					},
 				},
 			},
 		},
