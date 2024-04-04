@@ -1,3 +1,1 @@
-{
-	"extends": ["./dist/index.js", "./dist/json.js", "./dist/yml.js"]
-}
+{}
