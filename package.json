@@ -12,7 +12,7 @@
 		"@changesets/cli": "^2.27.1",
 		"@elsikora/eslint-plugin-nestjs-typed": "^1.0.26",
 		"@elsikora/eslint-plugin-sort-decorators": "^0.2.8",
-		"@stylistic/eslint-plugin": "^1.7.0",
+		"@stylistic/eslint-plugin": "^2.0.0",
 		"@stylistic/eslint-plugin-ts": "^1.7.0",
 		"@typescript-eslint/eslint-plugin": "^7.3.1",
 		"@typescript-eslint/parser": "^7.3.1",
