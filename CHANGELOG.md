@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 2.1.3
+
+### Patch Changes
+
+- da065c9: Update eslint-plugin-unused-imports version
+
 ## 2.1.2
 
 ### Patch Changes
