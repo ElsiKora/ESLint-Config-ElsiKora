@@ -1,5 +1,72 @@
 # @elsikora/eslint-config-elsikora
 
+## 2.1.2
+
+### Patch Changes
+
+- 41904f8: Update src/react.js with new configurations
+
+## 2.1.1
+
+### Patch Changes
+
+- b7e4114: Add react.js to package.json
+
+## 2.1.0
+
+### Minor Changes
+
+- 8ed4d7b: Add support for React in eslint configuration
+
+## 2.0.7
+
+### Patch Changes
+
+- d1397a2: Add TypeScript resolver to eslint configuration
+
+## 2.0.6
+
+### Patch Changes
+
+- f39fafb: Update dependency version and eslint format for Readonly properties
+
+## 2.0.5
+
+### Patch Changes
+
+- bacf14c: Add Snyk, Qodana, and CodeCommit workflows; update eslint rules
+
+## 2.0.4
+
+### Patch Changes
+
+- 4ea686c: Add peer dependency and refactor README paths
+
+## 2.0.3
+
+### Patch Changes
+
+- 4855b6a: Update main file and fix README links
+- 4855b6a: Update main file and fix README links
+
+## 2.0.2
+
+### Patch Changes
+
+- 8cce705: Update postbuild script and README with detailed configs
+
+## 2.0.1
+
+### Patch Changes
+
+- 909b60d: Optimize build script and update files list in package.json
+
+## 2.0.0
+
+### Major Changes
+
+- 053c4d9: Refactor package structure and improve build process
+
 ## 1.2.0
 
 ### Minor Changes
