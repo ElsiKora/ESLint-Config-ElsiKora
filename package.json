@@ -87,7 +87,7 @@
 		"eslint-plugin-perfectionist": ">2.0.0",
 		"eslint-plugin-prettier": ">5.0.0",
 		"eslint-plugin-react": ">6.0.0",
-		"eslint-plugin-sonarjs": ">0.20.0",
+		"eslint-plugin-sonarjs": "0.24.0",
 		"eslint-plugin-typeorm-typescript": ">0.2.0",
 		"eslint-plugin-unicorn": ">45.0.0",
 		"eslint-plugin-unused-imports": "^3.2.0",
@@ -110,5 +110,5 @@
 		"release": "npm install && npm run build && changeset publish"
 	},
 	"type": "commonjs",
-	"version": "2.1.2"
+	"version": "2.1.3"
 }
