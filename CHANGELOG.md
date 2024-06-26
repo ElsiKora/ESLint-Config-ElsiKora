@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 2.1.4
+
+### Patch Changes
+
+- 7faa539: Update eslint-plugin-sonarjs version
+
 ## 2.1.3
 
 ### Patch Changes
