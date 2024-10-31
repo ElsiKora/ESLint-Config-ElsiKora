@@ -5,6 +5,7 @@ import tseslint from "typescript-eslint";
 
 import { formatConfig } from "../utility/format";
 
+console.log("REACT", ...formatConfig([react.configs.all]));
 export default [
 	// @ts-ignore
 	...formatConfig([react.configs.all]),
