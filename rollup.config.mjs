@@ -29,5 +29,30 @@ export default [
 			declaration: true,
 			declarationDir: 'dist/cjs'
 		})]
-	}
+	},
+	{
+		input: 'src/cli.ts',
+		output: [
+			{
+				file: 'dist/cli.js',
+				format: 'esm',
+				banner: '#!/usr/bin/env node',
+			},
+		],
+		plugins: [
+			typescript({
+				tsconfig: './tsconfig.json',
+				declaration: true,
+			}),
+		],
+		external: [
+			'node:fs/promises',
+			'node:path',
+			'node:url',
+			'node:util',
+			'node:child_process',
+			'@clack/prompts',
+			'picocolors',
+		],
+	},
 ];

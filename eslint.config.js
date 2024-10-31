@@ -1,4 +1,4 @@
-import createConfig from './dist/esm/index.js';
+import createConfig from '@elsikora/eslint-config';
 
 export default createConfig({
 	javascript: true,

@@ -4,7 +4,6 @@ import nPlugin from "eslint-plugin-n";
 
 import { formatConfig, formatRuleName } from "../utility/format";
 
-console.log("NBODE", ...formatConfig([nPlugin.configs["flat/recommended"]]));
 export default [
 	...formatConfig([nPlugin.configs["flat/recommended"]]),
 	{

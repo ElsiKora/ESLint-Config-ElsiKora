@@ -6,7 +6,6 @@ import ngModuleSort from "eslint-plugin-ng-module-sort";
 // @ts-expect-error
 import nestJsTyped from "@elsikora/eslint-plugin-nestjs-typed";
 import tseslint from "typescript-eslint";
-console.log("nestJsTyped", fixupPluginRules(nestJsTyped));
 export default [
 	{
 		files: ["**/*.ts"],

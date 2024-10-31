@@ -11,3 +11,4 @@ export default {
 	printWidth: 480,
 	proseWrap: "never"
 };
+
