@@ -57,7 +57,6 @@ export default [
 			'node:child_process',
 			'@clack/prompts',
 			'picocolors',
-			"inquirer"
 		],
 	},
 ];
