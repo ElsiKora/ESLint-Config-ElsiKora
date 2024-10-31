@@ -118,10 +118,20 @@ async function checkEslintInstalled(): Promise<{
 	version: string | null;
 }> {
 	try {
-		const { stdout } = await exec("npm ls eslint --depth=0 --json");
+		const { stdout } = await exec("npm ls eslint --all --depth=0 --json");
 		const npmList = JSON.parse(stdout);
-		const eslintVersion = npmList.dependencies.eslint.version;
-		return { isInstalled: true, version: eslintVersion };
+		let eslintVersion = null;
+
+		// Check in dependencies
+		if (npmList.dependencies?.eslint?.version) {
+			eslintVersion = npmList.dependencies.eslint.version;
+		}
+		// Check in devDependencies if not found in dependencies
+		else if (npmList.devDependencies?.eslint?.version) {
+			eslintVersion = npmList.devDependencies.eslint.version;
+		}
+
+		return { isInstalled: !!eslintVersion, version: eslintVersion };
 	} catch {
 		return { isInstalled: false, version: null };
 	}
@@ -132,10 +142,20 @@ async function checkConfigInstalled(): Promise<{
 	version: string | null;
 }> {
 	try {
-		const { stdout } = await exec("npm ls @elsikora/eslint-config --depth=0 --json");
+		const { stdout } = await exec("npm ls @elsikora/eslint-config --all --depth=0 --json");
 		const npmList = JSON.parse(stdout);
-		const eslintVersion = npmList.dependencies["@elsikora/eslint-config"].version;
-		return { isInstalled: true, version: eslintVersion };
+		let configVersion = null;
+
+		// Check in dependencies
+		if (npmList.dependencies?.["@elsikora/eslint-config"]?.version) {
+			configVersion = npmList.dependencies["@elsikora/eslint-config"].version;
+		}
+		// Check in devDependencies if not found in dependencies
+		else if (npmList.devDependencies?.["@elsikora/eslint-config"]?.version) {
+			configVersion = npmList.devDependencies["@elsikora/eslint-config"].version;
+		}
+
+		return { isInstalled: !!configVersion, version: configVersion };
 	} catch {
 		return { isInstalled: false, version: null };
 	}
@@ -199,6 +219,7 @@ async function installDependencies(features: Array<Feature>) {
 	depsToInstall.add("eslint-plugin-n");
 	depsToInstall.add("eslint-plugin-regexp");
 	depsToInstall.add("eslint-plugin-typeorm-typescript");
+	depsToInstall.add("eslint-plugin-tailwindcss");
 
 	for (const feature of features) {
 		const config = FEATURES_CONFIG[feature];
