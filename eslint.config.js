@@ -1,4 +1,4 @@
-import createConfig from "@elsikora/eslint-config";
+import createConfig from '@elsikora/eslint-config';
 
 export default createConfig({
   javascript: true,
