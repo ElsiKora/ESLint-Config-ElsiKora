@@ -6,6 +6,7 @@ import tseslint from "typescript-eslint";
 import { formatConfig } from "../utility/format";
 
 export default [
+	// @ts-ignore
 	...formatConfig([react.configs.all]),
 	{
 		files: ["**/*.{js,jsx}"],

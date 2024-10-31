@@ -6,6 +6,7 @@ import tseslint from "typescript-eslint";
 import { formatConfig } from "../utility/format";
 
 export default [
+	// @ts-ignore
 	tseslint.config(...formatConfig([typeormTypescriptRecommended]), {
 		rules: {
 			"typeorm-typescript/enforce-column-types": "error",

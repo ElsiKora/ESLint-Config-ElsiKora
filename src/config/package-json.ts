@@ -11,6 +11,7 @@ export default [
 		...formatConfig([eslintPluginPackageJson])[0],
 		rules: {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+			// @ts-ignore
 			...formatConfig([eslintPluginPackageJson])[0].rules,
 			"package-json/order-properties": "off",
 		},

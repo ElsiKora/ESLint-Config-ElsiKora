@@ -12,6 +12,7 @@ const exec = promisify(execCallback);
 interface PackageJson {
 	dependencies?: Record<string, string>;
 	devDependencies?: Record<string, string>;
+	type?: string;
 }
 
 interface FeatureConfig {
@@ -111,20 +112,17 @@ const FEATURE_GROUPS = {
 
 type Feature = keyof typeof FEATURES_CONFIG;
 
-async function checkEslintInstalled(): Promise<boolean> {
+async function checkEslintInstalled(): Promise<{
+	isInstalled: boolean;
+	version: string | null;
+}> {
 	try {
-		const packageJsonPath = path.resolve(process.cwd(), "package.json");
-		const packageJsonContent = await fs.readFile(packageJsonPath, "utf8");
-		const packageJson: PackageJson = JSON.parse(packageJsonContent);
-
-		const allDependencies = {
-			...packageJson.dependencies,
-			...packageJson.devDependencies,
-		};
-
-		return !!allDependencies.eslint;
+		const { stdout } = await exec("npm ls eslint --depth=0 --json");
+		const npmList = JSON.parse(stdout);
+		const eslintVersion = npmList.dependencies.eslint.version;
+		return { isInstalled: true, version: eslintVersion };
 	} catch {
-		return false;
+		return { isInstalled: false, version: null };
 	}
 }
 
@@ -186,7 +184,25 @@ async function installDependencies(features: Array<Feature>) {
 	}
 }
 
-async function createEslintConfig(features: Array<Feature>) {
+async function getConfigFileExtension(): Promise<".js" | ".cjs" | ".mjs"> {
+	try {
+		const packageJsonPath = path.resolve(process.cwd(), "package.json");
+		const packageJsonContent = await fs.readFile(packageJsonPath, "utf8");
+		const packageJson: PackageJson = JSON.parse(packageJsonContent);
+
+		const isModule = packageJson.type === "module";
+
+		if (isModule) {
+			return ".js";
+		} else {
+			return ".cjs";
+		}
+	} catch {
+		return ".js";
+	}
+}
+
+async function createEslintConfig(features: Array<Feature>, extension: string) {
 	const configContent = `import createConfig from '@elsikora/eslint-config';
 
 export default createConfig({
@@ -194,7 +210,33 @@ ${features.map((feature) => `  ${feature}: true`).join(",\n")}
 });
 `;
 
-	await fs.writeFile("eslint.config.js", configContent, "utf-8");
+	await fs.writeFile(`eslint.config${extension}`, configContent, "utf-8");
+}
+
+async function createPrettierConfig(extension: string) {
+	const prettierConfigContent = `export default {
+  useTabs: true,
+  tabWidth: 2,
+  semi: true,
+  singleQuote: true,
+  jsxSingleQuote: false,
+  trailingComma: "all",
+  bracketSpacing: true,
+  bracketSameLine: true,
+  arrowParens: "always",
+  printWidth: 480,
+  proseWrap: "never",
+};
+`;
+
+	await fs.writeFile(`prettier.config${extension}`, prettierConfigContent, "utf-8");
+
+	const prettierIgnoreContent = `node_modules
+dist
+build
+`;
+
+	await fs.writeFile(".prettierignore", prettierIgnoreContent, "utf-8");
 }
 
 async function updatePackageJson() {
@@ -221,7 +263,11 @@ async function updatePackageJson() {
 }
 
 async function setupVSCodeConfig(features: Array<Feature>) {
-	const vscodeSettingsPath = path.resolve(process.cwd(), ".vscode", "settings.json");
+	const vscodeSettingsPath = path.resolve(
+		process.cwd(),
+		".vscode",
+		"settings.json"
+	);
 	let settings: any = {};
 
 	// Read existing settings.json if it exists
@@ -275,7 +321,11 @@ async function setupVSCodeConfig(features: Array<Feature>) {
 	await fs.mkdir(path.dirname(vscodeSettingsPath), { recursive: true });
 
 	// Write settings.json
-	await fs.writeFile(vscodeSettingsPath, JSON.stringify(settings, null, 2), "utf-8");
+	await fs.writeFile(
+		vscodeSettingsPath,
+		JSON.stringify(settings, null, 2),
+		"utf-8"
+	);
 }
 
 async function setupWebStormConfig(features: Array<Feature>) {
@@ -324,9 +374,7 @@ async function setupWebStormConfig(features: Array<Feature>) {
 	}
 
 	// Combine extensions into pattern
-	const filesPattern = `**/*.{${
-		Array.from(extensions).join(",")
-	}}`;
+	const filesPattern = `**/*.{${Array.from(extensions).join(",")}}`;
 
 	// Build the XML content
 	const xmlContent = `<?xml version="1.0" encoding="UTF-8"?>
@@ -351,7 +399,40 @@ export async function runCli() {
 
 	intro(color.cyan("ESLint Configuration Setup (@elsikora/eslint-config)"));
 
-	const hasEslint = await checkEslintInstalled();
+	const { isInstalled: hasEslint, version: eslintVersion } =
+		await checkEslintInstalled();
+
+	if (hasEslint && eslintVersion) {
+		const majorVersion = parseInt(eslintVersion.split(".")[0], 10);
+		if (majorVersion < 9) {
+			const shouldUninstallOldEslint = await confirm({
+				initialValue: true,
+				message:
+					`ESLint version ${eslintVersion} is installed, which is incompatible with this configuration.` +
+					"\nWould you like to uninstall it and install a compatible version?",
+			});
+
+			if (!shouldUninstallOldEslint) {
+				outro(
+					color.red(
+						"Incompatible ESLint version detected. Setup aborted."
+					)
+				);
+				process.exit(1);
+			}
+
+			const uninstallSpinner = spinner();
+			uninstallSpinner.start("Uninstalling old ESLint version...");
+
+			try {
+				await exec("npm uninstall eslint");
+				uninstallSpinner.stop("Old ESLint version uninstalled successfully!");
+			} catch (error) {
+				uninstallSpinner.stop("Failed to uninstall old ESLint version");
+				throw error;
+			}
+		}
+	}
 
 	if (!hasEslint) {
 		const shouldInstallEslint = await confirm({
@@ -380,6 +461,7 @@ export async function runCli() {
 
 	let shouldUseDetected = false;
 	if (detectedFeatures.length > 1) {
+		// @ts-ignore
 		shouldUseDetected = await confirm({
 			initialValue: true,
 			message: `Detected: ${detectedFeatures.join(
@@ -389,7 +471,9 @@ export async function runCli() {
 	}
 
 	// Create options for Inquirer prompt with grouping
-	const selectOptions: inquirer.DistinctChoice<inquirer.CheckboxChoiceMap>[] = [];
+	// @ts-ignore
+	const selectOptions: inquirer.DistinctChoice<inquirer.CheckboxChoiceMap>[] =
+		[];
 
 	for (const [groupName, features] of Object.entries(FEATURE_GROUPS)) {
 		selectOptions.push(new inquirer.Separator(`\n=== ${groupName} ===`));
@@ -439,9 +523,15 @@ export async function runCli() {
 	try {
 		setupSpinner.start("Setting up ESLint configuration...");
 
+		const configExtension = await getConfigFileExtension();
+
 		await installDependencies(selectedFeatures);
-		await createEslintConfig(selectedFeatures);
+		await createEslintConfig(selectedFeatures, configExtension);
 		await updatePackageJson();
+
+		if (selectedFeatures.includes("prettier")) {
+			await createPrettierConfig(configExtension);
+		}
 
 		setupSpinner.stop("ESLint configuration completed successfully!");
 
@@ -453,23 +543,25 @@ export async function runCli() {
 		});
 
 		if (setupIdeConfigs) {
-			const ideAnswers = await inquirer.prompt<{ selectedIDEs: Array<string> }>([
-				{
-					type: "checkbox",
-					name: "selectedIDEs",
-					message: "Select your code editor(s):",
-					choices: [
-						{ name: "VSCode", value: "vscode" },
-						{ name: "WebStorm (IntelliJ IDEA)", value: "webstorm" },
-					],
-					validate(answer) {
-						if (answer.length < 1) {
-							return "You must choose at least one code editor.";
-						}
-						return true;
+			const ideAnswers = await inquirer.prompt<{ selectedIDEs: Array<string> }>(
+				[
+					{
+						type: "checkbox",
+						name: "selectedIDEs",
+						message: "Select your code editor(s):",
+						choices: [
+							{ name: "VSCode", value: "vscode" },
+							{ name: "WebStorm (IntelliJ IDEA)", value: "webstorm" },
+						],
+						validate(answer) {
+							if (answer.length < 1) {
+								return "You must choose at least one code editor.";
+							}
+							return true;
+						},
 					},
-				},
-			]);
+				]
+			);
 
 			const selectedIDEs = ideAnswers.selectedIDEs;
 
@@ -480,6 +572,17 @@ export async function runCli() {
 			if (selectedIDEs.includes("webstorm")) {
 				await setupWebStormConfig(selectedFeatures);
 			}
+		}
+
+		if (selectedFeatures.includes("prettier")) {
+			note(
+				[
+					"Prettier configuration has been created.",
+					"",
+					"You can customize it in your prettier configuration file.",
+				].join("\n"),
+				"Prettier Setup"
+			);
 		}
 
 		note(

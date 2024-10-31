@@ -3,7 +3,9 @@ import typescript from '@rollup/plugin-typescript';
 export default [
 	{
 		input: 'src/index.ts',
-		external: ['@eslint/js', "@stylistic/eslint-plugin"],
+		external: ['@eslint/js', "@stylistic/eslint-plugin", "eslint-plugin-check-file", "eslint-plugin-jsonc", "@eslint/compat", "eslint-plugin-ng-module-sort",
+			"@elsikora/eslint-plugin-nestjs-typed", "typescript-eslint", "eslint-plugin-n", "eslint-plugin-package-json/configs/recommended", "eslint-plugin-perfectionist", "eslint-plugin-prettier/recommended",
+			"@eslint-react/eslint-plugin", "eslint-plugin-regexp", "eslint-plugin-sonarjs", "eslint-plugin-tailwindcss", "eslint-plugin-typeorm-typescript/recommended", "eslint-plugin-unicorn", "eslint-plugin-yml"],
 		output: {
 			dir: 'dist/esm',
 			format: 'esm',
@@ -17,7 +19,9 @@ export default [
 	},
 	{
 		input: 'src/index.ts',
-		external: ['@eslint/js', "@stylistic/eslint-plugin"],
+		external: ['@eslint/js', "@stylistic/eslint-plugin", "eslint-plugin-check-file", "eslint-plugin-jsonc", "@eslint/compat", "eslint-plugin-ng-module-sort",
+			"@elsikora/eslint-plugin-nestjs-typed", "typescript-eslint", "eslint-plugin-n", "eslint-plugin-package-json/configs/recommended", "eslint-plugin-perfectionist", "eslint-plugin-prettier/recommended",
+			"@eslint-react/eslint-plugin", "eslint-plugin-regexp", "eslint-plugin-sonarjs", "eslint-plugin-tailwindcss", "eslint-plugin-typeorm-typescript/recommended", "eslint-plugin-unicorn", "eslint-plugin-yml"],
 		output: {
 			dir: 'dist/cjs',
 			format: 'cjs',
@@ -34,7 +38,7 @@ export default [
 		input: 'src/cli.ts',
 		output: [
 			{
-				file: 'dist/cli.js',
+				file: 'bin/index.js',
 				format: 'esm',
 				banner: '#!/usr/bin/env node',
 			},
@@ -53,6 +57,7 @@ export default [
 			'node:child_process',
 			'@clack/prompts',
 			'picocolors',
+			"inquirer"
 		],
 	},
 ];
