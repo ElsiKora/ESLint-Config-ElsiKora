@@ -610,8 +610,6 @@ export async function runCli() {
 	}
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
-	runCli().catch(console.error);
-}
+runCli().catch(console.error);
 
 export default runCli;
