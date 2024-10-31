@@ -2,7 +2,7 @@ export default {
 	useTabs: true,
 	tabWidth: 2,
 	semi: true,
-	singleQuote: true,
+	singleQuote: false,
 	jsxSingleQuote: false,
 	trailingComma: "all",
 	bracketSpacing: true,
