@@ -12,10 +12,10 @@ const pluginMap: Record<string, string> = {
 	prettier: "@elsikora-prettier",
 	sonarjs: "@elsikora-sonar",
 	unicorn: "@elsikora-unicorn",
-	"@elsikora-react/dom": "@elsikora-react/dom",
-	"@elsikora-react/hooks-extra": "@elsikora-react/hooks-extra",
-	"@elsikora-react/naming-convention": "@elsikora-react/naming-convention",
-	"@elsikora-react/web-api": "@elsikora-react/web-api",
+	"@eslint-react/dom": "@elsikora-react/dom",
+	"@eslint-react/hooks-extra": "@elsikora-react/hooks-extra",
+	"@eslint-react/naming-convention": "@elsikora-react/naming-convention",
+	"@eslint-react/web-api": "@elsikora-react/web-api",
 };
 
 export function formatRuleName(ruleName: string): string {
