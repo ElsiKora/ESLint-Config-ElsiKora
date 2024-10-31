@@ -166,6 +166,24 @@ async function installDependencies(features: Array<Feature>) {
 	depsToInstall.add("@eslint/js");
 	depsToInstall.add("@eslint/compat");
 	depsToInstall.add("@types/eslint__js");
+	depsToInstall.add("typescript-eslint");
+	depsToInstall.add("@eslint-react/eslint-plugin");
+	depsToInstall.add("@elsikora/eslint-plugin-nestjs-typed");
+	depsToInstall.add("eslint-plugin-ng-module-sort");
+	depsToInstall.add("eslint-config-prettier");
+	depsToInstall.add("eslint-plugin-prettier");
+	depsToInstall.add("prettier");
+	depsToInstall.add("@stylistic/eslint-plugin");
+	depsToInstall.add("eslint-plugin-sonarjs");
+	depsToInstall.add("eslint-plugin-unicorn");
+	depsToInstall.add("eslint-plugin-perfectionist");
+	depsToInstall.add("eslint-plugin-jsonc");
+	depsToInstall.add("eslint-plugin-yml");
+	depsToInstall.add("eslint-plugin-check-file");
+	depsToInstall.add("eslint-plugin-package-json");
+	depsToInstall.add("eslint-plugin-n");
+	depsToInstall.add("eslint-plugin-regexp");
+	depsToInstall.add("eslint-plugin-typeorm-typescript");
 
 	for (const feature of features) {
 		const config = FEATURES_CONFIG[feature];
@@ -198,7 +216,7 @@ async function getConfigFileExtension(): Promise<'.js' | '.cjs' | '.mjs'> {
 		if (isModule) {
 			return '.js';
 		} else {
-			return '.cjs';
+			return '.js';
 		}
 	} catch {
 		return '.js';
