@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 3.0.0
+
+### Major Changes
+
+- eb5978e: Remove ESLint configuration files
+
 ## 2.1.4
 
 ### Patch Changes
