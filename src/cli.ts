@@ -164,7 +164,7 @@ async function installDependencies(features: Array<Feature>) {
 	const depsToInstall = new Set<string>();
 	depsToInstall.add('@elsikora/eslint-config');
 	depsToInstall.add("@eslint/js");
-	depsToInstall.add(|"@eslint/compat");
+	depsToInstall.add("@eslint/compat");
 	depsToInstall.add("@types/eslint__js");
 
 	for (const feature of features) {
