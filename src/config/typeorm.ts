@@ -7,7 +7,7 @@ import { formatConfig } from "../utility/format";
 
 export default [
 	// @ts-ignore
-	tseslint.config(...formatConfig([typeormTypescriptRecommended]), {
+	tseslint.config(...formatConfig([typeormTypescriptRecommended])[0], {
 		rules: {
 			"typeorm-typescript/enforce-column-types": "error",
 			"typeorm-typescript/enforce-consistent-nullability": ["error", { specifyNullable: "always" }],
