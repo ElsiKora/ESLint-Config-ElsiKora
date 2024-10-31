@@ -85,7 +85,7 @@ enforce coding best practices and style consistency in their projects.
     │   └── workflows
     ├── CHANGELOG.md
     ├── README.md
-    ├── index.js
+    ├── index.enums.ts
     ├── nest.js
     └── package.json
 ```
@@ -96,7 +96,7 @@ enforce coding best practices and style consistency in their projects.
 
 | File                                                                           | Summary                                                                                                                                                                                                                                                                                                        |
 |--------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [index.js](https://github.com/ElsiKora/ESLint-Config.git/blob/master/index.js) | Defines and customizes ESLint rules for the ESLint-Config repository, focusing on ensuring code consistency while providing flexibility in filename conventions and the use of top-level await, by integrating popular ESLint configurations and plugins like Prettier and Unicorn.                            |
+| [index.enums.ts](https://github.com/ElsiKora/ESLint-Config.git/blob/master/index.enums.ts) | Defines and customizes ESLint rules for the ESLint-Config repository, focusing on ensuring code consistency while providing flexibility in filename conventions and the use of top-level await, by integrating popular ESLint configurations and plugins like Prettier and Unicorn.                            |
 | [nest.js](https://github.com/ElsiKora/ESLint-Config.git/blob/master/nest.js)   | Defines the ESLint configuration specifically for NestJS projects within the ESLint-Config repository. It selects an environment supporting ES2021 and Node.js, extending recommended settings from a custom plugin designed to enforce typing conventions and best practices tailored for NestJS development. |
 
 ---
