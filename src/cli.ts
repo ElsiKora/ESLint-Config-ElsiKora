@@ -389,7 +389,7 @@ async function setupVSCodeConfig(features: Array<Feature>) {
 	await fs.writeFile(vscodeSettingsPath, JSON.stringify(settings, null, 2), "utf-8");
 }
 
-async function setupWebStormConfig(features: Array<Feature>) {
+async function setupWebStormConfig(features: Array<Feature>, includePrettier: boolean = false) {
 	const webstormConfigPath = path.resolve(process.cwd(), ".idea", "jsLinters", "eslint.xml");
 
 	// Collect file extensions based on selected features
@@ -434,6 +434,20 @@ async function setupWebStormConfig(features: Array<Feature>) {
 
 	// Write the eslint.xml file
 	await fs.writeFile(webstormConfigPath, xmlContent, "utf-8");
+
+	if (includePrettier) {
+		const webstormPrettierConfigPath = path.resolve(process.cwd(), ".idea", "prettier.xml");
+		const prettierXmlContent = `<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PrettierConfiguration">
+    <option name="myConfigurationMode" value="AUTOMATIC" />
+  </component>
+</project>
+`;
+
+		await fs.mkdir(path.dirname(webstormPrettierConfigPath), { recursive: true });
+
+		await fs.writeFile(webstormPrettierConfigPath, prettierXmlContent, "utf-8");
 }
 
 async function installStylelintDependencies() {
@@ -730,7 +744,7 @@ export async function runCli() {
 			}
 
 			if (selectedIDEs.includes("webstorm")) {
-				await setupWebStormConfig(selectedFeatures);
+				await setupWebStormConfig(selectedFeatures, selectedFeatures.includes("prettier"));
 			}
 		}
 
