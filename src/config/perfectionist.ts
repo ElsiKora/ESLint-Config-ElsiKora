@@ -1,6 +1,5 @@
 import type { Linter } from "eslint";
 
-import eslintPluginPackageJson from "eslint-plugin-package-json/configs/recommended";
 import perfectionist from "eslint-plugin-perfectionist";
 
 import { formatConfig, formatRuleName } from "../utility/format";

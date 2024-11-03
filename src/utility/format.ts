@@ -42,6 +42,7 @@ export function formatConfig(configs: Array<Linter.Config>): Array<Linter.Config
 				if (config.plugins[pluginKey]) {
 					config.plugins[newName] = config.plugins[pluginKey];
 
+					// eslint-disable-next-line @elsikora-typescript/no-dynamic-delete
 					delete config.plugins[pluginKey];
 				}
 			}
@@ -57,6 +58,7 @@ export function formatConfig(configs: Array<Linter.Config>): Array<Linter.Config
 						const newRule: string = rule.replace(oldPrefix, `${newName}/`);
 						config.rules[newRule] = config.rules[rule];
 
+						// eslint-disable-next-line @elsikora-typescript/no-dynamic-delete
 						delete config.rules[rule];
 					}
 				}

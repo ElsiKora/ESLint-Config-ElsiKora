@@ -2,7 +2,6 @@ import type { Linter } from "eslint";
 
 import { fixupPluginRules } from "@eslint/compat";
 import ngModuleSort from "eslint-plugin-ng-module-sort";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import nestJsTyped from "@elsikora/eslint-plugin-nestjs-typed";
 import tseslint from "typescript-eslint";
@@ -18,7 +17,7 @@ export default [
 		},
 		plugins: {
 			"@elsikora/nest/1": fixupPluginRules(ngModuleSort),
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+			// eslint-disable-next-line @elsikora-typescript/no-unsafe-argument
 			"@elsikora/nest/2": fixupPluginRules(nestJsTyped),
 		},
 		rules: {

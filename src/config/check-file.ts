@@ -1,5 +1,4 @@
 import type { ESLint, Linter } from "eslint";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import checkFile from "eslint-plugin-check-file";
 

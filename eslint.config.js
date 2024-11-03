@@ -1,7 +1,22 @@
 import createConfig from '@elsikora/eslint-config';
 
-export default createConfig({
-  javascript: true,
-  typescript: true,
-  prettier: true
-});
+export default [
+  {
+    ignores: [
+  "**/node_modules/",
+  "**/.git/",
+  "**/dist/",
+  "**/build/",
+  "**/coverage/",
+  "**/.vscode/",
+  "**/.idea/",
+  "**/*.min.js",
+  "**/*.bundle.js"
+]
+  },
+  ...createConfig({
+    javascript: true,
+    typescript: true,
+    prettier: true
+  })
+];

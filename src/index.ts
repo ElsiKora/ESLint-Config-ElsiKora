@@ -109,6 +109,6 @@ export function createConfig(options: IConfigOptions = {}): Array<Linter.Config>
 		configs.push(...packageJson);
 	}
 
-	return configs as Array<Linter.Config>;
+	return configs;
 }
 export default createConfig;

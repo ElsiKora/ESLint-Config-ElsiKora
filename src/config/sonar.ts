@@ -4,10 +4,11 @@ import sonarjs from "eslint-plugin-sonarjs";
 
 import { formatConfig, formatRuleName } from "../utility/format";
 
-const congnitiveComplexity = 100;
-const duplicateStringThreshold = 10;
+const congnitiveComplexity: number = 100;
+const duplicateStringThreshold: number = 10;
 
 export default [
+	// eslint-disable-next-line @elsikora-typescript/no-unsafe-argument
 	...formatConfig([sonarjs.configs.recommended]),
 	{
 		rules: {

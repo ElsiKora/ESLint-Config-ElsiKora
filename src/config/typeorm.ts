@@ -5,7 +5,6 @@ import tseslint from "typescript-eslint";
 
 import { formatConfig } from "../utility/format";
 
-
 export default tseslint.config({
 	// @ts-ignore
 	extends: [...formatConfig([typeormTypescriptRecommended])],

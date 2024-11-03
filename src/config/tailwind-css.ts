@@ -1,9 +1,8 @@
 import type { Linter } from "eslint";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
+// @ts-ignore
 import tailwind from "eslint-plugin-tailwindcss";
 
 import { formatConfig } from "../utility/format";
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
+// eslint-disable-next-line @elsikora-typescript/no-unsafe-argument,@elsikora-typescript/no-unsafe-assignment,@elsikora-typescript/no-unsafe-member-access
 export default [...formatConfig([...tailwind.configs["flat/recommended"]])] as Array<Linter.Config>;
