@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 3.1.0
+
+### Minor Changes
+
+- e0207ae: Update
+
 ## 3.0.0
 
 ### Major Changes
