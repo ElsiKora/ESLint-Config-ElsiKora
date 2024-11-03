@@ -1,10 +1,10 @@
 import type { Linter } from "eslint";
 
 const pluginMap: Record<string, string> = {
-	"@elsikora-react/dom": "@elsikora-react/dom",
-	"@elsikora-react/hooks-extra": "@elsikora-react/hooks-extra",
-	"@elsikora-react/naming-convention": "@elsikora-react/naming-convention",
-	"@elsikora-react/web-api": "@elsikora-react/web-api",
+	"@eslint-react/dom": "@elsikora-react/dom",
+	"@eslint-react/hooks-extra": "@elsikora-react/hooks-extra",
+	"@eslint-react/naming-convention": "@elsikora-react/naming-convention",
+	"@eslint-react/web-api": "@elsikora-react/web-api",
 	"@eslint-react": "@elsikora-react",
 	"@stylistic": "@elsikora-stylistic",
 	"@typescript-eslint": "@elsikora-typescript",
@@ -18,8 +18,11 @@ const pluginMap: Record<string, string> = {
 	unicorn: "@elsikora-unicorn",
 };
 
+const sortedPluginEntries = Object.entries(pluginMap)
+	.sort((a, b) => b[0].length - a[0].length);
+
 export function formatRuleName(ruleName: string): string {
-	for (const [oldName, newName] of Object.entries(pluginMap)) {
+	for (const [oldName, newName] of sortedPluginEntries) {
 		const oldPrefix: string = oldName.startsWith("@") ? `${oldName}/` : `${oldName}/`;
 
 		if (ruleName.startsWith(oldPrefix)) {
@@ -34,32 +37,32 @@ export function formatConfig(configs: Array<Linter.Config>): Array<Linter.Config
 	const formattedConfigs: Array<Linter.Config> = [];
 
 	for (const config of configs) {
-		// Handle plugins replacement
 		if (config.plugins) {
-			for (const [oldName, newName] of Object.entries(pluginMap)) {
+			for (const [oldName, newName] of sortedPluginEntries) {
 				const pluginKey: string = oldName.startsWith("@") ? oldName : oldName;
 
 				if (config.plugins[pluginKey]) {
 					config.plugins[newName] = config.plugins[pluginKey];
 
-					// eslint-disable-next-line @elsikora-typescript/no-dynamic-delete
 					delete config.plugins[pluginKey];
 				}
 			}
 		}
 
-		// Handle rules replacement
 		if (config.rules) {
 			for (const rule of Object.keys(config.rules)) {
-				for (const [oldName, newName] of Object.entries(pluginMap)) {
+				let replaced = false;
+
+				for (const [oldName, newName] of sortedPluginEntries) {
 					const oldPrefix: string = oldName.startsWith("@") ? `${oldName}/` : `${oldName}/`;
 
-					if (rule.startsWith(oldPrefix)) {
+					if (rule.startsWith(oldPrefix) && !replaced) {
 						const newRule: string = rule.replace(oldPrefix, `${newName}/`);
 						config.rules[newRule] = config.rules[rule];
 
-						// eslint-disable-next-line @elsikora-typescript/no-dynamic-delete
 						delete config.rules[rule];
+						replaced = true;
+						break;
 					}
 				}
 			}
