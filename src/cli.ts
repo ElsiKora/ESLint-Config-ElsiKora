@@ -14,6 +14,8 @@ interface PackageJson {
 	devDependencies?: Record<string, string>;
 	type?: string;
 	scripts?: Record<string, string>;
+	eslintConfig?: any;
+	prettier?: any;
 }
 
 interface FeatureConfig {
@@ -113,6 +115,31 @@ const FEATURE_GROUPS = {
 
 type Feature = keyof typeof FEATURES_CONFIG;
 
+const ESLINT_CONFIG_FILES = [
+	"eslint.config.js",
+	"eslint.config.cjs",
+	"eslint.config.mjs",
+	".eslintrc.js",
+	".eslintrc.cjs",
+	".eslintrc.yaml",
+	".eslintrc.yml",
+	".eslintrc.json",
+	".eslintrc",
+];
+
+const PRETTIER_CONFIG_FILES = [
+	"prettier.config.js",
+	"prettier.config.cjs",
+	"prettier.config.mjs",
+	".prettierrc",
+	".prettierrc.js",
+	".prettierrc.cjs",
+	".prettierrc.json",
+	".prettierrc.yaml",
+	".prettierrc.yml",
+	".prettierignore",
+];
+
 async function checkEslintInstalled(): Promise<{
 	isInstalled: boolean;
 	version: string | null;
@@ -122,12 +149,9 @@ async function checkEslintInstalled(): Promise<{
 		const npmList = JSON.parse(stdout);
 		let eslintVersion = null;
 
-		// Check in dependencies
 		if (npmList.dependencies?.eslint?.version) {
 			eslintVersion = npmList.dependencies.eslint.version;
-		}
-		// Check in devDependencies if not found in dependencies
-		else if (npmList.devDependencies?.eslint?.version) {
+		} else if (npmList.devDependencies?.eslint?.version) {
 			eslintVersion = npmList.devDependencies.eslint.version;
 		}
 
@@ -146,12 +170,9 @@ async function checkConfigInstalled(): Promise<{
 		const npmList = JSON.parse(stdout);
 		let configVersion = null;
 
-		// Check in dependencies
 		if (npmList.dependencies?.["@elsikora/eslint-config"]?.version) {
 			configVersion = npmList.dependencies["@elsikora/eslint-config"].version;
-		}
-		// Check in devDependencies if not found in dependencies
-		else if (npmList.devDependencies?.["@elsikora/eslint-config"]?.version) {
+		} else if (npmList.devDependencies?.["@elsikora/eslint-config"]?.version) {
 			configVersion = npmList.devDependencies["@elsikora/eslint-config"].version;
 		}
 
@@ -176,7 +197,7 @@ async function detectInstalledFeatures(): Promise<Array<Feature>> {
 
 		Object.entries(FEATURES_CONFIG).forEach(([feature, config]) => {
 			if (config.required) {
-				detectedFeatures.add(feature);
+				detectedFeatures.add(feature as Feature);
 			}
 		});
 
@@ -184,7 +205,7 @@ async function detectInstalledFeatures(): Promise<Array<Feature>> {
 			if (config.detect) {
 				const isDetected = config.detect.some((pkg) => !!allDependencies[pkg]);
 				if (isDetected) {
-					detectedFeatures.add(feature);
+					detectedFeatures.add(feature as Feature);
 				}
 			}
 		});
@@ -335,7 +356,6 @@ async function setupVSCodeConfig(features: Array<Feature>) {
 	const vscodeSettingsPath = path.resolve(process.cwd(), ".vscode", "settings.json");
 	let settings: any = {};
 
-	// Read existing settings.json if it exists
 	try {
 		const existingSettings = await fs.readFile(vscodeSettingsPath, "utf8");
 		settings = JSON.parse(existingSettings);
@@ -343,7 +363,6 @@ async function setupVSCodeConfig(features: Array<Feature>) {
 		// File does not exist, start with empty settings
 	}
 
-	// Collect language IDs based on selected features
 	const languages = new Set<string>();
 
 	if (features.includes("javascript")) {
@@ -371,28 +390,23 @@ async function setupVSCodeConfig(features: Array<Feature>) {
 		languages.add("typescriptreact");
 	}
 
-	// Update ESLint validate settings
 	settings["eslint.validate"] = Array.from(languages).map((language) => ({
 		language,
 		autoFix: true,
 	}));
 
-	// Enable auto-fix on save
 	settings["editor.codeActionsOnSave"] = {
 		"source.fixAll.eslint": true,
 	};
 
-	// Create .vscode directory if it doesn't exist
 	await fs.mkdir(path.dirname(vscodeSettingsPath), { recursive: true });
 
-	// Write settings.json
 	await fs.writeFile(vscodeSettingsPath, JSON.stringify(settings, null, 2), "utf-8");
 }
 
 async function setupWebStormConfig(features: Array<Feature>, includePrettier: boolean = false) {
 	const webstormConfigPath = path.resolve(process.cwd(), ".idea", "jsLinters", "eslint.xml");
 
-	// Collect file extensions based on selected features
 	const extensions = new Set<string>(["js", "ts", "jsx", "tsx", "cjs", "cts", "mjs", "mts", "html", "vue", "json", "yaml", "yml"]);
 
 	if (!features.includes("react")) {
@@ -415,10 +429,8 @@ async function setupWebStormConfig(features: Array<Feature>, includePrettier: bo
 		extensions.delete("yml");
 	}
 
-	// Combine extensions into pattern
 	const filesPattern = `**/*.{${Array.from(extensions).join(",")}}`;
 
-	// Build the XML content
 	const xmlContent = `<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="EslintConfiguration">
@@ -429,10 +441,8 @@ async function setupWebStormConfig(features: Array<Feature>, includePrettier: bo
 </project>
 `;
 
-	// Create directories if they don't exist
 	await fs.mkdir(path.dirname(webstormConfigPath), { recursive: true });
 
-	// Write the eslint.xml file
 	await fs.writeFile(webstormConfigPath, xmlContent, "utf-8");
 
 	if (includePrettier) {
@@ -448,6 +458,7 @@ async function setupWebStormConfig(features: Array<Feature>, includePrettier: bo
 		await fs.mkdir(path.dirname(webstormPrettierConfigPath), { recursive: true });
 
 		await fs.writeFile(webstormPrettierConfigPath, prettierXmlContent, "utf-8");
+	}
 }
 
 async function installStylelintDependencies() {
@@ -561,13 +572,79 @@ export default {
 
 	await fs.writeFile("stylelint.config.js", stylelintConfigContent, "utf-8");
 
-	// Create .stylelintignore file
 	const stylelintIgnoreContent = `node_modules
 dist
 build
 `;
 
 	await fs.writeFile(".stylelintignore", stylelintIgnoreContent, "utf-8");
+}
+
+async function findExistingFiles(files: Array<string>): Promise<Array<string>> {
+	const existingFiles = [];
+	for (const file of files) {
+		try {
+			await fs.access(file);
+			existingFiles.push(file);
+		} catch {
+			// File does not exist
+		}
+	}
+	return existingFiles;
+}
+
+async function removeEslintConfigFromPackageJson() {
+	try {
+		const packageJsonPath = path.resolve(process.cwd(), "package.json");
+		const packageJsonContent = await fs.readFile(packageJsonPath, "utf8");
+		const packageJson = JSON.parse(packageJsonContent);
+
+		if (packageJson.eslintConfig) {
+			delete packageJson.eslintConfig;
+			await fs.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2) + "\n", "utf-8");
+		}
+	} catch (error) {
+		throw new Error(`Failed to remove eslintConfig from package.json: ${error}`);
+	}
+}
+
+async function removePrettierConfigFromPackageJson() {
+	try {
+		const packageJsonPath = path.resolve(process.cwd(), "package.json");
+		const packageJsonContent = await fs.readFile(packageJsonPath, "utf8");
+		const packageJson = JSON.parse(packageJsonContent);
+
+		if (packageJson.prettier) {
+			delete packageJson.prettier;
+			await fs.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2) + "\n", "utf-8");
+		}
+	} catch (error) {
+		throw new Error(`Failed to remove prettier config from package.json: ${error}`);
+	}
+}
+
+async function checkForEslintConfigInPackageJson(): Promise<boolean> {
+	try {
+		const packageJsonPath = path.resolve(process.cwd(), "package.json");
+		const packageJsonContent = await fs.readFile(packageJsonPath, "utf8");
+		const packageJson = JSON.parse(packageJsonContent);
+
+		return packageJson.hasOwnProperty("eslintConfig");
+	} catch (error) {
+		return false;
+	}
+}
+
+async function checkForPrettierConfigInPackageJson(): Promise<boolean> {
+	try {
+		const packageJsonPath = path.resolve(process.cwd(), "package.json");
+		const packageJsonContent = await fs.readFile(packageJsonPath, "utf8");
+		const packageJson = JSON.parse(packageJsonContent);
+
+		return packageJson.hasOwnProperty("prettier");
+	} catch (error) {
+		return false;
+	}
 }
 
 export async function runCli() {
@@ -595,6 +672,36 @@ export async function runCli() {
 		try {
 			await exec("npm uninstall @elsikora/eslint-config eslint");
 			uninstallSpinner.stop("Existing ESLint configuration uninstalled successfully!");
+
+			// Check for existing ESLint config files
+			const existingEslintConfigFiles = await findExistingFiles(ESLINT_CONFIG_FILES);
+			const hasEslintConfigInPackageJson = await checkForEslintConfigInPackageJson();
+
+			if (existingEslintConfigFiles.length > 0 || hasEslintConfigInPackageJson) {
+				const filesList = existingEslintConfigFiles.join("\n");
+				const messageLines = ["Existing ESLint configuration files detected:"];
+				if (filesList) {
+					messageLines.push(filesList);
+				}
+				if (hasEslintConfigInPackageJson) {
+					messageLines.push("package.json (eslintConfig field)");
+				}
+				messageLines.push("Do you want to delete them?");
+
+				const shouldDeleteConfigFiles = await confirm({
+					initialValue: true,
+					message: messageLines.join("\n"),
+				});
+
+				if (shouldDeleteConfigFiles) {
+					// Delete the files
+					for (const file of existingEslintConfigFiles) {
+						await fs.unlink(file);
+					}
+					// Also remove 'eslintConfig' field from package.json
+					await removeEslintConfigFromPackageJson();
+				}
+			}
 		} catch (error) {
 			uninstallSpinner.stop("Failed to uninstall existing ESLint configuration");
 			throw error;
@@ -606,7 +713,9 @@ export async function runCli() {
 		if (majorVersion < 9) {
 			const shouldUninstallOldEslint = await confirm({
 				initialValue: true,
-				message: `ESLint version ${eslintVersion} is installed, which is incompatible with this configuration.` + "\nWould you like to uninstall it and install a compatible version?",
+				message:
+					`ESLint version ${eslintVersion} is installed, which is incompatible with this configuration.` +
+					"\nWould you like to uninstall it and install a compatible version?",
 			});
 
 			if (!shouldUninstallOldEslint) {
@@ -631,15 +740,12 @@ export async function runCli() {
 
 	let shouldUseDetected = false;
 	if (detectedFeatures.length > 1) {
-		// @ts-ignore
 		shouldUseDetected = await confirm({
 			initialValue: true,
 			message: `Detected: ${detectedFeatures.join(", ")}. Would you like to include these features?`,
 		});
 	}
 
-	// Create options for Inquirer prompt with grouping
-	// @ts-ignore
 	const selectOptions: Array<inquirer.DistinctChoice<inquirer.CheckboxChoiceMap>> = [];
 
 	for (const [groupName, features] of Object.entries(FEATURE_GROUPS)) {
@@ -678,7 +784,6 @@ export async function runCli() {
 		process.exit(1);
 	}
 
-	// Ensure that javascript is always included
 	if (!selectedFeatures.includes("javascript")) {
 		selectedFeatures.unshift("javascript");
 	}
@@ -703,19 +808,53 @@ export async function runCli() {
 			await installStylelintDependencies();
 			await createStylelintConfig();
 
-			note(["Stylelint configuration has been created.", "", "You can customize it in your stylelint.config.js file."].join("\n"), "Stylelint Setup");
+			note(
+				["Stylelint configuration has been created.", "", "You can customize it in your stylelint.config.js file."].join(
+					"\n"
+				),
+				"Stylelint Setup"
+			);
 		}
 
 		if (selectedFeatures.includes("prettier")) {
+			// Check for existing Prettier config files
+			const existingPrettierConfigFiles = await findExistingFiles(PRETTIER_CONFIG_FILES);
+			const hasPrettierConfigInPackageJson = await checkForPrettierConfigInPackageJson();
+			if (existingPrettierConfigFiles.length > 0 || hasPrettierConfigInPackageJson) {
+				const filesList = existingPrettierConfigFiles.join("\n");
+				const messageLines = ["Existing Prettier configuration files detected:"];
+				if (filesList) {
+					messageLines.push(filesList);
+				}
+				if (hasPrettierConfigInPackageJson) {
+					messageLines.push("package.json (prettier field)");
+				}
+				messageLines.push("Do you want to delete them?");
+
+				const shouldDeletePrettierConfigFiles = await confirm({
+					initialValue: true,
+					message: messageLines.join("\n"),
+				});
+
+				if (shouldDeletePrettierConfigFiles) {
+					// Delete the files
+					for (const file of existingPrettierConfigFiles) {
+						await fs.unlink(file);
+					}
+					// Also remove 'prettier' field from package.json
+					await removePrettierConfigFromPackageJson();
+				}
+			}
+
 			await createPrettierConfig(configExtension);
 		}
 
 		setupSpinner.stop("ESLint configuration completed successfully!");
 
-		// Prompt to set up IDE configurations
 		const setupIdeConfigs = await confirm({
 			initialValue: true,
-			message: "Would you like to set up ESLint configurations for your code editor (e.g., VSCode, WebStorm)?",
+			message:
+				"Would you like to set up ESLint configurations for your code editor (e.g., VSCode, WebStorm)?",
 		});
 
 		if (setupIdeConfigs) {
@@ -749,7 +888,12 @@ export async function runCli() {
 		}
 
 		if (selectedFeatures.includes("prettier")) {
-			note(["Prettier configuration has been created.", "", "You can customize it in your prettier configuration file."].join("\n"), "Prettier Setup");
+			note(
+				["Prettier configuration has been created.", "", "You can customize it in your prettier configuration file."].join(
+					"\n"
+				),
+				"Prettier Setup"
+			);
 		}
 
 		const scriptsList = [];
@@ -767,7 +911,6 @@ export async function runCli() {
 			runCommands.push("  npm run lint:fix  # to fix ESLint issues");
 		}
 
-		// Add Prettier format commands if enabled
 		if (selectedFeatures.includes("prettier")) {
 			scriptsList.push('  "format": "prettier --check ."');
 			scriptsList.push('  "format:fix": "prettier --write ."');

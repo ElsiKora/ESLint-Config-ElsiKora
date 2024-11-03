@@ -5,13 +5,13 @@ import tseslint from "typescript-eslint";
 
 import { formatConfig } from "../utility/format";
 
-export default [
+
+export default tseslint.config({
 	// @ts-ignore
-	tseslint.config(...formatConfig([typeormTypescriptRecommended])[0], {
-		rules: {
-			"typeorm-typescript/enforce-column-types": "error",
-			"typeorm-typescript/enforce-consistent-nullability": ["error", { specifyNullable: "always" }],
-			"typeorm-typescript/enforce-relation-types": "error",
-		},
-	}),
-] as Array<Linter.Config>;
+	extends: [...formatConfig([typeormTypescriptRecommended])],
+	rules: {
+		"typeorm-typescript/enforce-column-types": "error",
+		"typeorm-typescript/enforce-consistent-nullability": ["error", { specifyNullable: "always" }],
+		"typeorm-typescript/enforce-relation-types": "error",
+	},
+}) as Array<Linter.Config>;
