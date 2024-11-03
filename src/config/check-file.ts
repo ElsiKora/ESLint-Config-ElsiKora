@@ -1,15 +1,16 @@
 import type { ESLint, Linter } from "eslint";
 // @ts-expect-error
 import checkFile from "eslint-plugin-check-file";
+import { formatRuleName } from "../utility/format";
 
 export default [
 	{
 		files: ["src/**/*"],
 		plugins: {
-			"@elsikora/check-file": checkFile as ESLint.Plugin,
+			"@elsikora-check-file": checkFile as ESLint.Plugin,
 		},
 		rules: {
-			"@elsikora/check-file/filename-blocklist": [
+			[formatRuleName("check-file/filename-blocklist")]: [
 				"error",
 				{
 					"**/*.enums.ts": "*.enum.ts",
@@ -19,7 +20,7 @@ export default [
 					"**/*.util.ts": "*.utility.ts",
 				},
 			], // Disallow specific filename patterns to enforce a consistent naming convention across the project. For example, preferring `*.enum.ts` over `*.enums.ts`.
-			"@elsikora/check-file/filename-naming-convention": [
+			[formatRuleName("check-file/filename-naming-convention")]: [
 				"error",
 				{
 					"**/class/**/*.{js,ts}": "KEBAB_CASE",
@@ -39,7 +40,7 @@ export default [
 				},
 				{ ignoreMiddleExtensions: true },
 			], // Enforce a specific naming convention for files in various directories, typically using KEBAB_CASE for clarity and consistency. The `ignoreMiddleExtensions` option allows ignoring file extensions in the middle of filenames, focusing on the final extension for the rule.
-			"@elsikora/check-file/folder-match-with-fex": [
+			[formatRuleName("check-file/folder-match-with-fex")]: [
 				"error",
 				{
 					"*.api.{ts,js}": "**/api/**",
@@ -58,7 +59,7 @@ export default [
 					"*.validator.{js,jsx,ts,tsx}": "**/validator/**",
 				},
 			], // Enforce a naming convention that requires files to be located in folders matching their type (e.g., API files in /api, DTOs in /dto) to ensure a clear and consistent project structure.
-			"@elsikora/check-file/folder-naming-convention": [
+			[formatRuleName("check-file/folder-naming-convention")]: [
 				"error",
 				{
 					"src/**": "KEBAB_CASE",

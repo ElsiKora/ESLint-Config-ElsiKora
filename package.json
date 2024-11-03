@@ -1,6 +1,6 @@
 {
   "name": "@elsikora/eslint-config",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "ESLint configuration vision of ElsiKora",
   "keywords": [
     "eslint",
@@ -59,7 +59,10 @@
     "prebuild": "rimraf dist",
     "release": "npm install && npm run build && changeset publish",
     "lint:fix": "eslint ./src --fix && stylelint \"**/*.{css,scss,less}\" --fix && prettier --write .",
-    "format:fix": "prettier --write ."
+    "format:fix": "prettier --write .",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "test:watch": "vitest --watch"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
@@ -73,6 +76,7 @@
     "@typescript-eslint/eslint-plugin": "^8.12.2",
     "@typescript-eslint/parser": "^8.12.2",
     "@typescript-eslint/utils": "^8.12.2",
+    "@vitest/coverage-v8": "2.1.4",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-check-file": "^2.8.0",
     "eslint-plugin-jsonc": "^2.16.0",
@@ -88,6 +92,7 @@
     "eslint-plugin-unicorn": "^56.0.0",
     "eslint-plugin-yml": "^1.15.0",
     "inquirer": "^12.0.1",
+    "memfs": "^4.14.0",
     "picocolors": "^1.1.1",
     "prettier": "^3.3.3",
     "rimraf": "^6.0.1",
@@ -100,7 +105,8 @@
     "stylelint-prettier": "^5.0.2",
     "tslib": "^2.8.0",
     "typescript": "^5.6.3",
-    "typescript-eslint": "^8.12.2"
+    "typescript-eslint": "^8.12.2",
+    "vitest": "^2.1.4"
   },
   "peerDependencies": {
     "@clack/prompts": "^0.7.0",

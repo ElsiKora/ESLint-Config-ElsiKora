@@ -17,6 +17,8 @@ export default [
   ...createConfig({
     javascript: true,
     typescript: true,
-    prettier: true
+    prettier: true,
+    react: true,
+    json: true,
   })
 ];

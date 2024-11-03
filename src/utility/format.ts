@@ -18,8 +18,7 @@ const pluginMap: Record<string, string> = {
 	unicorn: "@elsikora-unicorn",
 };
 
-const sortedPluginEntries = Object.entries(pluginMap)
-	.sort((a, b) => b[0].length - a[0].length);
+const sortedPluginEntries = Object.entries(pluginMap).sort((a, b) => b[0].length - a[0].length);
 
 export function formatRuleName(ruleName: string): string {
 	for (const [oldName, newName] of sortedPluginEntries) {
