@@ -10,6 +10,7 @@ export const FEATURES_CONFIG: Record<string, IFeatureConfig> = {
 		packages: ["typescript", "@typescript-eslint/parser", "@typescript-eslint/eslint-plugin"],
 		detect: ["typescript", "@types/node"],
 		description: "TypeScript support",
+		requiresTypescript: true,
 	},
 	react: {
 		packages: ["eslint-plugin-react", "eslint-plugin-react-hooks"],
@@ -20,6 +21,7 @@ export const FEATURES_CONFIG: Record<string, IFeatureConfig> = {
 		packages: ["@nestjs/eslint-plugin", "eslint-plugin-nestjs-typed"],
 		detect: ["@nestjs/core", "@nestjs/common"],
 		description: "NestJS framework support",
+		requiresTypescript: true,
 	},
 	tailwindCss: {
 		packages: ["eslint-plugin-tailwindcss"],
@@ -76,6 +78,7 @@ export const FEATURES_CONFIG: Record<string, IFeatureConfig> = {
 		packages: ["eslint-plugin-typeorm"],
 		detect: ["typeorm", "@typeorm/core"],
 		description: "TypeORM support",
+		requiresTypescript: true,
 	},
 } as const;
 

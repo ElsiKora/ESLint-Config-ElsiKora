@@ -7,6 +7,43 @@ import { FEATURES_CONFIG, CORE_DEPENDENCIES } from "./constants";
 
 const exec: (arg1: any) => Promise<any> = promisify(execCallback);
 
+export async function detectTypescriptInProject(): Promise<boolean> {
+	try {
+		const packageJsonPath: string = path.resolve(process.cwd(), "package.json");
+		const packageJsonContent: string = await fs.readFile(packageJsonPath, "utf8");
+		const packageJson: IPackageJson = JSON.parse(packageJsonContent) as IPackageJson;
+		const allDependencies: object = {
+			...packageJson.dependencies,
+			...packageJson.devDependencies,
+		};
+
+		// @ts-ignore
+		return !!(allDependencies.typescript || allDependencies["@types/node"]);
+	} catch {
+		return false;
+	}
+}
+
+export async function validateFeatureSelection(features: Array<TFeature>): Promise<{
+	isValid: boolean;
+	errors: Array<string>;
+}> {
+	const hasTypescript: boolean = await detectTypescriptInProject();
+	const errors: Array<string> = [];
+
+	for (const feature of features) {
+		const config: IFeatureConfig = FEATURES_CONFIG[feature];
+		if (config.requiresTypescript && !hasTypescript) {
+			errors.push(`${feature} requires TypeScript, but TypeScript is not detected in your project. Please install TypeScript first.`);
+		}
+	}
+
+	return {
+		isValid: errors.length === 0,
+		errors,
+	};
+}
+
 export async function checkEslintInstalled(): Promise<{
 	isInstalled: boolean;
 	version: string | null;
@@ -64,10 +101,10 @@ export async function detectInstalledFeatures(): Promise<Array<TFeature>> {
 		Object.entries(FEATURES_CONFIG).forEach(([feature, config]) => {
 			if (config.detect) {
 				// @ts-ignore
-				//const isDetected: boolean = config.detect.some((pkg: string) => !!allDependencies[pkg]);
-				//if (isDetected) {
-				detectedFeatures.add(feature);
-				//}
+				const isDetected: boolean = config.detect.some((pkg: string) => !!allDependencies[pkg]);
+				if (isDetected) {
+					detectedFeatures.add(feature);
+				}
 			}
 		});
 

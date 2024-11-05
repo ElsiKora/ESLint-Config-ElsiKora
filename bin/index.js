@@ -17,6 +17,7 @@ const FEATURES_CONFIG = {
         packages: ["typescript", "@typescript-eslint/parser", "@typescript-eslint/eslint-plugin"],
         detect: ["typescript", "@types/node"],
         description: "TypeScript support",
+        requiresTypescript: true,
     },
     react: {
         packages: ["eslint-plugin-react", "eslint-plugin-react-hooks"],
@@ -27,6 +28,7 @@ const FEATURES_CONFIG = {
         packages: ["@nestjs/eslint-plugin", "eslint-plugin-nestjs-typed"],
         detect: ["@nestjs/core", "@nestjs/common"],
         description: "NestJS framework support",
+        requiresTypescript: true,
     },
     tailwindCss: {
         packages: ["eslint-plugin-tailwindcss"],
@@ -83,6 +85,7 @@ const FEATURES_CONFIG = {
         packages: ["eslint-plugin-typeorm"],
         detect: ["typeorm", "@typeorm/core"],
         description: "TypeORM support",
+        requiresTypescript: true,
     },
 };
 const FEATURE_GROUPS = {
@@ -99,6 +102,36 @@ const STYLELINT_CONFIG_FILES = ["stylelint.config.js", "stylelint.config.cjs", "
 const CORE_DEPENDENCIES = ["@elsikora/eslint-config", "@eslint/js", "@eslint/compat", "@types/eslint__js"];
 
 const exec$2 = promisify(exec$3);
+async function detectTypescriptInProject() {
+    try {
+        const packageJsonPath = path.resolve(process.cwd(), "package.json");
+        const packageJsonContent = await fs.readFile(packageJsonPath, "utf8");
+        const packageJson = JSON.parse(packageJsonContent);
+        const allDependencies = {
+            ...packageJson.dependencies,
+            ...packageJson.devDependencies,
+        };
+        // @ts-ignore
+        return !!(allDependencies.typescript || allDependencies["@types/node"]);
+    }
+    catch {
+        return false;
+    }
+}
+async function validateFeatureSelection(features) {
+    const hasTypescript = await detectTypescriptInProject();
+    const errors = [];
+    for (const feature of features) {
+        const config = FEATURES_CONFIG[feature];
+        if (config.requiresTypescript && !hasTypescript) {
+            errors.push(`${feature} requires TypeScript, but TypeScript is not detected in your project. Please install TypeScript first.`);
+        }
+    }
+    return {
+        isValid: errors.length === 0,
+        errors,
+    };
+}
 async function checkEslintInstalled() {
     try {
         // eslint-disable-next-line @elsikora-typescript/no-unsafe-assignment
@@ -132,6 +165,7 @@ async function detectInstalledFeatures() {
         const packageJsonPath = path.resolve(process.cwd(), "package.json");
         const packageJsonContent = await fs.readFile(packageJsonPath, "utf8");
         const packageJson = JSON.parse(packageJsonContent);
+        // eslint-disable-next-line @elsikora-typescript/no-unused-vars
         const allDependencies = {
             ...packageJson.dependencies,
             ...packageJson.devDependencies,
@@ -789,6 +823,7 @@ async function runCli() {
         });
     }
     const selectOptions = [];
+    const hasTypescript = await detectTypescriptInProject();
     for (const [groupName, features] of Object.entries(FEATURE_GROUPS)) {
         selectOptions.push(new inquirer.Separator(`\n=== ${groupName} ===`));
         for (const feature of features) {
@@ -797,8 +832,13 @@ async function runCli() {
                 // eslint-disable-next-line @elsikora-typescript/restrict-template-expressions
                 name: `${feature} - ${config.description}`,
                 value: feature,
-                checked: feature === "javascript" || (shouldUseDetected && detectedFeatures.includes(feature)),
-                disabled: feature === "javascript" ? "Required" : false,
+                checked: feature === "javascript" ||
+                    (shouldUseDetected && detectedFeatures.includes(feature)),
+                disabled: feature === "javascript" ?
+                    "Required" :
+                    (config.requiresTypescript && !hasTypescript ?
+                        "Requires TypeScript" :
+                        false),
             });
         }
     }
@@ -821,15 +861,18 @@ async function runCli() {
     ]);
     // eslint-disable-next-line @elsikora-typescript/no-unsafe-member-access,@elsikora-typescript/no-unsafe-assignment
     const selectedFeatures = answers.selectedFeatures;
-    // eslint-disable-next-line @elsikora-typescript/no-unsafe-member-access
     if (!selectedFeatures || selectedFeatures.length === 0) {
         outro(color.red("No features selected. Configuration aborted."));
         process.exit(1);
     }
-    // eslint-disable-next-line @elsikora-typescript/no-unsafe-call,@elsikora-typescript/no-unsafe-member-access
     if (!selectedFeatures.includes("javascript")) {
-        // eslint-disable-next-line @elsikora-typescript/no-unsafe-call,@elsikora-typescript/no-unsafe-member-access
         selectedFeatures.unshift("javascript");
+    }
+    const { isValid, errors } = await validateFeatureSelection(selectedFeatures);
+    if (!isValid) {
+        outro(color.red("Configuration cannot proceed due to the following errors:"));
+        errors.forEach((error) => { console.error(color.red(`- ${error}`)); });
+        process.exit(1);
     }
     const setupSpinner = spinner();
     try {

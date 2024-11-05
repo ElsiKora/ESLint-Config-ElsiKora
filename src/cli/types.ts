@@ -15,6 +15,7 @@ export interface IFeatureConfig {
 	detect?: Array<string>;
 	required?: boolean;
 	description?: string;
+	requiresTypescript?: boolean;
 }
 
 export type TFeature = keyof typeof FEATURES_CONFIG;

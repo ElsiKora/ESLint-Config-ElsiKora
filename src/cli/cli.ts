@@ -4,7 +4,13 @@ import fs from "node:fs/promises";
 import inquirer from "inquirer";
 import { confirm, intro, note, outro, spinner } from "@clack/prompts";
 import color from "picocolors";
-import { checkConfigInstalled, checkEslintInstalled, detectInstalledFeatures, installDependencies } from "./package-manager";
+import {
+	checkConfigInstalled,
+	checkEslintInstalled,
+	detectInstalledFeatures,
+	detectTypescriptInProject,
+	installDependencies, validateFeatureSelection,
+} from "./package-manager";
 import { findExistingFiles } from "./utils";
 import { ESLINT_CONFIG_FILES, FEATURE_GROUPS, FEATURES_CONFIG, PRETTIER_CONFIG_FILES, STYLELINT_CONFIG_FILES } from "./constants";
 import { checkForEslintConfigInPackageJson, checkForPrettierConfigInPackageJson, checkForStylelintConfigInPackageJson, createEslintConfig, createPrettierConfig, getConfigFileExtension, removeEslintConfigFromPackageJson, removePrettierConfigFromPackageJson, removeStylelintConfigFromPackageJson, updatePackageJson } from "./config-generator";
@@ -122,6 +128,7 @@ export async function runCli(): Promise<void> {
 	}
 
 	const selectOptions: Array<any> = [];
+	const hasTypescript: boolean = await detectTypescriptInProject();
 
 	for (const [groupName, features] of Object.entries(FEATURE_GROUPS)) {
 		selectOptions.push(new inquirer.Separator(`\n=== ${groupName} ===`));
@@ -131,8 +138,13 @@ export async function runCli(): Promise<void> {
 				// eslint-disable-next-line @elsikora-typescript/restrict-template-expressions
 				name: `${feature} - ${config.description}`,
 				value: feature,
-				checked: feature === "javascript" || (shouldUseDetected && detectedFeatures.includes(feature as unknown as TFeature)),
-				disabled: feature === "javascript" ? "Required" : false,
+				checked: feature === "javascript" ||
+					(shouldUseDetected && detectedFeatures.includes(feature as unknown as TFeature)),
+				disabled: feature === "javascript" ?
+					"Required" :
+					(config.requiresTypescript && !hasTypescript ?
+						"Requires TypeScript" :
+						false),
 			});
 		}
 	}
@@ -156,18 +168,23 @@ export async function runCli(): Promise<void> {
 	]);
 
 	// eslint-disable-next-line @elsikora-typescript/no-unsafe-member-access,@elsikora-typescript/no-unsafe-assignment
-	const selectedFeatures: any = answers.selectedFeatures;
+	const selectedFeatures: Array<string> = answers.selectedFeatures;
 
-	// eslint-disable-next-line @elsikora-typescript/no-unsafe-member-access
 	if (!selectedFeatures || selectedFeatures.length === 0) {
 		outro(color.red("No features selected. Configuration aborted."));
 		process.exit(1);
 	}
 
-	// eslint-disable-next-line @elsikora-typescript/no-unsafe-call,@elsikora-typescript/no-unsafe-member-access
 	if (!selectedFeatures.includes("javascript")) {
-		// eslint-disable-next-line @elsikora-typescript/no-unsafe-call,@elsikora-typescript/no-unsafe-member-access
 		selectedFeatures.unshift("javascript");
+	}
+
+	const { isValid, errors }: { isValid: boolean; errors: Array<string> } = await validateFeatureSelection(selectedFeatures);
+
+	if (!isValid) {
+		outro(color.red("Configuration cannot proceed due to the following errors:"));
+		errors.forEach((error: string) => { console.error(color.red(`- ${error}`)); });
+		process.exit(1);
 	}
 
 	const setupSpinner: {
