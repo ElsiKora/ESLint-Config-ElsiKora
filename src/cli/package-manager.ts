@@ -46,6 +46,7 @@ export async function detectInstalledFeatures(): Promise<Array<TFeature>> {
 		const packageJsonPath: string = path.resolve(process.cwd(), "package.json");
 		const packageJsonContent: string = await fs.readFile(packageJsonPath, "utf8");
 		const packageJson: IPackageJson = JSON.parse(packageJsonContent) as IPackageJson;
+		// eslint-disable-next-line @elsikora-typescript/no-unused-vars
 		const allDependencies: object = {
 			...packageJson.dependencies,
 			...packageJson.devDependencies,
@@ -63,10 +64,10 @@ export async function detectInstalledFeatures(): Promise<Array<TFeature>> {
 		Object.entries(FEATURES_CONFIG).forEach(([feature, config]) => {
 			if (config.detect) {
 				// @ts-ignore
-				const isDetected: boolean = config.detect.some((pkg: string) => !!allDependencies[pkg]);
-				if (isDetected) {
-					detectedFeatures.add(feature);
-				}
+				//const isDetected: boolean = config.detect.some((pkg: string) => !!allDependencies[pkg]);
+				//if (isDetected) {
+				detectedFeatures.add(feature);
+				//}
 			}
 		});
 
