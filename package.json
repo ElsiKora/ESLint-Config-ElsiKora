@@ -1,6 +1,6 @@
 {
   "name": "@elsikora/eslint-config",
-  "version": "3.1.4",
+  "version": "3.1.5",
   "description": "ESLint configuration vision of ElsiKora",
   "keywords": [
     "eslint",
