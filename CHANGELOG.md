@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 3.1.6
+
+### Patch Changes
+
+- feed5d9: Updated
+
 ## 3.1.5
 
 ### Patch Changes
