@@ -1,23 +1,5 @@
 import type { Linter } from "eslint";
 
-import checkFileConfig from "./config/check-file";
-import javascriptConfig from "./config/javascript";
-import jsonConfig from "./config/json";
-import nestConfig from "./config/nest";
-import nodeConfig from "./config/node";
-import packageJson from "./config/package-json";
-import perfectionistConfig from "./config/perfectionist";
-import prettierConfig from "./config/prettier";
-import reactConfig from "./config/react";
-import regExpConfig from "./config/regexp";
-import sonarConfig from "./config/sonar";
-import stylisticConfig from "./config/stylistic";
-import tailwindCssConfig from "./config/tailwind-css";
-import typeormConfig from "./config/typeorm";
-import typescriptConfig from "./config/typescript";
-import unicornConfig from "./config/unicorn";
-import yamlConfig from "./config/yaml";
-
 interface IConfigOptions {
 	checkFile?: boolean;
 	javascript?: boolean;
@@ -38,77 +20,49 @@ interface IConfigOptions {
 	yaml?: boolean;
 }
 
-export function createConfig(options: IConfigOptions = {}): Array<Linter.Config> {
-	const configs: Array<Linter.Config> = [];
-
-	if (options.javascript) {
-		configs.push(...javascriptConfig);
+async function loadConfig(name: string): Promise<Array<Linter.Config>> {
+	try {
+		// eslint-disable-next-line @elsikora-typescript/no-unsafe-assignment,@elsikora-typescript/typedef
+		const config = await import(`./config/${name}`);
+		// eslint-disable-next-line @elsikora-typescript/no-unsafe-member-access,@elsikora-typescript/no-unsafe-return
+		return config.default;
+	} catch {
+		console.warn(`Failed to load config for ${name}. Make sure the corresponding package is installed.`);
+		return [];
 	}
-
-	if (options.typescript) {
-		configs.push(...typescriptConfig);
-	}
-
-	if (options.perfectionist) {
-		configs.push(...perfectionistConfig);
-	}
-
-	if (options.stylistic) {
-		configs.push(...stylisticConfig);
-	}
-
-	if (options.checkFile) {
-		configs.push(...checkFileConfig);
-	}
-
-	if (options.prettier) {
-		configs.push(...prettierConfig);
-	}
-
-	if (options.unicorn) {
-		configs.push(...unicornConfig);
-	}
-
-	if (options.sonar) {
-		configs.push(...sonarConfig);
-	}
-
-	if (options.typeorm) {
-		configs.push(...typeormConfig);
-	}
-
-	if (options.nest) {
-		configs.push(...nestConfig);
-	}
-
-	if (options.node) {
-		configs.push(...nodeConfig);
-	}
-
-	if (options.tailwindCss) {
-		configs.push(...tailwindCssConfig);
-	}
-
-	if (options.yaml) {
-		configs.push(...yamlConfig);
-	}
-
-	if (options.json) {
-		configs.push(...jsonConfig);
-	}
-
-	if (options.regexp) {
-		configs.push(...regExpConfig);
-	}
-
-	if (options.react) {
-		configs.push(...reactConfig);
-	}
-
-	if (options.packageJson) {
-		configs.push(...packageJson);
-	}
-
-	return configs;
 }
+
+export async function createConfig(options: IConfigOptions = {}): Promise<Array<Linter.Config>> {
+	const configPromises: Array<Promise<Array<Linter.Config>>> = [];
+
+	const configMap: Record<keyof IConfigOptions, string> = {
+		javascript: "javascript",
+		typescript: "typescript",
+		perfectionist: "perfectionist",
+		stylistic: "stylistic",
+		checkFile: "check-file",
+		prettier: "prettier",
+		unicorn: "unicorn",
+		sonar: "sonar",
+		typeorm: "typeorm",
+		nest: "nest",
+		node: "node",
+		tailwindCss: "tailwind-css",
+		yaml: "yaml",
+		json: "json",
+		regexp: "regexp",
+		react: "react",
+		packageJson: "package-json",
+	};
+
+	for (const [key, value] of Object.entries(configMap)) {
+		if (options[key as keyof IConfigOptions]) {
+			configPromises.push(loadConfig(value));
+		}
+	}
+
+	const configs: Array<Awaited<Array<Linter.Config>>> = await Promise.all(configPromises);
+	return configs.flat();
+}
+
 export default createConfig;

@@ -7,18 +7,18 @@ export const FEATURES_CONFIG: Record<string, IFeatureConfig> = {
 		description: "JavaScript support",
 	},
 	typescript: {
-		packages: ["typescript", "@typescript-eslint/parser", "@typescript-eslint/eslint-plugin"],
+		packages: ["typescript", "@typescript-eslint/parser", "@typescript-eslint/eslint-plugin", "typescript-eslint"],
 		detect: ["typescript", "@types/node"],
 		description: "TypeScript support",
 		requiresTypescript: true,
 	},
 	react: {
-		packages: ["eslint-plugin-react", "eslint-plugin-react-hooks"],
+		packages: ["@eslint-react/eslint-plugin"],
 		detect: ["react", "react-dom", "@types/react"],
 		description: "React framework support",
 	},
 	nest: {
-		packages: ["@nestjs/eslint-plugin", "eslint-plugin-nestjs-typed"],
+		packages: ["eslint-plugin-ng-module-sort", "@elsikora/eslint-plugin-nestjs-typed"],
 		detect: ["@nestjs/core", "@nestjs/common"],
 		description: "NestJS framework support",
 		requiresTypescript: true,
@@ -29,7 +29,7 @@ export const FEATURES_CONFIG: Record<string, IFeatureConfig> = {
 		description: "Tailwind CSS support",
 	},
 	prettier: {
-		packages: ["eslint-config-prettier", "eslint-plugin-prettier", "prettier"],
+		packages: ["eslint-plugin-prettier", "prettier"],
 		detect: ["prettier"],
 		description: "Prettier integration",
 	},
