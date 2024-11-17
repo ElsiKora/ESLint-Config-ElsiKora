@@ -26,6 +26,7 @@ export default tseslint.config({
 		"@elsikora-typescript/ban-types": "off", // Disables the rule that prevents the use of certain built-in types like `Object`, `String`, `Number`, etc., allowing their use in the codebase.
 		"@elsikora-typescript/consistent-generic-constructors": "error", // Enforces the use of a consistent generic constructor style, either `new () => T` or `new <T>() => T`, to ensure consistency and readability in type definitions.
 		"@elsikora-typescript/consistent-indexed-object-style": "error", // Requires a consistent style for indexed objects, either using an interface or type alias for index signatures, to enhance code clarity and maintainability.
+		"@elsikora-typescript/consistent-type-definitions": "off", // Disables the rule that enforces consistent type definitions for variables, parameters, and class members, allowing for more flexibility in type definitions.
 		"@elsikora-typescript/consistent-type-exports": "error", // Enforces consistent usage of type exports, promoting clarity and consistency in how types are exported from modules.
 		"@elsikora-typescript/consistent-type-imports": "error", // Enforces using the `import type {}` syntax where possible for importing types, which can lead to more efficient bundling by avoiding unnecessary JavaScript execution.
 		"@elsikora-typescript/explicit-function-return-type": "error", // Requires explicit return types on functions and class methods, improving code documentation and maintainability by making the intended return type clear.
@@ -38,14 +39,14 @@ export default tseslint.config({
 				selector: "default",
 			},
 			{
+				filter: {
+					match: false,
+					regex: "^match$",
+				},
+				format: null,
+				prefix: ["is", "should", "has", "can", "did", "will", "use", "with", "to"],
 				selector: ["variable", "parameter", "property", "parameterProperty", "accessor", "enumMember", "classProperty"],
 				types: ["boolean"],
-				format: null,
-				prefix: ["is", "should", "has", "can", "did", "will", "use", "with"],
-				filter: {
-					regex: "^match$",
-					match: false,
-				},
 			},
 			{
 				format: ["PascalCase", "UPPER_CASE"], // Boolean variables should be prefixed with specific keywords and can be in PascalCase or UPPER_CASE.
@@ -99,72 +100,72 @@ export default tseslint.config({
 				selector: "typeAlias",
 			},
 			{
-				selector: "variable", // Constants should be in UPPER_CASE and use camelCase for variables.
-				modifiers: ["const"],
-				format: ["UPPER_CASE"],
 				filter: {
+					match: true,
 					regex: "^[A-Z][A-Z0-9_]*$",
-					match: true,
 				},
+				format: ["UPPER_CASE"],
+				modifiers: ["const"],
+				selector: "variable", // Constants should be in UPPER_CASE and use camelCase for variables.
 			},
 			{
-				selector: "class", // Abstract classes should use PascalCase and be prefixed with 'Abstract'.
+				format: ["PascalCase"],
 				modifiers: ["abstract"],
-				format: ["PascalCase"],
 				prefix: ["Abstract"],
+				selector: "class", // Abstract classes should use PascalCase and be prefixed with 'Abstract'.
 			},
 			{
-				selector: "class", // Classes should use PascalCase and be prefixed with 'Base'.
-				format: ["PascalCase"],
-				suffix: ["Factory"],
 				filter: {
+					match: true,
 					regex: ".*Factory$",
-					match: true,
 				},
+				format: ["PascalCase"],
+				selector: "class", // Classes should use PascalCase and be prefixed with 'Base'.
+				suffix: ["Factory"],
 			},
 			{
-				selector: "class", // Classes should use PascalCase and be suffixed with 'Factory'.
-				format: ["PascalCase"],
-				suffix: ["Service"],
 				filter: {
+					match: true,
 					regex: ".*Service$",
-					match: true,
 				},
-			},
-			{
-				selector: "class", // Classes should use PascalCase and be suffixed with 'Service'.
 				format: ["PascalCase"],
-				suffix: ["Component"],
-				filter: {
-					regex: ".*Component$",
-					match: true,
-				},
+				selector: "class", // Classes should use PascalCase and be suffixed with 'Factory'.
+				suffix: ["Service"],
 			},
 			{
-				selector: "function", // Functions should use camelCase and be prefixed with 'use'.
+				filter: {
+					match: true,
+					regex: ".*Component$",
+				},
+				format: ["PascalCase"],
+				selector: "class", // Classes should use PascalCase and be suffixed with 'Service'.
+				suffix: ["Component"],
+			},
+			{
+				filter: {
+					match: true,
+					regex: "^use[A-Z]",
+				},
 				format: ["camelCase"],
 				prefix: ["use"],
-				filter: {
-					regex: "^use[A-Z]",
-					match: true,
-				},
+				selector: "function", // Functions should use camelCase and be prefixed with 'use'.
 			},
 			{
-				selector: "typeParameter", // Type parameters should use PascalCase.
-				format: ["PascalCase"],
 				filter: {
+					match: true,
 					regex: "^[A-Z]$",
-					match: true,
 				},
+				format: ["PascalCase"],
+				selector: "typeParameter", // Type parameters should use PascalCase.
 			},
 			{
-				selector: "property", // Event properties should use PascalCase and be suffixed with 'Event'.
-				format: ["PascalCase"],
-				suffix: ["Event"],
 				filter: {
-					regex: ".*Event$",
 					match: true,
+					regex: ".*Event$",
 				},
+				format: ["PascalCase"],
+				selector: "property", // Event properties should use PascalCase and be suffixed with 'Event'.
+				suffix: ["Event"],
 			},
 		],
 		"@elsikora-typescript/no-array-delete": "error", // Disallow using delete on arrays because it may lead to unexpected behavior by leaving a 'hole' in the array.
@@ -180,7 +181,6 @@ export default tseslint.config({
 		"@elsikora-typescript/no-import-type-side-effects": "error", // Prohibit imports that can have side effects when only importing types, ensuring cleaner and safer code.
 		"@elsikora-typescript/no-inferrable-types": "off", // Allow explicit types to be inferred by TypeScript for cleaner and more readable code.
 		"@elsikora-typescript/no-loop-func": "error", // Forbid the creation of functions within loops to prevent errors due to the use of loop variables inside closures.
-		"@elsikora-typescript/prefer-literal-enum-member": "off", // Allow the use of enum members as literals to enable more flexible and readable code.
 		"@elsikora-typescript/no-magic-numbers": [
 			"error",
 			{
@@ -203,6 +203,7 @@ export default tseslint.config({
 		"@elsikora-typescript/prefer-for-of": "error", // Encourage the use of for-of loops for iterable objects for clarity and simplicity.
 		"@elsikora-typescript/prefer-function-type": "error", // Prefer using function type literals over interfaces with call signatures for simplicity and readability.
 		"@elsikora-typescript/prefer-includes": "error", // Suggest using includes method over indexOf for arrays and strings for better readability and intent.
+		"@elsikora-typescript/prefer-literal-enum-member": "off", // Allow the use of enum members as literals to enable more flexible and readable code.
 		"@elsikora-typescript/prefer-namespace-keyword": "error", // Recommend the use of the namespace keyword over module to declare custom TypeScript modules.
 		"@elsikora-typescript/prefer-optional-chain": "error", // Encourage optional chaining for cleaner and safer access to nested object properties.
 		"@elsikora-typescript/prefer-readonly": "error", // Suggest marking properties that are never reassigned after initialization as readonly.
