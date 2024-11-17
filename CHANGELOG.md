@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 3.1.5
+
+### Patch Changes
+
+- 1530118: Updated formats
+
 ## 3.1.0
 
 ### Minor Changes
