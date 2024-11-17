@@ -31,7 +31,7 @@ export default tseslint.config({
 		"@elsikora-typescript/explicit-function-return-type": "error", // Requires explicit return types on functions and class methods, improving code documentation and maintainability by making the intended return type clear.
 		"@elsikora-typescript/explicit-module-boundary-types": "error", // Enforces explicit return and argument types on exported functions and classes at module boundaries, improving type safety and clarity in module interfaces.
 		"@elsikora-typescript/interface-name-prefix": "off", // Disables the rule that requires interface names to be prefixed with "I", allowing more flexibility in naming interfaces according to project conventions.
-		"@elsikora-typescript/naming-convention": [
+		"@elsikora-typescript/naming-convention ": [
 			"error",
 			{
 				format: null, // Disables any format enforcement by default, allowing for flexibility unless specifically overridden.
@@ -154,12 +154,6 @@ export default tseslint.config({
 				},
 			},
 			{
-				selector: "decorator", // Decorators should use PascalCase and be prefixed with '@'.
-				format: ["PascalCase"],
-				leadingUnderscore: "forbid",
-				prefix: ["@"],
-			},
-			{
 				selector: "property", // Event properties should use PascalCase and be suffixed with 'Event'.
 				format: ["PascalCase"],
 				suffix: ["Event"],
@@ -182,6 +176,7 @@ export default tseslint.config({
 		"@elsikora-typescript/no-import-type-side-effects": "error", // Prohibit imports that can have side effects when only importing types, ensuring cleaner and safer code.
 		"@elsikora-typescript/no-inferrable-types": "off", // Allow explicit types to be inferred by TypeScript for cleaner and more readable code.
 		"@elsikora-typescript/no-loop-func": "error", // Forbid the creation of functions within loops to prevent errors due to the use of loop variables inside closures.
+		"@elsikora-typescript/prefer-literal-enum-member": "off", // Allow the use of enum members as literals to enable more flexible and readable code.
 		"@elsikora-typescript/no-magic-numbers": [
 			"error",
 			{
