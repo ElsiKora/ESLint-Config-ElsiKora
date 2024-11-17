@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 3.1.9
+
+### Patch Changes
+
+- 22b3e8e: Updated
+
 ## 3.1.8
 
 ### Patch Changes
