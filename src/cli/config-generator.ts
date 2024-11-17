@@ -28,7 +28,7 @@ export default [
     ignores: ${JSON.stringify(ignores, null, 2)}
   },
   ...createConfig({
-${features.map((feature: string) => `    ${feature}: true`).join(",\n")}
+${features.map((feature: string) => `    with${feature.charAt(0).toUpperCase() + feature.slice(1)}: true`).join(",\n")}
   })
 ];
 `;

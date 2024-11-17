@@ -1,68 +1,114 @@
 import type { Linter } from "eslint";
 
+import checkFileConfig from "./config/check-file";
+import javascriptConfig from "./config/javascript";
+import jsonConfig from "./config/json";
+import nestConfig from "./config/nest";
+import nodeConfig from "./config/node";
+import packageJson from "./config/package-json";
+import perfectionistConfig from "./config/perfectionist";
+import prettierConfig from "./config/prettier";
+import reactConfig from "./config/react";
+import regExpConfig from "./config/regexp";
+import sonarConfig from "./config/sonar";
+import stylisticConfig from "./config/stylistic";
+import tailwindCssConfig from "./config/tailwind-css";
+import typeormConfig from "./config/typeorm";
+import typescriptConfig from "./config/typescript";
+import unicornConfig from "./config/unicorn";
+import yamlConfig from "./config/yaml";
+
 interface IConfigOptions {
-	checkFile?: boolean;
-	javascript?: boolean;
-	json?: boolean;
-	nest?: boolean;
-	node?: boolean;
-	packageJson?: boolean;
-	perfectionist?: boolean;
-	prettier?: boolean;
-	react?: boolean;
-	regexp?: boolean;
-	sonar?: boolean;
-	stylistic?: boolean;
-	tailwindCss?: boolean;
-	typeorm?: boolean;
-	typescript?: boolean;
-	unicorn?: boolean;
-	yaml?: boolean;
+	withCheckFile?: boolean;
+	withJavascript?: boolean;
+	withJson?: boolean;
+	withNest?: boolean;
+	withNode?: boolean;
+	withPackageJson?: boolean;
+	withPerfectionist?: boolean;
+	withPrettier?: boolean;
+	withReact?: boolean;
+	withRegexp?: boolean;
+	withSonar?: boolean;
+	withStylistic?: boolean;
+	withTailwindCss?: boolean;
+	withTypeorm?: boolean;
+	withTypescript?: boolean;
+	withUnicorn?: boolean;
+	withYaml?: boolean;
 }
 
-async function loadConfig(name: string): Promise<Array<Linter.Config>> {
-	try {
-		// eslint-disable-next-line @elsikora-typescript/no-unsafe-assignment,@elsikora-typescript/typedef
-		const config = await import(`./config/${name}`);
-		// eslint-disable-next-line @elsikora-typescript/no-unsafe-member-access,@elsikora-typescript/no-unsafe-return
-		return config.default;
-	} catch {
-		console.warn(`Failed to load config for ${name}. Make sure the corresponding package is installed.`);
-		return [];
-	}
-}
+export function createConfig(options: IConfigOptions = {}): Array<Linter.Config> {
+	const configs: Array<Linter.Config> = [];
 
-export async function createConfig(options: IConfigOptions = {}): Promise<Array<Linter.Config>> {
-	const configPromises: Array<Promise<Array<Linter.Config>>> = [];
-
-	const configMap: Record<keyof IConfigOptions, string> = {
-		javascript: "javascript",
-		typescript: "typescript",
-		perfectionist: "perfectionist",
-		stylistic: "stylistic",
-		checkFile: "check-file",
-		prettier: "prettier",
-		unicorn: "unicorn",
-		sonar: "sonar",
-		typeorm: "typeorm",
-		nest: "nest",
-		node: "node",
-		tailwindCss: "tailwind-css",
-		yaml: "yaml",
-		json: "json",
-		regexp: "regexp",
-		react: "react",
-		packageJson: "package-json",
-	};
-
-	for (const [key, value] of Object.entries(configMap)) {
-		if (options[key as keyof IConfigOptions]) {
-			configPromises.push(loadConfig(value));
-		}
+	if (options.withJavascript) {
+		configs.push(...javascriptConfig);
 	}
 
-	const configs: Array<Awaited<Array<Linter.Config>>> = await Promise.all(configPromises);
-	return configs.flat();
-}
+	if (options.withTypescript) {
+		configs.push(...typescriptConfig);
+	}
 
+	if (options.withPerfectionist) {
+		configs.push(...perfectionistConfig);
+	}
+
+	if (options.withStylistic) {
+		configs.push(...stylisticConfig);
+	}
+
+	if (options.withCheckFile) {
+		configs.push(...checkFileConfig);
+	}
+
+	if (options.withPrettier) {
+		configs.push(...prettierConfig);
+	}
+
+	if (options.withUnicorn) {
+		configs.push(...unicornConfig);
+	}
+
+	if (options.withSonar) {
+		configs.push(...sonarConfig);
+	}
+
+	if (options.withTypeorm) {
+		configs.push(...typeormConfig);
+	}
+
+	if (options.withNest) {
+		configs.push(...nestConfig);
+	}
+
+	if (options.withNode) {
+		configs.push(...nodeConfig);
+	}
+
+	if (options.withTailwindCss) {
+		configs.push(...tailwindCssConfig);
+	}
+
+	if (options.withYaml) {
+		configs.push(...yamlConfig);
+	}
+
+	if (options.withJson) {
+		configs.push(...jsonConfig);
+	}
+
+	if (options.withRegexp) {
+		configs.push(...regExpConfig);
+	}
+
+	if (options.withReact) {
+		configs.push(...reactConfig);
+	}
+
+	if (options.withPackageJson) {
+		configs.push(...packageJson);
+	}
+
+	return configs;
+}
 export default createConfig;

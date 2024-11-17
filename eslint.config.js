@@ -15,10 +15,18 @@ export default [
 ]
   },
   ...createConfig({
-    javascript: true,
-    typescript: true,
-    prettier: true,
-    react: true,
-    json: true,
+    withJavascript: true,
+    withTypescript: true,
+    withPrettier: true,
+    withStylistic: true,
+    withSonar: true,
+    withUnicorn: true,
+    withPerfectionist: true,
+    withJson: true,
+    withYaml: true,
+    withCheckFile: true,
+    withPackageJson: true,
+    withNode: true,
+    withRegexp: true
   })
 ];

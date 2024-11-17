@@ -31,17 +31,21 @@ export default tseslint.config({
 		"@elsikora-typescript/explicit-function-return-type": "error", // Requires explicit return types on functions and class methods, improving code documentation and maintainability by making the intended return type clear.
 		"@elsikora-typescript/explicit-module-boundary-types": "error", // Enforces explicit return and argument types on exported functions and classes at module boundaries, improving type safety and clarity in module interfaces.
 		"@elsikora-typescript/interface-name-prefix": "off", // Disables the rule that requires interface names to be prefixed with "I", allowing more flexibility in naming interfaces according to project conventions.
-		"@elsikora-typescript/naming-convention ": [
+		"@elsikora-typescript/naming-convention": [
 			"error",
 			{
 				format: null, // Disables any format enforcement by default, allowing for flexibility unless specifically overridden.
 				selector: "default",
 			},
 			{
-				selector: ["variable", "parameter", "property", "parameterProperty", "accessor", "enumMember", "classProperty", "typeProperty", "method"], // Variables, parameters, properties, and methods should use camelCase by default.
+				selector: ["variable", "parameter", "property", "parameterProperty", "accessor", "enumMember", "classProperty"],
 				types: ["boolean"],
 				format: null,
-				prefix: ["is", "should", "has", "can", "did", "will"],
+				prefix: ["is", "should", "has", "can", "did", "will", "use", "with"],
+				filter: {
+					regex: "^match$",
+					match: false,
+				},
 			},
 			{
 				format: ["PascalCase", "UPPER_CASE"], // Boolean variables should be prefixed with specific keywords and can be in PascalCase or UPPER_CASE.

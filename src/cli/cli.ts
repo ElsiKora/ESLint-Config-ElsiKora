@@ -206,7 +206,7 @@ export async function runCli(): Promise<void> {
 		}
 
 		// eslint-disable-next-line @elsikora-typescript/no-unsafe-argument,@elsikora-typescript/no-unsafe-return,@elsikora-typescript/no-unsafe-member-access
-		await installDependencies(selectedFeatures);
+		await installDependencies(selectOptions.map((option: any) => option.value));
 		// eslint-disable-next-line @elsikora-typescript/no-unsafe-argument
 		await createEslintConfig(selectedFeatures, configExtension, framework);
 

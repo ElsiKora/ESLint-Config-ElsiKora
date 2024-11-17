@@ -7,23 +7,23 @@ describe("ESLint Config Generator", () => {
 		it("should handle large number of configurations without performance issues", () => {
 			const start = performance.now();
 			const result = createConfig({
-				checkFile: true,
-				javascript: true,
-				json: true,
-				nest: true,
-				node: true,
-				packageJson: true,
-				perfectionist: true,
-				prettier: true,
-				react: true,
-				regexp: true,
-				sonar: true,
-				stylistic: true,
-				tailwindCss: true,
-				typeorm: true,
-				typescript: true,
-				unicorn: true,
-				yaml: true,
+				withCheckFile: true,
+				withJavascript: true,
+				withJson: true,
+				withNest: true,
+				withNode: true,
+				withPackageJson: true,
+				withPerfectionist: true,
+				withPrettier: true,
+				withReact: true,
+				withRegexp: true,
+				withSonar: true,
+				withStylistic: true,
+				withTailwindCss: true,
+				withTypeorm: true,
+				withTypescript: true,
+				withUnicorn: true,
+				withYaml: true,
 			});
 			const end = performance.now();
 			expect(result.length).toBeGreaterThan(0);
@@ -33,23 +33,23 @@ describe("ESLint Config Generator", () => {
 
 	it("should handle all options set to false without errors", () => {
 		const result = createConfig({
-			checkFile: false,
-			javascript: false,
-			json: false,
-			nest: false,
-			node: false,
-			packageJson: false,
-			perfectionist: false,
-			prettier: false,
-			react: false,
-			regexp: false,
-			sonar: false,
-			stylistic: false,
-			tailwindCss: false,
-			typeorm: false,
-			typescript: false,
-			unicorn: false,
-			yaml: false,
+			withCheckFile: false,
+			withJavascript: false,
+			withJson: false,
+			withNest: false,
+			withNode: false,
+			withPackageJson: false,
+			withPerfectionist: false,
+			withPrettier: false,
+			withReact: false,
+			withRegexp: false,
+			withSonar: false,
+			withStylistic: false,
+			withTailwindCss: false,
+			withTypeorm: false,
+			withTypescript: false,
+			withUnicorn: false,
+			withYaml: false,
 		});
 		expect(result).toEqual([]);
 	});
@@ -60,7 +60,7 @@ describe("ESLint Config Generator", () => {
 	});
 
 	it("should include javascriptConfig when javascript option is true", () => {
-		const result = createConfig({ javascript: true });
+		const result = createConfig({ withJavascript: true });
 		expect(result).toContain(javascriptConfig[0]);
 	});
 
