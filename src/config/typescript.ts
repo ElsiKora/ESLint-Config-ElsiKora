@@ -38,8 +38,13 @@ export default tseslint.config({
 				selector: "default",
 			},
 			{
-				format: ["PascalCase", "UPPER_CASE"], // Boolean variables should be prefixed with specific keywords and can be in PascalCase or UPPER_CASE.
+				selector: ["variable", "parameter", "property", "parameterProperty", "accessor", "enumMember", "classProperty", "typeProperty", "method"], // Variables, parameters, properties, and methods should use camelCase by default.
+				types: ["boolean"],
+				format: null,
 				prefix: ["is", "should", "has", "can", "did", "will"],
+			},
+			{
+				format: ["PascalCase", "UPPER_CASE"], // Boolean variables should be prefixed with specific keywords and can be in PascalCase or UPPER_CASE.
 				selector: "variable",
 				types: ["boolean"],
 			},
@@ -88,6 +93,80 @@ export default tseslint.config({
 				format: ["StrictPascalCase"], // Type aliases should use StrictPascalCase and be prefixed with 'T'.
 				prefix: ["T"],
 				selector: "typeAlias",
+			},
+			{
+				selector: "variable", // Constants should be in UPPER_CASE and use camelCase for variables.
+				modifiers: ["const"],
+				format: ["UPPER_CASE"],
+				filter: {
+					regex: "^[A-Z][A-Z0-9_]*$",
+					match: true,
+				},
+			},
+			{
+				selector: "class", // Abstract classes should use PascalCase and be prefixed with 'Abstract'.
+				modifiers: ["abstract"],
+				format: ["PascalCase"],
+				prefix: ["Abstract"],
+			},
+			{
+				selector: "class", // Classes should use PascalCase and be prefixed with 'Base'.
+				format: ["PascalCase"],
+				suffix: ["Factory"],
+				filter: {
+					regex: ".*Factory$",
+					match: true,
+				},
+			},
+			{
+				selector: "class", // Classes should use PascalCase and be suffixed with 'Factory'.
+				format: ["PascalCase"],
+				suffix: ["Service"],
+				filter: {
+					regex: ".*Service$",
+					match: true,
+				},
+			},
+			{
+				selector: "class", // Classes should use PascalCase and be suffixed with 'Service'.
+				format: ["PascalCase"],
+				suffix: ["Component"],
+				filter: {
+					regex: ".*Component$",
+					match: true,
+				},
+			},
+			{
+				selector: "function", // Functions should use camelCase and be prefixed with 'use'.
+				format: ["camelCase"],
+				prefix: ["use"],
+				filter: {
+					regex: "^use[A-Z]",
+					match: true,
+				},
+			},
+			{
+				selector: "typeParameter", // Type parameters should use PascalCase.
+				format: ["PascalCase"],
+				filter: {
+					regex: "^[A-Z]$",
+					match: true,
+				},
+			},
+			{
+				selector: "decorator", // Decorators should use PascalCase and be prefixed with '@'.
+				format: ["PascalCase"],
+				leadingUnderscore: "forbid",
+				prefix: ["@"],
+			},
+			{
+				selector: "property", // Event properties should use PascalCase and be suffixed with 'Event'.
+				format: ["PascalCase"],
+				suffix: ["Event"],
+				filter: {
+					regex: ".*Event$",
+					match: true,
+				},
 			},
 		],
 		"@elsikora-typescript/no-array-delete": "error", // Disallow using delete on arrays because it may lead to unexpected behavior by leaving a 'hole' in the array.
