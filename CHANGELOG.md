@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 3.1.7
+
+### Patch Changes
+
+- f3ebdb2: Updated
+
 ## 3.1.6
 
 ### Patch Changes
