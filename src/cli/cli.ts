@@ -14,7 +14,7 @@ import { setupVSCodeConfig, setupWebStormConfig } from "./ide-config";
 import { detectProjectStructure } from "./framework-detection";
 import { setupGitHubCIConfig } from "./github-ci-config";
 import path from "node:path";
-import { createGitignore } from "./gitignore-config";
+import { checkForExistingGitignore, createGitignore } from "./gitignore-config";
 
 const exec: (arg1: any) => Promise<any> = promisify(execCallback);
 
@@ -417,7 +417,7 @@ export async function runCli(): Promise<void> {
 				const selectedFileNames = ciAnswers.selectedCIFiles.map((file: any) => GITHUB_CI_FILES[file].name);
 
 				// eslint-disable-next-line @elsikora-typescript/restrict-template-expressions
-				note(["GitHub CI configuration has been created.", "", "", "Created files:", ...selectedFileNames.map((name) => `- ${name}`), "", "", dependabotBranch !== "dev" && ciAnswers.selectedCIFiles.includes("DEPENDABOT") ? `Dependabot configured to target '${dependabotBranch}' branch` : `Dependabot configured to target 'dev' branch`, "", "", "The workflows will be activated when you push to GitHub."].filter(Boolean).join("\n"), "GitHub CI Setup");
+				note(["GitHub CI configuration has been created.", "", "", "Created files:", ...selectedFileNames.map((name: any) => `- ${name}`), "", "", dependabotBranch !== "dev" && ciAnswers.selectedCIFiles.includes("DEPENDABOT") ? `Dependabot configured to target '${dependabotBranch}' branch` : `Dependabot configured to target 'dev' branch`, "", "", "The workflows will be activated when you push to GitHub."].filter(Boolean).join("\n"), "GitHub CI Setup");
 			}
 		}
 
