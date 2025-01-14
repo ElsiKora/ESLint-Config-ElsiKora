@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 3.2.0
+
+### Minor Changes
+
+- c617e39: Added GitHub CI and Changesets, bug fixes
+
 ## 3.1.9
 
 ### Patch Changes
