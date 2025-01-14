@@ -4,6 +4,12 @@
 
 ### Minor Changes
 
+- 10dd85f: Added GitHub CI and Changesets, bug fixes
+
+## 3.2.0
+
+### Minor Changes
+
 - c617e39: Added GitHub CI and Changesets, bug fixes
 
 ## 3.1.9
