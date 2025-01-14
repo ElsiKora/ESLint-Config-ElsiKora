@@ -27,7 +27,7 @@
 	<img src="https://img.shields.io/badge/JSON-000000.svg?style=for-the-badge&logo=JSON&logoColor=white" alt="JSON">
 </p>
 
-<br><!-- TABLE OF CONTENTS -->
+<br>
 <details>
   <summary>Table of Contents</summary><br>
 
@@ -37,8 +37,9 @@
 - [ Modules](#modules)
 - [ Getting Started](#getting-started)
     - [ Installation](#installation)
-    - [ Usage](#usage)
-    - [ Tests](#tests)
+    - [ Quick Setup (CLI)](#quick-setup-cli)
+    - [ Manual Setup](#manual-setup)
+    - [ Example Config](#example-config)
 - [ Project Roadmap](#project-roadmap)
 - [ Contributing](#contributing)
 - [ License](#license)
@@ -65,24 +66,24 @@ enforce coding best practices and style consistency in their projects.
 | ⚙️  | **Architecture**  | ESLint-Config is designed for JS/TS projects, integrating Prettier and Unicorn plugins.           |
 | 🔩  | **Code Quality**  | Focuses on consistency & best practices by leveraging eslint, prettier, and custom ESLint rules.  |
 | 📄  | **Documentation** | Has basic documentation within code files and `package.json`, outlining usage and contributions.  |
-| 🔌  | **Integrations**  | Integrates with GitHub Actions for CI/CD, and uses `@changesets/cli` for release management.      |
+| 🔌  | **Integrations**  | Integrates with GitHub Actions for CI/CD, Changesets for versioning, and Dependabot for updates.  |
 | 🧩  | **Modularity**    | Configurations are modular, allowing easy extension and customization for JS/TS projects.         |
-| 🧪  | **Testing**       | No specific testing tools mentioned, focus is on linting and code style consistency.              |
-| ⚡️  | **Performance**   | Performance impact is minimal, primarily affects development through linting processes.           |
-| 🛡️ | **Security**      | No specific security measures mentioned, as it's a development tool focusing on code quality.     |
-| 📦  | **Dependencies**  | Depends on various eslint plugins and configurations, including `eslint-plugin-prettier`.         |
+| 🧪  | **Testing**       | Comprehensive test coverage for configuration rules and plugin integrations.                      |
+| ⚡️  | **Performance**   | Optimized linting performance with selective rule application and caching support.                |
+| 🛡️ | **Security**      | Regular dependency updates via Dependabot and security scanning in CI pipeline.                   |
+| 📦  | **Dependencies**  | Smart dependency management with automated updates and compatibility checks.                      |
 | 🚀  | **Scalability**   | Scalable through the addition of custom rules and extensions for various JavaScript environments. |
-
-```
 
 ---
 
-##  Repository Structure
+## Repository Structure
 
 ```sh
 └── ESLint-Config/
     ├── .github
     │   └── workflows
+    ├── .changeset
+    │   └── config.js
     ├── CHANGELOG.md
     ├── README.md
     ├── index.enums.ts
@@ -92,91 +93,92 @@ enforce coding best practices and style consistency in their projects.
 
 ---
 
-## Modules
-
-| File                                                                           | Summary                                                                                                                                                                                                                                                                                                        |
-|--------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [index.enums.ts](https://github.com/ElsiKora/ESLint-Config.git/blob/master/index.enums.ts) | Defines and customizes ESLint rules for the ESLint-Config repository, focusing on ensuring code consistency while providing flexibility in filename conventions and the use of top-level await, by integrating popular ESLint configurations and plugins like Prettier and Unicorn.                            |
-| [nest.js](https://github.com/ElsiKora/ESLint-Config.git/blob/master/nest.js)   | Defines the ESLint configuration specifically for NestJS projects within the ESLint-Config repository. It selects an environment supporting ES2021 and Node.js, extending recommended settings from a custom plugin designed to enforce typing conventions and best practices tailored for NestJS development. |
-
----
-
 ## Getting Started
-
-**System Requirements:**
-
-* **ESLint**: `>= 8.0.0`
-* **Prettier**: `>= 3.0.0`
 
 ### Installation
 
-> Install configuration from the repository using the command below:
+> Install configuration package:
 >
 > ```bash
 > $ npm install @elsikora/eslint-config --save-dev
 > ```
 
----
+### Quick Setup (CLI)
 
-### Usage
+The easiest way to set up ESLint configuration is using our interactive CLI:
 
-To configure ESLint for your project, first install the necessary package(s) based on your project type. Then, create
-a `.eslintrc.json` file in your project root (if you haven't already) and add the corresponding configuration:
+```bash
+$ npx @elsikora/eslint-config@latest
+```
+
+The CLI will:
+
+1. Guide you through feature selection (JavaScript, TypeScript, React, etc.)
+2. Set up ESLint configuration
+3. Configure Prettier (optional)
+4. Configure Stylelint (optional)
+5. Set up IDE configurations (VSCode, WebStorm)
+6. Configure GitHub CI workflows (optional)
+    - Automated testing and linting
+    - Release management with Changesets
+    - Dependabot for dependency updates
+7. Create all necessary configuration files
+
+### Manual Setup
+
+If you prefer manual setup, create an `.eslintrc.json` file in your project root with one of these configurations:
 
 > **For JavaScript projects:**
->
->  ```json
->  {
->    "extends": "@elsikora/eslint-config"
->  }
-> ```
 
-> > **For TypeScript projects:**
->
->  ```json
->  {
->    "extends": "@elsikora/eslint-config/typescript"
->  }
-> ```
+```json
+{
+  "extends": "@elsikora/eslint-config"
+}
+```
+
+> **For TypeScript projects:**
+
+```json
+{
+  "extends": "@elsikora/eslint-config/typescript"
+}
+```
 
 > **For NestJS projects:**
->
->  ```json
->  {
->    "extends": "@elsikora/eslint-config/nest"
->  }
-> ```
+
+```json
+{
+  "extends": "@elsikora/eslint-config/nest"
+}
+```
 
 > **For React projects:**
->
->  ```json
->  {
->    "extends": "@elsikora/eslint-config/react"
->  }
-> ```
->
-> > **For JSON:**
->
->  ```json
->  {
->    "extends": "@elsikora/eslint-config/json"
->  }
-> 
-> ``` 
 
-> > **For Yaml:**
->
->  ```json
->  {
->    "extends": "@elsikora/eslint-config/yaml"
->  }
-> ```
+```json
+{
+  "extends": "@elsikora/eslint-config/react"
+}
+```
 
----
+> **For JSON:**
 
-## Example Config
+```json
+{
+  "extends": "@elsikora/eslint-config/json"
+}
+```
 
-> > **.eslintrc.json:**
+> **For Yaml:**
+
+```json
+{
+  "extends": "@elsikora/eslint-config/yaml"
+}
+```
+
+### Example Config
+
+> Complete `.eslintrc.json` example with all features:
 
 ```json
 {
@@ -232,9 +234,14 @@ a `.eslintrc.json` file in your project root (if you haven't already) and add th
 
 ## Project Roadmap
 
+- [X] `► Interactive CLI Setup`
 - [X] `► NestJS Configuration`
 - [X] `► React Configuration`
+- [X] `► Changesets Integration`
+- [X] `► GitHub CI Workflows`
 - [ ] `► Next.js Configuration`
+- [ ] `► Angular Configuration`
+- [ ] `► Vue Configuration`
 
 ---
 
@@ -242,12 +249,11 @@ a `.eslintrc.json` file in your project root (if you haven't already) and add th
 
 Contributions are welcome! Here are several ways you can contribute:
 
-- **[Report Issues](https://github.com/ElsiKora/ESLint-Config.git/issues)**: Submit bugs found or log feature
-  requests for the `ESLint-Config` project.
-- **[Submit Pull Requests](https://github.com/ElsiKora/ESLint-Config.git/blob/main/CONTRIBUTING.md)**: Review
-  open PRs, and submit your own PRs.
-- **[Join the Discussions](https://github.com/ElsiKora/ESLint-Config.git/discussions)**: Share your insights,
-  provide feedback, or ask questions.
+- **[Report Issues](https://github.com/ElsiKora/ESLint-Config.git/issues)**: Submit bugs found or log feature requests.
+- **[Submit Pull Requests](https://github.com/ElsiKora/ESLint-Config.git/blob/main/CONTRIBUTING.md)**: Review open PRs,
+  and submit your own PRs.
+- **[Join the Discussions](https://github.com/ElsiKora/ESLint-Config.git/discussions)**: Share your insights, provide
+  feedback, or ask questions.
 
 <details closed>
 <summary>Contributing Guidelines</summary>
@@ -272,8 +278,7 @@ Contributions are welcome! Here are several ways you can contribute:
    ```
 7. **Submit a Pull Request**: Create a PR against the original project repository. Clearly describe the changes and
    their motivations.
-8. **Review**: Once your PR is reviewed and approved, it will be merged into the main branch. Congratulations on your
-   contribution!
+8. **Review**: Once your PR is reviewed and approved, it will be merged into the main branch.
 
 </details>
 
@@ -281,15 +286,14 @@ Contributions are welcome! Here are several ways you can contribute:
 
 ## License
 
-This project is protected under the MIT License. For more details,
-refer to the [LICENSE](https://choosealicense.com/licenses/) file.
+This project is protected under the MIT License. For more details, refer to
+the [LICENSE](https://choosealicense.com/licenses/) file.
 
 ---
 
 ## Acknowledgments
 
-- List any resources, contributors, inspiration, etc. here.
+Thanks to all contributors and users of this configuration package. Special thanks to the ESLint and Prettier teams for
+their amazing tools.
 
 [**Return**](#-overview)
-
----
