@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 3.2.2
+
+### Patch Changes
+
+- 724aa99: Enhance gitignore handling in CLI setup process
+
 ## 3.2.1
 
 ### Patch Changes
