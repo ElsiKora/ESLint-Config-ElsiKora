@@ -52,7 +52,7 @@ const FRAMEWORK_CONFIGS: Array<IFrameworkConfig> = [
 	{
 		name: "nest",
 		packageIndicators: ["@nestjs/core", "@nestjs/common"],
-		lintPaths: ["./src/**/*.ts", "./libs/**/*.ts", "./apps/**/*.ts"],
+		lintPaths: ["./src/**/*.ts"],
 		ignorePaths: {
 			directories: ["dist/", "coverage/", ".nest/"],
 			patterns: ["*.spec.ts", "test/**/*", "**/node_modules/**/*", "**/.git/**/*", "nest-cli.json"],
@@ -203,7 +203,13 @@ export function generateIgnoreConfig(framework: IDetectedFramework | null): {
 	const commonIgnores: Array<string> = ["**/node_modules/", "**/.git/", "**/dist/", "**/build/", "**/coverage/", "**/.vscode/", "**/.idea/", "**/*.min.js", "**/*.bundle.js"];
 
 	if (framework) {
-		const { directories, patterns }: { directories: Array<string>; patterns: Array<string> } = framework.framework.ignorePaths;
+		const {
+			directories,
+			patterns,
+		}: {
+			directories: Array<string>;
+			patterns: Array<string>;
+		} = framework.framework.ignorePaths;
 
 		// Convert directory ignores to proper format
 		const directoryIgnores: Array<string> = directories.map((dir: string) => (dir.endsWith("/") ? `**/${dir}**/*` : `**/${dir}/**/*`));
@@ -221,7 +227,15 @@ export function generateIgnoreConfig(framework: IDetectedFramework | null): {
 	};
 }
 
-export function generateLintCommands(framework: IDetectedFramework | null, customPaths: Array<string>, includeStylelint: boolean, includePrettier: boolean): { lintCommand: string; lintFixCommand: string } {
+export function generateLintCommands(
+	framework: IDetectedFramework | null,
+	customPaths: Array<string>,
+	includeStylelint: boolean,
+	includePrettier: boolean,
+): {
+	lintCommand: string;
+	lintFixCommand: string;
+} {
 	// Convert paths to directory patterns
 	const basePaths: Array<string> = framework?.framework.lintPaths ?? customPaths;
 	const dirPaths: Array<string> = basePaths.map((path: string) => {

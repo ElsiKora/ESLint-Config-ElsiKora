@@ -14,6 +14,7 @@ import { setupVSCodeConfig, setupWebStormConfig } from "./ide-config";
 import { detectProjectStructure } from "./framework-detection";
 import { setupGitHubCIConfig } from "./github-ci-config";
 import path from "node:path";
+import { createGitignore } from "./gitignore-config";
 
 const exec: (arg1: any) => Promise<any> = promisify(execCallback);
 
@@ -469,6 +470,40 @@ export async function runCli(): Promise<void> {
 			}
 		}
 
+		const hasGitignore = await checkForExistingGitignore();
+		let shouldSetupGitignore = true;
+
+		if (hasGitignore) {
+			const shouldDeleteGitignore = await confirm({
+				initialValue: true,
+				message: "An existing .gitignore file was found. Would you like to replace it?",
+			});
+
+			if (!shouldDeleteGitignore) {
+				shouldSetupGitignore = false;
+			} else {
+				try {
+					await fs.unlink(".gitignore");
+				} catch (error) {
+					console.error("Error deleting existing .gitignore:", error);
+					throw error;
+				}
+			}
+		}
+
+		if (shouldSetupGitignore) {
+			setupSpinner.start("Setting up .gitignore...");
+			try {
+				await createGitignore();
+				setupSpinner.stop(".gitignore created successfully!");
+
+				note([".gitignore has been configured for your project.", "", "The configuration includes ignore patterns for:", "- Build outputs and dependencies", "- Common IDEs and editors", "- Testing and coverage files", "- Environment and local config files", "- System and temporary files", "- Framework-specific files", "- Lock files", "", "You can customize it further by editing .gitignore"].join("\n"), "Gitignore Setup");
+			} catch (error) {
+				setupSpinner.stop("Failed to create .gitignore");
+				throw error;
+			}
+		}
+
 		try {
 			const {
 				framework,
@@ -546,12 +581,25 @@ export async function runCli(): Promise<void> {
 				}
 			}
 
-			if (setupChangesets === true) {
+			if (setupChangesets) {
 				scriptDescriptions.push("");
 				scriptDescriptions.push("Changesets commands:");
 				scriptDescriptions.push("  npm run patch      # create a new changeset");
 				scriptDescriptions.push("  npm run release    # publish packages");
 			}
+
+			if (shouldSetupGitignore) {
+				scriptDescriptions.push("");
+				scriptDescriptions.push("Git configuration:");
+				scriptDescriptions.push("  .gitignore has been configured with common ignore patterns");
+				scriptDescriptions.push("  Including patterns for:");
+				scriptDescriptions.push("    - Build outputs and dependencies");
+				scriptDescriptions.push("    - IDE and editor files");
+				scriptDescriptions.push("    - Testing and coverage");
+				scriptDescriptions.push("    - Environment files");
+				scriptDescriptions.push("    - Framework specific ignores");
+			}
+
 			if (framework) {
 				// eslint-disable-next-line @elsikora-typescript/no-unsafe-assignment
 				note(["ESLint has been configured for your project.", `Framework: ${framework.framework.name}`, framework.hasTypescript ? "TypeScript support: enabled" : "", "", ...scriptDescriptions].filter(Boolean).join("\n"), "Configuration Summary");
