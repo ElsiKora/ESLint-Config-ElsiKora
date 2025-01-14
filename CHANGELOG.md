@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 3.2.1
+
+### Patch Changes
+
+- 924e701: Add automated .gitignore configuration in CLI setup
+
 ## 3.2.0
 
 ### Minor Changes
