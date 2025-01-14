@@ -86,9 +86,10 @@ export default [
 		plugins: [
 			typescript({
 				tsconfig: "./tsconfig.json",
-				declaration: true,
+				outDir: "bin",
+				declarationDir: "bin",
 			}),
 		],
-		external: ["node:fs/promises", "node:path", "node:url", "node:util", "node:child_process", "@clack/prompts", "picocolors"],
+		external: ["node:fs/promises", "node:path", "node:url", "node:util", "node:child_process", "@clack/prompts", "picocolors", "inquirer"],
 	},
 ];

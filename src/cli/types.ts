@@ -1,4 +1,4 @@
-import type { FEATURES_CONFIG } from "./constants";
+import { FEATURES_CONFIG, GITHUB_CI_FILES } from "./constants";
 
 export interface IPackageJson {
 	dependencies?: Record<string, string>;
@@ -35,3 +35,5 @@ export interface IDetectedFramework {
 	framework: IFrameworkConfig;
 	hasTypescript: boolean;
 }
+
+export type TGitHubCIFile = keyof typeof GITHUB_CI_FILES;

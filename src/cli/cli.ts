@@ -4,20 +4,16 @@ import fs from "node:fs/promises";
 import inquirer from "inquirer";
 import { confirm, intro, note, outro, spinner } from "@clack/prompts";
 import color from "picocolors";
-import {
-	checkConfigInstalled,
-	checkEslintInstalled,
-	detectInstalledFeatures,
-	detectTypescriptInProject,
-	installDependencies, validateFeatureSelection,
-} from "./package-manager";
+import { checkConfigInstalled, checkEslintInstalled, detectInstalledFeatures, detectTypescriptInProject, installDependencies, validateFeatureSelection } from "./package-manager";
 import { findExistingFiles } from "./utils";
-import { ESLINT_CONFIG_FILES, FEATURE_GROUPS, FEATURES_CONFIG, PRETTIER_CONFIG_FILES, STYLELINT_CONFIG_FILES } from "./constants";
+import { ESLINT_CONFIG_FILES, FEATURE_GROUPS, FEATURES_CONFIG, GITHUB_CI_FILES, PRETTIER_CONFIG_FILES, STYLELINT_CONFIG_FILES } from "./constants";
 import { checkForEslintConfigInPackageJson, checkForPrettierConfigInPackageJson, checkForStylelintConfigInPackageJson, createEslintConfig, createPrettierConfig, getConfigFileExtension, removeEslintConfigFromPackageJson, removePrettierConfigFromPackageJson, removeStylelintConfigFromPackageJson, updatePackageJson } from "./config-generator";
-import type { IDetectedFramework, IFeatureConfig, TFeature } from "./types";
+import type { IDetectedFramework, IFeatureConfig, TFeature, TGitHubCIFile } from "./types";
 import { createStylelintConfig, installStylelintDependencies } from "./stylelint-config";
 import { setupVSCodeConfig, setupWebStormConfig } from "./ide-config";
 import { detectProjectStructure } from "./framework-detection";
+import { setupGitHubCIConfig } from "./github-ci-config";
+import path from "node:path";
 
 const exec: (arg1: any) => Promise<any> = promisify(execCallback);
 
@@ -26,7 +22,13 @@ export async function runCli(): Promise<void> {
 
 	intro(color.cyan("ESLint Configuration Setup (@elsikora/eslint-config)"));
 
-	const { isInstalled: hasEslint, version: eslintVersion }: { isInstalled: boolean; version: string | null } = await checkEslintInstalled();
+	const {
+		isInstalled: hasEslint,
+		version: eslintVersion,
+	}: {
+		isInstalled: boolean;
+		version: string | null;
+	} = await checkEslintInstalled();
 	const { isInstalled: hasConfig }: { isInstalled: boolean; version: string | null } = await checkConfigInstalled();
 
 	if (hasConfig) {
@@ -138,13 +140,8 @@ export async function runCli(): Promise<void> {
 				// eslint-disable-next-line @elsikora-typescript/restrict-template-expressions
 				name: `${feature} - ${config.description}`,
 				value: feature,
-				checked: feature === "javascript" ||
-					(shouldUseDetected && detectedFeatures.includes(feature as unknown as TFeature)),
-				disabled: feature === "javascript" ?
-					"Required" :
-					(config.requiresTypescript && !hasTypescript ?
-						"Requires TypeScript" :
-						false),
+				checked: feature === "javascript" || (shouldUseDetected && detectedFeatures.includes(feature as unknown as TFeature)),
+				disabled: feature === "javascript" ? "Required" : config.requiresTypescript && !hasTypescript ? "Requires TypeScript" : false,
 			});
 		}
 	}
@@ -179,11 +176,19 @@ export async function runCli(): Promise<void> {
 		selectedFeatures.unshift("javascript");
 	}
 
-	const { isValid, errors }: { isValid: boolean; errors: Array<string> } = await validateFeatureSelection(selectedFeatures);
+	const {
+		isValid,
+		errors,
+	}: {
+		isValid: boolean;
+		errors: Array<string>;
+	} = await validateFeatureSelection(selectedFeatures);
 
 	if (!isValid) {
 		outro(color.red("Configuration cannot proceed due to the following errors:"));
-		errors.forEach((error: string) => { console.error(color.red(`- ${error}`)); });
+		errors.forEach((error: string) => {
+			console.error(color.red(`- ${error}`));
+		});
 		process.exit(1);
 	}
 
@@ -199,7 +204,12 @@ export async function runCli(): Promise<void> {
 
 		const configExtension: string = await getConfigFileExtension();
 
-		const { framework }: { framework: IDetectedFramework | null; customPaths: Array<string> } = await detectProjectStructure();
+		const {
+			framework,
+		}: {
+			framework: IDetectedFramework | null;
+			customPaths: Array<string>;
+		} = await detectProjectStructure();
 
 		if (framework) {
 			note([`Detected ${framework.framework.name} project structure.`, `Will configure linting for the following paths:`, ...framework.framework.lintPaths.map((path: string) => `  - ${path}`), "", "Additional ignore patterns will be added to the configuration."].join("\n"), "Framework Detection");
@@ -353,8 +363,120 @@ export async function runCli(): Promise<void> {
 			}
 		}
 
+		const setupGitHubCIResponse: boolean | symbol = await confirm({
+			// eslint-disable-next-line @elsikora-typescript/naming-convention
+			initialValue: true,
+			message: "Would you like to set up GitHub CI workflows?",
+		});
+		const willSetupGitHubCI: boolean = setupGitHubCIResponse === true;
+		let ciAnswers: any;
+		let isNpmPackage: boolean = false;
+
+		if (willSetupGitHubCI) {
+			const isNpmPackageResponse = await confirm({
+				initialValue: false,
+				message: "Is this package going to be published to NPM?",
+			});
+			const isNpmPackage = isNpmPackageResponse === true;
+
+			ciAnswers = await inquirer.prompt([
+				{
+					type: "checkbox",
+					name: "selectedCIFiles",
+					message: "Select the CI workflows you want to set up:",
+					choices: Object.entries(GITHUB_CI_FILES).map(([key, value]) => ({
+						name: `${value.name} - ${value.description}`,
+						value: key,
+					})),
+					pageSize: 10,
+				},
+			]);
+
+			if (ciAnswers.selectedCIFiles.length > 0) {
+				// If dependabot is selected, ask for target branch
+				let dependabotBranch = "dev";
+				if (ciAnswers.selectedCIFiles.includes("DEPENDABOT")) {
+					const branchAnswer = await inquirer.prompt([
+						{
+							type: "input",
+							name: "branch",
+							message: "Enter the target branch for Dependabot updates:",
+							default: "dev",
+						},
+					]);
+					dependabotBranch = branchAnswer.branch;
+				}
+
+				setupSpinner.start("Setting up GitHub CI configuration...");
+				await setupGitHubCIConfig(ciAnswers.selectedCIFiles, isNpmPackage, dependabotBranch);
+				setupSpinner.stop("GitHub CI configuration completed successfully!");
+
+				// @ts-ignore
+				// eslint-disable-next-line @elsikora-typescript/no-unsafe-return,@elsikora-typescript/no-unsafe-member-access
+				const selectedFileNames = ciAnswers.selectedCIFiles.map((file: any) => GITHUB_CI_FILES[file].name);
+
+				// eslint-disable-next-line @elsikora-typescript/restrict-template-expressions
+				note(["GitHub CI configuration has been created.", "", "", "Created files:", ...selectedFileNames.map((name) => `- ${name}`), "", "", dependabotBranch !== "dev" && ciAnswers.selectedCIFiles.includes("DEPENDABOT") ? `Dependabot configured to target '${dependabotBranch}' branch` : `Dependabot configured to target 'dev' branch`, "", "", "The workflows will be activated when you push to GitHub."].filter(Boolean).join("\n"), "GitHub CI Setup");
+			}
+		}
+
+		const setupChangesets: boolean | symbol = await confirm({
+			initialValue: true,
+			message: "Would you like to set up Changesets for version management?",
+		});
+
+		if (setupChangesets) {
+			setupSpinner.start("Setting up Changesets configuration...");
+			try {
+				// Install changesets
+				await exec("npm install -D @changesets/cli");
+
+				// Create .changeset directory and config
+				await fs.mkdir(".changeset", { recursive: true });
+				await fs.writeFile(
+					".changeset/config.json",
+					`{
+  "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
+  "changelog": "@changesets/cli/changelog",
+  "commit": false,
+  "fixed": [],
+  "linked": [],
+  "access": "restricted",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": []
+}`,
+				);
+
+				const packageJsonPath = path.resolve(process.cwd(), "package.json");
+				const packageJsonContent = await fs.readFile(packageJsonPath, "utf8");
+				const packageJson = JSON.parse(packageJsonContent);
+
+				packageJson.scripts = {
+					...packageJson.scripts,
+					patch: "changeset",
+					release: "npm install && npm run build && changeset publish",
+				};
+
+				await fs.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2) + "\n");
+
+				setupSpinner.stop("Changesets configuration completed successfully!");
+
+				note(["Changesets has been configured for your project.", "", "Available commands:", "  npm run patch     # create a new changeset", "  npm run release   # publish packages", "", "Configuration file:", "  .changeset/config.js"].join("\n"), "Changesets Setup");
+			} catch (error) {
+				setupSpinner.stop("Failed to set up Changesets configuration");
+				throw error;
+			}
+		}
+
 		try {
-			const { framework, customPaths }: { framework: IDetectedFramework | null; customPaths: Array<string> } = await detectProjectStructure();
+			const {
+				framework,
+				customPaths,
+			}: {
+				framework: IDetectedFramework | null;
+				customPaths: Array<string>;
+			} = await detectProjectStructure();
 
 			if (framework) {
 				note([`Detected ${framework.framework.name} project structure.`, "Will configure linting for:", ...framework.framework.lintPaths.map((path: string) => `  - ${path}`)].join("\n"), "Framework Detection");
@@ -411,6 +533,25 @@ export async function runCli(): Promise<void> {
 				scriptDescriptions.push("  npm run format:fix # automatically format code");
 			}
 
+			if (willSetupGitHubCI) {
+				scriptDescriptions.push("");
+				scriptDescriptions.push("GitHub CI Workflows:");
+				// Map the selected CI files to their descriptions
+				// eslint-disable-next-line @elsikora-typescript/no-unsafe-member-access
+				ciAnswers.selectedCIFiles.forEach((file: TGitHubCIFile) => {
+					scriptDescriptions.push(`  ${GITHUB_CI_FILES[file].name} - ${GITHUB_CI_FILES[file].description}`);
+				});
+				if (isNpmPackage) {
+					scriptDescriptions.push("  The release workflow will automatically publish to NPM when changes are merged to main");
+				}
+			}
+
+			if (setupChangesets === true) {
+				scriptDescriptions.push("");
+				scriptDescriptions.push("Changesets commands:");
+				scriptDescriptions.push("  npm run patch      # create a new changeset");
+				scriptDescriptions.push("  npm run release    # publish packages");
+			}
 			if (framework) {
 				// eslint-disable-next-line @elsikora-typescript/no-unsafe-assignment
 				note(["ESLint has been configured for your project.", `Framework: ${framework.framework.name}`, framework.hasTypescript ? "TypeScript support: enabled" : "", "", ...scriptDescriptions].filter(Boolean).join("\n"), "Configuration Summary");
@@ -431,4 +572,5 @@ export async function runCli(): Promise<void> {
 		process.exit(1);
 	}
 }
+
 export default runCli;
