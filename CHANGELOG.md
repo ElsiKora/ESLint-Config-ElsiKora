@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 3.2.3
+
+### Patch Changes
+
+- e130422: Refactor ESLint CLI and feature configurations
+
 ## 3.2.2
 
 ### Patch Changes
