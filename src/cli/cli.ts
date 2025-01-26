@@ -1,22 +1,25 @@
-import { exec as execCallback } from "node:child_process";
-import { promisify } from "node:util";
-import fs from "node:fs/promises";
-import inquirer from "inquirer";
-import { confirm, intro, note, outro, spinner } from "@clack/prompts";
-import color from "picocolors";
-import { checkConfigInstalled, checkEslintInstalled, detectInstalledFeatures, detectTypescriptInProject, installDependencies, validateFeatureSelection } from "./package-manager";
-import { findExistingFiles } from "./utils";
-import { ESLINT_CONFIG_FILES, FEATURE_GROUPS, FEATURES_CONFIG, GITHUB_CI_FILES, PRETTIER_CONFIG_FILES, STYLELINT_CONFIG_FILES } from "./constants";
-import { checkForEslintConfigInPackageJson, checkForPrettierConfigInPackageJson, checkForStylelintConfigInPackageJson, createEslintConfig, createPrettierConfig, getConfigFileExtension, removeEslintConfigFromPackageJson, removePrettierConfigFromPackageJson, removeStylelintConfigFromPackageJson, updatePackageJson } from "./config-generator";
 import type { IDetectedFramework, IFeatureConfig, TFeature, TGitHubCIFile } from "./types";
-import { createStylelintConfig, installStylelintDependencies } from "./stylelint-config";
-import { setupVSCodeConfig, setupWebStormConfig } from "./ide-config";
+
+import { exec as execCallback } from "node:child_process";
+import fs from "node:fs/promises";
+import path from "node:path";
+import { promisify } from "node:util";
+
+import { confirm, intro, note, outro, spinner } from "@clack/prompts";
+import inquirer from "inquirer";
+import color from "picocolors";
+
+import { checkForEslintConfigInPackageJson, checkForPrettierConfigInPackageJson, checkForStylelintConfigInPackageJson, createEslintConfig, createPrettierConfig, getConfigFileExtension, removeEslintConfigFromPackageJson, removePrettierConfigFromPackageJson, removeStylelintConfigFromPackageJson, updatePackageJson } from "./config-generator";
+import { ESLINT_CONFIG_FILES, FEATURE_GROUPS, FEATURES_CONFIG, GITHUB_CI_FILES, PRETTIER_CONFIG_FILES, STYLELINT_CONFIG_FILES } from "./constants";
 import { detectProjectStructure } from "./framework-detection";
 import { setupGitHubCIConfig } from "./github-ci-config";
-import path from "node:path";
 import { checkForExistingGitignore, createGitignore } from "./gitignore-config";
+import { setupVSCodeConfig, setupWebStormConfig } from "./ide-config";
+import { checkConfigInstalled, checkEslintInstalled, detectInstalledFeatures, detectTypescriptInProject, installDependencies, validateFeatureSelection } from "./package-manager";
+import { createStylelintConfig, installStylelintDependencies } from "./stylelint-config";
+import { findExistingFiles } from "./utils";
 
-const exec: (arg1: any) => Promise<any> = promisify(execCallback);
+const exec: (argument1: any) => Promise<any> = promisify(execCallback);
 
 export async function runCli(): Promise<void> {
 	console.clear();
@@ -28,9 +31,9 @@ export async function runCli(): Promise<void> {
 		version: eslintVersion,
 	}: {
 		isInstalled: boolean;
-		version: string | null;
+		version: null | string;
 	} = await checkEslintInstalled();
-	const { isInstalled: hasConfig }: { isInstalled: boolean; version: string | null } = await checkConfigInstalled();
+	const { isInstalled: hasConfig }: { isInstalled: boolean; version: null | string } = await checkConfigInstalled();
 
 	if (hasConfig) {
 		const shouldUninstallOldConfig: boolean | symbol = await confirm({
@@ -44,9 +47,9 @@ export async function runCli(): Promise<void> {
 		}
 
 		const uninstallSpinner: {
-			start: (msg?: string) => void;
-			stop: (msg?: string, code?: number) => void;
-			message: (msg?: string) => void;
+			message: (message?: string) => void;
+			start: (message?: string) => void;
+			stop: (message?: string, code?: number) => void;
 		} = spinner();
 		uninstallSpinner.start("Uninstalling existing ElsiKora ESLint configuration...");
 
@@ -62,14 +65,15 @@ export async function runCli(): Promise<void> {
 				const filesList: string = existingEslintConfigFiles.join("\n- ");
 				const messageLines: Array<string> = ["Existing ESLint configuration files detected:"];
 				messageLines.push("");
+
 				if (filesList) {
 					messageLines.push("- " + filesList);
 				}
+
 				if (hasEslintConfigInPackageJson) {
 					messageLines.push("- package.json (eslintConfig field)");
 				}
-				messageLines.push("");
-				messageLines.push("Do you want to delete them?");
+				messageLines.push("", "Do you want to delete them?");
 
 				const shouldDeleteConfigFiles: boolean | symbol = await confirm({
 					initialValue: true,
@@ -85,12 +89,14 @@ export async function runCli(): Promise<void> {
 			}
 		} catch (error) {
 			uninstallSpinner.stop("Failed to uninstall existing ESLint configuration");
+
 			throw error;
 		}
 	}
 
 	if (hasEslint && eslintVersion) {
-		const majorVersion: number = parseInt(eslintVersion.split(".")[0], 10);
+		const majorVersion: number = Number.parseInt(eslintVersion.split(".")[0], 10);
+
 		// eslint-disable-next-line @elsikora-typescript/no-magic-numbers
 		if (majorVersion < 9) {
 			const shouldUninstallOldEslint: boolean | symbol = await confirm({
@@ -104,9 +110,9 @@ export async function runCli(): Promise<void> {
 			}
 
 			const uninstallSpinner: {
-				start: (msg?: string) => void;
-				stop: (msg?: string, code?: number) => void;
-				message: (msg?: string) => void;
+				message: (message?: string) => void;
+				start: (message?: string) => void;
+				stop: (message?: string, code?: number) => void;
 			} = spinner();
 			uninstallSpinner.start("Uninstalling old ESLint version...");
 
@@ -115,6 +121,7 @@ export async function runCli(): Promise<void> {
 				uninstallSpinner.stop("Old ESLint version uninstalled successfully!");
 			} catch (error) {
 				uninstallSpinner.stop("Failed to uninstall old ESLint version");
+
 				throw error;
 			}
 		}
@@ -123,6 +130,7 @@ export async function runCli(): Promise<void> {
 	const detectedFeatures: Array<TFeature> = await detectInstalledFeatures();
 
 	let shouldUseDetected: boolean | symbol = false;
+
 	if (detectedFeatures.length > 1) {
 		shouldUseDetected = await confirm({
 			initialValue: true,
@@ -135,31 +143,33 @@ export async function runCli(): Promise<void> {
 
 	for (const [groupName, features] of Object.entries(FEATURE_GROUPS)) {
 		selectOptions.push(new inquirer.Separator(`\n=== ${groupName} ===`));
+
 		for (const feature of features) {
 			const config: IFeatureConfig = FEATURES_CONFIG[feature];
 			selectOptions.push({
+				checked: feature === "javascript" || (shouldUseDetected && detectedFeatures.includes(feature as unknown as TFeature)),
+				disabled: feature === "javascript" ? "Required" : config.requiresTypescript && !hasTypescript ? "Requires TypeScript" : false,
 				// eslint-disable-next-line @elsikora-typescript/restrict-template-expressions
 				name: `${feature} - ${config.description}`,
 				value: feature,
-				checked: feature === "javascript" || (shouldUseDetected && detectedFeatures.includes(feature as unknown as TFeature)),
-				disabled: feature === "javascript" ? "Required" : config.requiresTypescript && !hasTypescript ? "Requires TypeScript" : false,
 			});
 		}
 	}
 
 	const answers: any = await inquirer.prompt<{ selectedFeatures: Array<TFeature> }>([
 		{
-			type: "checkbox",
-			name: "selectedFeatures",
-			message: "Select the features you want to enable:",
 			choices: selectOptions,
+			message: "Select the features you want to enable:",
+			name: "selectedFeatures",
 			// eslint-disable-next-line @elsikora-typescript/no-magic-numbers
 			pageSize: 15,
+			type: "checkbox",
 			// eslint-disable-next-line @elsikora-typescript/explicit-function-return-type,@elsikora-typescript/typedef
 			validate(answer) {
-				if (answer.length < 1) {
+				if (answer.length === 0) {
 					return "You must choose at least one feature.";
 				}
+
 				return true;
 			},
 		},
@@ -178,11 +188,11 @@ export async function runCli(): Promise<void> {
 	}
 
 	const {
-		isValid,
 		errors,
+		isValid,
 	}: {
-		isValid: boolean;
 		errors: Array<string>;
+		isValid: boolean;
 	} = await validateFeatureSelection(selectedFeatures);
 
 	if (!isValid) {
@@ -194,9 +204,9 @@ export async function runCli(): Promise<void> {
 	}
 
 	const setupSpinner: {
-		start: (msg?: string) => void;
-		stop: (msg?: string, code?: number) => void;
-		message: (msg?: string) => void;
+		message: (message?: string) => void;
+		start: (message?: string) => void;
+		stop: (message?: string, code?: number) => void;
 	} = spinner();
 
 	try {
@@ -208,8 +218,8 @@ export async function runCli(): Promise<void> {
 		const {
 			framework,
 		}: {
-			framework: IDetectedFramework | null;
 			customPaths: Array<string>;
+			framework: IDetectedFramework | null;
 		} = await detectProjectStructure();
 
 		if (framework) {
@@ -218,7 +228,7 @@ export async function runCli(): Promise<void> {
 
 		// eslint-disable-next-line @elsikora-typescript/no-unsafe-argument,@elsikora-typescript/no-unsafe-return,@elsikora-typescript/no-unsafe-member-access
 		await installDependencies(selectOptions.map((option: any) => option.value));
-		// eslint-disable-next-line @elsikora-typescript/no-unsafe-argument
+
 		await createEslintConfig(selectedFeatures, configExtension, framework);
 
 		// Stop the spinner before the Stylelint prompt
@@ -249,8 +259,7 @@ export async function runCli(): Promise<void> {
 					messageLines.push("- package.json (stylelint field)");
 				}
 
-				messageLines.push("");
-				messageLines.push("Do you want to delete them?");
+				messageLines.push("", "Do you want to delete them?");
 
 				const shouldDeleteStylelintConfigFiles: boolean | symbol = await confirm({
 					initialValue: true,
@@ -265,6 +274,7 @@ export async function runCli(): Promise<void> {
 
 			// Добавляем установку и создание конфигурации Stylelint
 			setupSpinner.start("Setting up Stylelint configuration...");
+
 			try {
 				await installStylelintDependencies();
 				await createStylelintConfig();
@@ -273,15 +283,16 @@ export async function runCli(): Promise<void> {
 				note(["Stylelint configuration has been created.", "", "Available files:", "- stylelint.config.js", "- .stylelintignore", "", "You can customize the configuration in these files."].join("\n"), "Stylelint Setup");
 			} catch (error) {
 				setupSpinner.stop("Failed to set up Stylelint configuration");
+
 				throw error;
 			}
 		}
 
-		// eslint-disable-next-line @elsikora-typescript/no-unsafe-call,@elsikora-typescript/no-unsafe-member-access
 		if (selectedFeatures.includes("prettier")) {
 			// Check for existing Prettier config files
 			const existingPrettierConfigFiles: Array<string> = await findExistingFiles(PRETTIER_CONFIG_FILES);
 			const hasPrettierConfigInPackageJson: boolean = await checkForPrettierConfigInPackageJson();
+
 			if (existingPrettierConfigFiles.length > 0 || hasPrettierConfigInPackageJson) {
 				const filesList: string = existingPrettierConfigFiles.join("\n- ");
 				const messageLines: Array<string> = ["Existing Prettier configuration files detected:"];
@@ -296,9 +307,7 @@ export async function runCli(): Promise<void> {
 					messageLines.push("- package.json (prettier field)");
 				}
 
-				messageLines.push("");
-
-				messageLines.push("Do you want to delete them?");
+				messageLines.push("", "Do you want to delete them?");
 
 				const shouldDeletePrettierConfigFiles: boolean | symbol = await confirm({
 					initialValue: true,
@@ -330,19 +339,20 @@ export async function runCli(): Promise<void> {
 		if (setupIdeConfigs) {
 			const ideAnswers: any = await inquirer.prompt<{ selectedIDEs: Array<string> }>([
 				{
-					type: "checkbox",
-					name: "selectedIDEs",
-					message: "Select your code editor(s):",
 					choices: [
 						{ name: "VSCode", value: "vscode" },
 						{ name: "WebStorm (IntelliJ IDEA)", value: "webstorm" },
 					],
+					message: "Select your code editor(s):",
+					name: "selectedIDEs",
+					type: "checkbox",
 					// eslint-disable-next-line @elsikora-typescript/explicit-function-return-type
 					validate(answer: any) {
 						// eslint-disable-next-line @elsikora-typescript/no-unsafe-member-access
-						if (answer.length < 1) {
+						if (answer.length === 0) {
 							return "You must choose at least one code editor.";
 						}
+
 						return true;
 					},
 				},
@@ -353,13 +363,11 @@ export async function runCli(): Promise<void> {
 
 			// eslint-disable-next-line @elsikora-typescript/no-unsafe-member-access,@elsikora-typescript/no-unsafe-call
 			if (selectedIDEs.includes("vscode")) {
-				// eslint-disable-next-line @elsikora-typescript/no-unsafe-argument
 				await setupVSCodeConfig(selectedFeatures);
 			}
 
 			// eslint-disable-next-line @elsikora-typescript/no-unsafe-member-access,@elsikora-typescript/no-unsafe-call
 			if (selectedIDEs.includes("webstorm")) {
-				// eslint-disable-next-line @elsikora-typescript/no-unsafe-argument,@elsikora-typescript/no-unsafe-call,@elsikora-typescript/no-unsafe-member-access
 				await setupWebStormConfig(selectedFeatures, selectedFeatures.includes("prettier"));
 			}
 		}
@@ -371,7 +379,7 @@ export async function runCli(): Promise<void> {
 		});
 		const willSetupGitHubCI: boolean = setupGitHubCIResponse === true;
 		let ciAnswers: any;
-		let isNpmPackage: boolean = false;
+		const isNpmPackage: boolean = false;
 
 		if (willSetupGitHubCI) {
 			const isNpmPackageResponse = await confirm({
@@ -382,27 +390,28 @@ export async function runCli(): Promise<void> {
 
 			ciAnswers = await inquirer.prompt([
 				{
-					type: "checkbox",
-					name: "selectedCIFiles",
-					message: "Select the CI workflows you want to set up:",
 					choices: Object.entries(GITHUB_CI_FILES).map(([key, value]) => ({
 						name: `${value.name} - ${value.description}`,
 						value: key,
 					})),
+					message: "Select the CI workflows you want to set up:",
+					name: "selectedCIFiles",
 					pageSize: 10,
+					type: "checkbox",
 				},
 			]);
 
 			if (ciAnswers.selectedCIFiles.length > 0) {
 				// If dependabot is selected, ask for target branch
 				let dependabotBranch = "dev";
+
 				if (ciAnswers.selectedCIFiles.includes("DEPENDABOT")) {
 					const branchAnswer = await inquirer.prompt([
 						{
-							type: "input",
-							name: "branch",
-							message: "Enter the target branch for Dependabot updates:",
 							default: "dev",
+							message: "Enter the target branch for Dependabot updates:",
+							name: "branch",
+							type: "input",
 						},
 					]);
 					dependabotBranch = branchAnswer.branch;
@@ -428,6 +437,7 @@ export async function runCli(): Promise<void> {
 
 		if (setupChangesets) {
 			setupSpinner.start("Setting up Changesets configuration...");
+
 			try {
 				// Install changesets
 				await exec("npm install -D @changesets/cli");
@@ -466,6 +476,7 @@ export async function runCli(): Promise<void> {
 				note(["Changesets has been configured for your project.", "", "Available commands:", "  npm run patch     # create a new changeset", "  npm run release   # publish packages", "", "Configuration file:", "  .changeset/config.js"].join("\n"), "Changesets Setup");
 			} catch (error) {
 				setupSpinner.stop("Failed to set up Changesets configuration");
+
 				throw error;
 			}
 		}
@@ -479,20 +490,22 @@ export async function runCli(): Promise<void> {
 				message: "An existing .gitignore file was found. Would you like to replace it?",
 			});
 
-			if (!shouldDeleteGitignore) {
-				shouldSetupGitignore = false;
-			} else {
+			if (shouldDeleteGitignore) {
 				try {
 					await fs.unlink(".gitignore");
 				} catch (error) {
 					console.error("Error deleting existing .gitignore:", error);
+
 					throw error;
 				}
+			} else {
+				shouldSetupGitignore = false;
 			}
 		}
 
 		if (shouldSetupGitignore) {
 			setupSpinner.start("Setting up .gitignore...");
+
 			try {
 				await createGitignore();
 				setupSpinner.stop(".gitignore created successfully!");
@@ -500,104 +513,94 @@ export async function runCli(): Promise<void> {
 				note([".gitignore has been configured for your project.", "", "The configuration includes ignore patterns for:", "- Build outputs and dependencies", "- Common IDEs and editors", "- Testing and coverage files", "- Environment and local config files", "- System and temporary files", "- Framework-specific files", "- Lock files", "", "You can customize it further by editing .gitignore"].join("\n"), "Gitignore Setup");
 			} catch (error) {
 				setupSpinner.stop("Failed to create .gitignore");
+
 				throw error;
 			}
 		}
 
 		try {
 			const {
-				framework,
 				customPaths,
+				framework,
 			}: {
-				framework: IDetectedFramework | null;
 				customPaths: Array<string>;
+				framework: IDetectedFramework | null;
 			} = await detectProjectStructure();
 
 			if (framework) {
 				note([`Detected ${framework.framework.name} project structure.`, "Will configure linting for:", ...framework.framework.lintPaths.map((path: string) => `  - ${path}`)].join("\n"), "Framework Detection");
 			}
 
-			// eslint-disable-next-line @elsikora-typescript/no-unsafe-argument,@elsikora-typescript/no-unsafe-member-access,@elsikora-typescript/no-unsafe-call
 			await updatePackageJson(framework, customPaths, selectedFeatures.includes("prettier"), installStylelint);
 
 			const scriptDescriptions: Array<any> = [];
 
 			// Basic lint commands
-			scriptDescriptions.push("Available commands:");
-			scriptDescriptions.push("  npm run lint      # check for ESLint issues");
-			scriptDescriptions.push("  npm run lint:fix  # automatically fix ESLint issues");
+			scriptDescriptions.push("Available commands:", "  npm run lint      # check for ESLint issues", "  npm run lint:fix  # automatically fix ESLint issues");
 
 			// Framework-specific commands
 			if (framework) {
 				if (framework.hasTypescript) {
-					scriptDescriptions.push("  npm run lint:types # check TypeScript types");
-					scriptDescriptions.push("  npm run lint:all   # run all checks (ESLint + TypeScript)");
+					scriptDescriptions.push("  npm run lint:types # check TypeScript types", "  npm run lint:all   # run all checks (ESLint + TypeScript)");
 				}
 
 				switch (framework.framework.name) {
-					case "next":
+					case "angular": {
+						scriptDescriptions.push("  npm run lint:test  # lint test files");
+
+						break;
+					}
+
 					case "express":
-					case "koa":
+
 					case "fastify":
+
+					case "koa":
+
+					case "next": {
 						scriptDescriptions.push("  npm run lint:watch # watch mode: lint files on change");
+
 						break;
-					case "nest":
-						scriptDescriptions.push("  npm run lint:watch # watch mode: lint files on change");
-						scriptDescriptions.push("  npm run lint:test  # lint test files");
+					}
+
+					case "nest": {
+						scriptDescriptions.push("  npm run lint:watch # watch mode: lint files on change", "  npm run lint:test  # lint test files");
+
 						break;
-					case "angular":
-						scriptDescriptions.push("  npm run lint:test  # lint test files");
-						break;
+					}
 				}
 			}
 
 			// Stylelint commands
 			if (installStylelint) {
-				scriptDescriptions.push("");
-				scriptDescriptions.push("Stylelint commands:");
-				scriptDescriptions.push("  npm run lint      # includes CSS/SCSS linting");
-				scriptDescriptions.push("  npm run lint:fix  # includes CSS/SCSS auto-fixing");
+				scriptDescriptions.push("", "Stylelint commands:", "  npm run lint      # includes CSS/SCSS linting", "  npm run lint:fix  # includes CSS/SCSS auto-fixing");
 			}
 
 			// Prettier commands
-			// eslint-disable-next-line @elsikora-typescript/no-unsafe-call,@elsikora-typescript/no-unsafe-member-access
+
 			if (selectedFeatures.includes("prettier")) {
-				scriptDescriptions.push("");
-				scriptDescriptions.push("Prettier commands:");
-				scriptDescriptions.push("  npm run format     # check code formatting");
-				scriptDescriptions.push("  npm run format:fix # automatically format code");
+				scriptDescriptions.push("", "Prettier commands:", "  npm run format     # check code formatting", "  npm run format:fix # automatically format code");
 			}
 
 			if (willSetupGitHubCI) {
-				scriptDescriptions.push("");
-				scriptDescriptions.push("GitHub CI Workflows:");
+				scriptDescriptions.push("", "GitHub CI Workflows:");
 				// Map the selected CI files to their descriptions
 				// eslint-disable-next-line @elsikora-typescript/no-unsafe-member-access
 				ciAnswers.selectedCIFiles.forEach((file: TGitHubCIFile) => {
 					scriptDescriptions.push(`  ${GITHUB_CI_FILES[file].name} - ${GITHUB_CI_FILES[file].description}`);
 				});
+
 				if (isNpmPackage) {
 					scriptDescriptions.push("  The release workflow will automatically publish to NPM when changes are merged to main");
 				}
 			}
 
 			if (setupChangesets) {
-				scriptDescriptions.push("");
-				scriptDescriptions.push("Changesets commands:");
-				scriptDescriptions.push("  npm run patch      # create a new changeset");
-				scriptDescriptions.push("  npm run release    # publish packages");
+				scriptDescriptions.push("", "Changesets commands:", "  npm run patch      # create a new changeset", "  npm run release    # publish packages");
 			}
 
 			if (shouldSetupGitignore) {
-				scriptDescriptions.push("");
-				scriptDescriptions.push("Git configuration:");
-				scriptDescriptions.push("  .gitignore has been configured with common ignore patterns");
-				scriptDescriptions.push("  Including patterns for:");
-				scriptDescriptions.push("    - Build outputs and dependencies");
-				scriptDescriptions.push("    - IDE and editor files");
-				scriptDescriptions.push("    - Testing and coverage");
-				scriptDescriptions.push("    - Environment files");
-				scriptDescriptions.push("    - Framework specific ignores");
+				scriptDescriptions.push("", "Git configuration:", "  .gitignore has been configured with common ignore patterns", "  Including patterns for:", "    - Build outputs and dependencies", "    - IDE and editor files", "    - Testing and coverage", "    - Environment files", "    - Framework specific ignores");
 			}
 
 			if (framework) {

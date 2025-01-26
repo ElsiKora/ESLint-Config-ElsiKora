@@ -1,11 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { createConfig } from "./index";
+
 import javascriptConfig from "./config/javascript";
+
+import { createConfig } from "./index";
 
 describe("ESLint Config Generator", () => {
 	describe("createConfig", () => {
 		it("should handle large number of configurations without performance issues", () => {
 			const start = performance.now();
+
 			const result = createConfig({
 				withCheckFile: true,
 				withJavascript: true,
@@ -65,7 +68,7 @@ describe("ESLint Config Generator", () => {
 	});
 
 	it("should handle undefined options gracefully", () => {
-		const result = createConfig(undefined);
+		const result = createConfig();
 		expect(result).toEqual([]);
 	});
 });

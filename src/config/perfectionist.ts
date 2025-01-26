@@ -18,7 +18,6 @@ export default [
 					environment: "node",
 					groups: ["builtin-type", "type", "external-type", "internal-type", "parent-type", "sibling-type", "index-type", "builtin", "external", "internal", "parent", "sibling", "index", "object", "style", "side-effect", "unknown"],
 					ignoreCase: false,
-					internalPattern: ["~/**"],
 					newlinesBetween: "always",
 					order: "asc",
 					sortSideEffects: true,

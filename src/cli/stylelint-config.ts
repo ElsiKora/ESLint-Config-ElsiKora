@@ -1,13 +1,8 @@
 import { exec as execCallback } from "node:child_process";
-import { promisify } from "node:util";
 import fs from "node:fs/promises";
+import { promisify } from "node:util";
 
-const exec: (arg1: any) => Promise<any> = promisify(execCallback);
-
-export async function installStylelintDependencies(): Promise<void> {
-	const stylelintDeps: Array<string> = ["stylelint@^16.10.0", "stylelint-config-css-modules@^4.4.0", "stylelint-config-rational-order@^0.1.2", "stylelint-config-standard-scss@^13.1.0", "stylelint-order@^6.0.4", "stylelint-prettier@^5.0.2"];
-	await exec(`npm install -D ${stylelintDeps.join(" ")}`);
-}
+const exec: (argument1: any) => Promise<any> = promisify(execCallback);
 
 export async function createStylelintConfig(): Promise<void> {
 	const stylelintConfigContent: string = `
@@ -33,4 +28,9 @@ dist
 build
 `;
 	await fs.writeFile(".stylelintignore", stylelintIgnoreContent, "utf-8");
+}
+
+export async function installStylelintDependencies(): Promise<void> {
+	const stylelintDeps: Array<string> = ["stylelint@^16.10.0", "stylelint-config-css-modules@^4.4.0", "stylelint-config-rational-order@^0.1.2", "stylelint-config-standard-scss@^13.1.0", "stylelint-order@^6.0.4", "stylelint-prettier@^5.0.2"];
+	await exec(`npm install -D ${stylelintDeps.join(" ")}`);
 }

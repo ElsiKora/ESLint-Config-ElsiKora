@@ -1,7 +1,9 @@
+import type { TGitHubCIFile } from "./types";
+
 import fs from "node:fs/promises";
 import path from "node:path";
+
 import { CI_FILE_CONTENTS, GITHUB_CI_FILES } from "./constants";
-import type { TGitHubCIFile } from "./types";
 
 export async function setupGitHubCIConfig(selectedFiles: Array<TGitHubCIFile>, isNpmPackage: boolean = false, dependabotBranch: string = "dev"): Promise<void> {
 	const githubDir = path.resolve(process.cwd(), ".github");

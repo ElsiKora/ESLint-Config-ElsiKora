@@ -1,9 +1,10 @@
 import fs from "node:fs/promises";
 
 export async function findExistingFiles(files: Array<string>): Promise<Array<string>> {
-	const fileChecks: Array<Promise<string | null>> = files.map(async (file: string) => {
+	const fileChecks: Array<Promise<null | string>> = files.map(async (file: string) => {
 		try {
 			await fs.access(file);
+
 			return file;
 		} catch {
 			// File does not exist
@@ -11,5 +12,6 @@ export async function findExistingFiles(files: Array<string>): Promise<Array<str
 		}
 	});
 	const existingFiles: Array<string> = (await Promise.all(fileChecks)).filter(Boolean) as Array<string>;
+
 	return existingFiles;
 }

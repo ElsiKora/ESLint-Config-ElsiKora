@@ -1,14 +1,16 @@
-import { describe, it, expect } from "vitest";
-import { generateLintCommands } from "./framework-detection";
 import type { IDetectedFramework } from "./types";
+
+import { describe, expect, it } from "vitest";
+
+import { generateLintCommands } from "./framework-detection";
 
 describe("generateLintCommands", () => {
 	it("should generate correct lint and fix commands for provided framework and paths", () => {
 		const framework: IDetectedFramework = {
 			framework: {
-				name: "test",
-				lintPaths: ["src/**/*"],
 				ignorePaths: { directories: [], patterns: [] },
+				lintPaths: ["src/**/*"],
+				name: "test",
 				packageIndicators: [],
 			},
 			hasTypescript: false,
@@ -21,9 +23,9 @@ describe("generateLintCommands", () => {
 	it("should include stylelint commands when includeStylelint is true", () => {
 		const framework = {
 			framework: {
-				name: "test",
-				lintPaths: ["src/**/*"],
 				ignorePaths: { directories: [], patterns: [] },
+				lintPaths: ["src/**/*"],
+				name: "test",
 				packageIndicators: [],
 			},
 			hasTypescript: false,
@@ -49,9 +51,9 @@ describe("generateLintCommands", () => {
 	it('should correctly handle paths without "/*" pattern', () => {
 		const framework: IDetectedFramework = {
 			framework: {
-				name: "test",
-				lintPaths: ["src"],
 				ignorePaths: { directories: [], patterns: [] },
+				lintPaths: ["src"],
+				name: "test",
 				packageIndicators: [],
 			},
 			hasTypescript: false,

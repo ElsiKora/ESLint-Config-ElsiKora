@@ -1,6 +1,7 @@
+import type { TFeature } from "./types";
+
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { TFeature } from "./types";
 
 export async function setupVSCodeConfig(features: Array<TFeature>): Promise<void> {
 	const vscodeSettingsPath: string = path.resolve(process.cwd(), ".vscode", "settings.json");
@@ -40,9 +41,9 @@ export async function setupVSCodeConfig(features: Array<TFeature>): Promise<void
 		languages.add("typescriptreact");
 	}
 
-	settings["eslint.validate"] = Array.from(languages).map((language: string) => ({
-		language,
+	settings["eslint.validate"] = [...languages].map((language: string) => ({
 		autoFix: true,
+		language,
 	}));
 	settings["editor.codeActionsOnSave"] = {
 		"source.fixAll.eslint": true,
@@ -55,7 +56,7 @@ export async function setupVSCodeConfig(features: Array<TFeature>): Promise<void
 
 export async function setupWebStormConfig(features: Array<TFeature>, includePrettier: boolean = false): Promise<void> {
 	const webstormConfigPath: string = path.resolve(process.cwd(), ".idea", "jsLinters", "eslint.xml");
-	const extensions: Set<string> = new Set<string>(["js", "ts", "jsx", "tsx", "cjs", "cts", "mjs", "mts", "html", "vue", "json", "yaml", "yml"]);
+	const extensions: Set<string> = new Set<string>(["cjs", "cts", "html", "js", "json", "jsx", "mjs", "mts", "ts", "tsx", "vue", "yaml", "yml"]);
 
 	if (!features.includes("react")) {
 		extensions.delete("jsx");
@@ -77,7 +78,7 @@ export async function setupWebStormConfig(features: Array<TFeature>, includePret
 		extensions.delete("yml");
 	}
 
-	const filesPattern: string = `**/*.{${Array.from(extensions).join(",")}}`;
+	const filesPattern: string = `**/*.{${[...extensions].join(",")}}`;
 
 	const xmlContent: string = `<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
@@ -94,6 +95,7 @@ export async function setupWebStormConfig(features: Array<TFeature>, includePret
 
 	if (includePrettier) {
 		const webstormPrettierConfigPath: string = path.resolve(process.cwd(), ".idea", "prettier.xml");
+
 		const prettierXmlContent: string = `<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="PrettierConfiguration">

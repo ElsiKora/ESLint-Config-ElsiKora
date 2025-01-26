@@ -1,94 +1,94 @@
 import type { IFeatureConfig } from "./types";
 
 export const FEATURES_CONFIG: Record<string, IFeatureConfig> = {
+	checkFile: {
+		description: "File naming rules",
+		packages: ["eslint-plugin-check-file"],
+	},
 	javascript: {
+		description: "JavaScript support",
 		packages: [],
 		required: true,
-		description: "JavaScript support",
-	},
-	typescript: {
-		packages: ["typescript", "@typescript-eslint/parser", "@typescript-eslint/eslint-plugin", "typescript-eslint"],
-		detect: ["typescript", "@types/node"],
-		description: "TypeScript support",
-		requiresTypescript: true,
-	},
-	react: {
-		packages: ["@eslint-react/eslint-plugin"],
-		detect: ["react", "react-dom", "@types/react"],
-		description: "React framework support",
-	},
-	nest: {
-		packages: ["eslint-plugin-ng-module-sort", "@elsikora/eslint-plugin-nestjs-typed"],
-		detect: ["@nestjs/core", "@nestjs/common"],
-		description: "NestJS framework support",
-		requiresTypescript: true,
-	},
-	tailwindCss: {
-		packages: ["eslint-plugin-tailwindcss"],
-		detect: ["tailwindcss"],
-		description: "Tailwind CSS support",
-	},
-	prettier: {
-		packages: ["eslint-plugin-prettier", "eslint-config-prettier", "prettier"],
-		detect: ["prettier"],
-		description: "Prettier integration",
-	},
-	stylistic: {
-		packages: ["@stylistic/eslint-plugin"],
-		description: "Stylistic rules",
-	},
-	sonar: {
-		packages: ["eslint-plugin-sonarjs"],
-		description: "SonarJS code quality rules",
-	},
-	unicorn: {
-		packages: ["eslint-plugin-unicorn"],
-		description: "Unicorn rules",
-	},
-	perfectionist: {
-		packages: ["eslint-plugin-perfectionist"],
-		description: "Code organization rules",
 	},
 	json: {
-		packages: ["eslint-plugin-jsonc"],
 		description: "JSON files support",
+		packages: ["eslint-plugin-jsonc"],
 	},
-	yaml: {
-		packages: ["eslint-plugin-yml"],
-		description: "YAML files support",
-	},
-	checkFile: {
-		packages: ["eslint-plugin-check-file"],
-		description: "File naming rules",
-	},
-	packageJson: {
-		packages: ["eslint-plugin-package-json"],
-		description: "package.json linting",
+	nest: {
+		description: "NestJS framework support",
+		detect: ["@nestjs/core", "@nestjs/common"],
+		packages: ["eslint-plugin-ng-module-sort", "@elsikora/eslint-plugin-nestjs-typed"],
+		requiresTypescript: true,
 	},
 	node: {
-		packages: ["eslint-plugin-n"],
-		detect: ["node", "@types/node"],
 		description: "Node.js specific rules",
+		detect: ["node", "@types/node"],
+		packages: ["eslint-plugin-n"],
+	},
+	packageJson: {
+		description: "package.json linting",
+		packages: ["eslint-plugin-package-json"],
+	},
+	perfectionist: {
+		description: "Code organization rules",
+		packages: ["eslint-plugin-perfectionist"],
+	},
+	prettier: {
+		description: "Prettier integration",
+		detect: ["prettier"],
+		packages: ["eslint-plugin-prettier", "eslint-config-prettier", "prettier"],
+	},
+	react: {
+		description: "React framework support",
+		detect: ["react", "react-dom", "@types/react"],
+		packages: ["@eslint-react/eslint-plugin"],
 	},
 	regexp: {
-		packages: ["eslint-plugin-regexp"],
 		description: "RegExp linting",
+		packages: ["eslint-plugin-regexp"],
+	},
+	sonar: {
+		description: "SonarJS code quality rules",
+		packages: ["eslint-plugin-sonarjs"],
+	},
+	stylistic: {
+		description: "Stylistic rules",
+		packages: ["@stylistic/eslint-plugin"],
+	},
+	tailwindCss: {
+		description: "Tailwind CSS support",
+		detect: ["tailwindcss"],
+		packages: ["eslint-plugin-tailwindcss"],
 	},
 	typeorm: {
-		packages: ["eslint-plugin-typeorm-typescript"],
-		detect: ["typeorm", "@typeorm/core"],
 		description: "TypeORM support",
+		detect: ["typeorm", "@typeorm/core"],
+		packages: ["eslint-plugin-typeorm-typescript"],
 		requiresTypescript: true,
+	},
+	typescript: {
+		description: "TypeScript support",
+		detect: ["typescript", "@types/node"],
+		packages: ["typescript", "@typescript-eslint/parser", "@typescript-eslint/eslint-plugin", "typescript-eslint"],
+		requiresTypescript: true,
+	},
+	unicorn: {
+		description: "Unicorn rules",
+		packages: ["eslint-plugin-unicorn"],
+	},
+	yaml: {
+		description: "YAML files support",
+		packages: ["eslint-plugin-yml"],
 	},
 } as const;
 
 export const FEATURE_GROUPS: Record<string, Array<string>> = {
-	"Core Features": ["javascript", "typescript"],
-	Frameworks: ["react", "nest"],
-	Styling: ["tailwindCss", "prettier", "stylistic"],
 	"Code Quality": ["sonar", "unicorn", "perfectionist"],
+	"Core Features": ["javascript", "typescript"],
 	"File Types": ["json", "yaml", "checkFile", "packageJson"],
+	Frameworks: ["react", "nest"],
 	"Other Tools": ["node", "regexp", "typeorm"],
+	Styling: ["tailwindCss", "prettier", "stylistic"],
 } as const;
 
 export const ESLINT_CONFIG_FILES: Array<string> = ["eslint.config.js", "eslint.config.cjs", "eslint.config.mjs", ".eslintrc.js", ".eslintrc.cjs", ".eslintrc.yaml", ".eslintrc.yml", ".eslintrc.json", ".eslintrc", ".eslintignore"];
@@ -101,24 +101,24 @@ export const CORE_DEPENDENCIES: Array<string> = ["@elsikora/eslint-config", "@es
 
 export const GITHUB_CI_FILES = {
 	CODECOMMIT_SYNC: {
-		name: "codecommit-sync.yml",
 		description: "Mirror repository to AWS CodeCommit",
-	},
-	QODANA: {
-		name: "qodana-code-quality.yml",
-		description: "JetBrains Qodana code quality scan",
-	},
-	RELEASE_NPM: {
-		name: "release.yml",
-		description: "Release workflow",
-	},
-	SNYK: {
-		name: "snyk-security-scan.yml",
-		description: "Snyk security scanning",
+		name: "codecommit-sync.yml",
 	},
 	DEPENDABOT: {
-		name: "dependabot.yml",
 		description: "Automated dependency updates",
+		name: "dependabot.yml",
+	},
+	QODANA: {
+		description: "JetBrains Qodana code quality scan",
+		name: "qodana-code-quality.yml",
+	},
+	RELEASE_NPM: {
+		description: "Release workflow",
+		name: "release.yml",
+	},
+	SNYK: {
+		description: "Snyk security scanning",
+		name: "snyk-security-scan.yml",
 	},
 } as const;
 
@@ -142,6 +142,20 @@ jobs:
           target_repo_url: \${{ secrets.CODECOMMIT_SSH_REPOSITORY_URL }}
           ssh_private_key: \${{ secrets.CODECOMMIT_SSH_PRIVATE_KEY }}
           ssh_username: \${{ secrets.CODECOMMIT_SSH_PRIVATE_KEY_ID }}`,
+
+	DEPENDABOT: `version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    target-branch: "dev"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    target-branch: "dev"`,
 
 	QODANA: `name: Qodana Quality Scan
 on: push
@@ -168,37 +182,6 @@ jobs:
         uses: JetBrains/qodana-action@v2023.3
         env:
           QODANA_TOKEN: \${{ secrets.QODANA_TOKEN }}`,
-
-	RELEASE_NPM: `name: Release
-on:
-  push:
-    branches:
-      - main
-
-concurrency: \${{ github.workflow }}-\${{ github.ref }}
-jobs:
-  release:
-    name: Release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js 20.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.x
-      - name: Install Dependencies
-        run: yarn
-
-      - name: Create Release Pull Request or Publish to NPM
-        id: changesets
-        uses: changesets/action@v1
-        with:
-          publish: yarn release
-        env:
-          GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: \${{ secrets.NPM_TOKEN }}`,
 
 	RELEASE_NON_NPM: `name: Release and Publish
 on:
@@ -288,6 +271,37 @@ jobs:
           draft: false
           prerelease: false`,
 
+	RELEASE_NPM: `name: Release
+on:
+  push:
+    branches:
+      - main
+
+concurrency: \${{ github.workflow }}-\${{ github.ref }}
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      - name: Install Dependencies
+        run: yarn
+
+      - name: Create Release Pull Request or Publish to NPM
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: yarn release
+        env:
+          GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: \${{ secrets.NPM_TOKEN }}`,
+
 	SNYK: `name: Snyk Security Scan
 on: push
 
@@ -325,18 +339,4 @@ jobs:
       - name: Snyk IaC
         run: |
           snyk iac test || true`,
-
-	DEPENDABOT: `version: 2
-updates:
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "daily"
-    target-branch: "dev"
-
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "daily"
-    target-branch: "dev"`,
 };

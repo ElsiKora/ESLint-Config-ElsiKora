@@ -1,11 +1,11 @@
 import type { Linter } from "eslint";
 
 const pluginMap: Record<string, string> = {
+	"@eslint-react": "@elsikora-react",
 	"@eslint-react/dom": "@elsikora-react/dom",
 	"@eslint-react/hooks-extra": "@elsikora-react/hooks-extra",
 	"@eslint-react/naming-convention": "@elsikora-react/naming-convention",
 	"@eslint-react/web-api": "@elsikora-react/web-api",
-	"@eslint-react": "@elsikora-react",
 	"@stylistic": "@elsikora-stylistic",
 	"@typescript-eslint": "@elsikora-typescript",
 	"check-file": "@elsikora-check-file",
@@ -19,18 +19,6 @@ const pluginMap: Record<string, string> = {
 };
 
 const sortedPluginEntries = Object.entries(pluginMap).sort((a, b) => b[0].length - a[0].length);
-
-export function formatRuleName(ruleName: string): string {
-	for (const [oldName, newName] of sortedPluginEntries) {
-		const oldPrefix: string = oldName.startsWith("@") ? `${oldName}/` : `${oldName}/`;
-
-		if (ruleName.startsWith(oldPrefix)) {
-			return ruleName.replace(oldPrefix, `${newName}/`);
-		}
-	}
-
-	return ruleName;
-}
 
 export function formatConfig(configs: Array<Linter.Config>): Array<Linter.Config> {
 	const formattedConfigs: Array<Linter.Config> = [];
@@ -61,6 +49,7 @@ export function formatConfig(configs: Array<Linter.Config>): Array<Linter.Config
 
 						delete config.rules[rule];
 						replaced = true;
+
 						break;
 					}
 				}
@@ -71,4 +60,16 @@ export function formatConfig(configs: Array<Linter.Config>): Array<Linter.Config
 	}
 
 	return formattedConfigs;
+}
+
+export function formatRuleName(ruleName: string): string {
+	for (const [oldName, newName] of sortedPluginEntries) {
+		const oldPrefix: string = oldName.startsWith("@") ? `${oldName}/` : `${oldName}/`;
+
+		if (ruleName.startsWith(oldPrefix)) {
+			return ruleName.replace(oldPrefix, `${newName}/`);
+		}
+	}
+
+	return ruleName;
 }

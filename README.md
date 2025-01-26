@@ -36,10 +36,10 @@
 - [ Repository Structure](#repository-structure)
 - [ Modules](#modules)
 - [ Getting Started](#getting-started)
-    - [ Installation](#installation)
-    - [ Quick Setup (CLI)](#quick-setup-cli)
-    - [ Manual Setup](#manual-setup)
-    - [ Example Config](#example-config)
+  - [ Installation](#installation)
+  - [ Quick Setup (CLI)](#quick-setup-cli)
+  - [ Manual Setup](#manual-setup)
+  - [ Example Config](#example-config)
 - [ Project Roadmap](#project-roadmap)
 - [ Contributing](#contributing)
 - [ License](#license)
@@ -50,27 +50,22 @@
 
 ## Overview
 
-The ESLint-Config is a meticulously designed ESLint configuration repository that aims to enhance code quality
-and ensure consistency across JavaScript and TypeScript projects. Its core functionalities include custom ESLint rules,
-integration with popular plugins like Prettier and Unicorn, and specialized support for NestJS environments. By
-outlining standards for filename conventions and the use of modern JavaScript features, alongside automating the release
-process for streamlined updates, ESLint-Config offers a comprehensive solution for developers seeking to
-enforce coding best practices and style consistency in their projects.
+The ESLint-Config is a meticulously designed ESLint configuration repository that aims to enhance code quality and ensure consistency across JavaScript and TypeScript projects. Its core functionalities include custom ESLint rules, integration with popular plugins like Prettier and Unicorn, and specialized support for NestJS environments. By outlining standards for filename conventions and the use of modern JavaScript features, alongside automating the release process for streamlined updates, ESLint-Config offers a comprehensive solution for developers seeking to enforce coding best practices and style consistency in their projects.
 
 ---
 
 ## Features
 
 |     | Feature           | Description                                                                                       |
-|-----|-------------------|---------------------------------------------------------------------------------------------------|
+| --- | ----------------- | ------------------------------------------------------------------------------------------------- |
 | ⚙️  | **Architecture**  | ESLint-Config is designed for JS/TS projects, integrating Prettier and Unicorn plugins.           |
 | 🔩  | **Code Quality**  | Focuses on consistency & best practices by leveraging eslint, prettier, and custom ESLint rules.  |
 | 📄  | **Documentation** | Has basic documentation within code files and `package.json`, outlining usage and contributions.  |
 | 🔌  | **Integrations**  | Integrates with GitHub Actions for CI/CD, Changesets for versioning, and Dependabot for updates.  |
 | 🧩  | **Modularity**    | Configurations are modular, allowing easy extension and customization for JS/TS projects.         |
 | 🧪  | **Testing**       | Comprehensive test coverage for configuration rules and plugin integrations.                      |
-| ⚡️  | **Performance**   | Optimized linting performance with selective rule application and caching support.                |
-| 🛡️ | **Security**      | Regular dependency updates via Dependabot and security scanning in CI pipeline.                   |
+| ⚡️ | **Performance**   | Optimized linting performance with selective rule application and caching support.                |
+| 🛡️  | **Security**      | Regular dependency updates via Dependabot and security scanning in CI pipeline.                   |
 | 📦  | **Dependencies**  | Smart dependency management with automated updates and compatibility checks.                      |
 | 🚀  | **Scalability**   | Scalable through the addition of custom rules and extensions for various JavaScript environments. |
 
@@ -119,9 +114,9 @@ The CLI will:
 4. Configure Stylelint (optional)
 5. Set up IDE configurations (VSCode, WebStorm)
 6. Configure GitHub CI workflows (optional)
-    - Automated testing and linting
-    - Release management with Changesets
-    - Dependabot for dependency updates
+   - Automated testing and linting
+   - Release management with Changesets
+   - Dependabot for dependency updates
 7. Create all necessary configuration files
 
 ### Manual Setup
@@ -132,7 +127,7 @@ If you prefer manual setup, create an `.eslintrc.json` file in your project root
 
 ```json
 {
-  "extends": "@elsikora/eslint-config"
+	"extends": "@elsikora/eslint-config"
 }
 ```
 
@@ -140,7 +135,7 @@ If you prefer manual setup, create an `.eslintrc.json` file in your project root
 
 ```json
 {
-  "extends": "@elsikora/eslint-config/typescript"
+	"extends": "@elsikora/eslint-config/typescript"
 }
 ```
 
@@ -148,7 +143,7 @@ If you prefer manual setup, create an `.eslintrc.json` file in your project root
 
 ```json
 {
-  "extends": "@elsikora/eslint-config/nest"
+	"extends": "@elsikora/eslint-config/nest"
 }
 ```
 
@@ -156,7 +151,7 @@ If you prefer manual setup, create an `.eslintrc.json` file in your project root
 
 ```json
 {
-  "extends": "@elsikora/eslint-config/react"
+	"extends": "@elsikora/eslint-config/react"
 }
 ```
 
@@ -164,7 +159,7 @@ If you prefer manual setup, create an `.eslintrc.json` file in your project root
 
 ```json
 {
-  "extends": "@elsikora/eslint-config/json"
+	"extends": "@elsikora/eslint-config/json"
 }
 ```
 
@@ -172,7 +167,7 @@ If you prefer manual setup, create an `.eslintrc.json` file in your project root
 
 ```json
 {
-  "extends": "@elsikora/eslint-config/yaml"
+	"extends": "@elsikora/eslint-config/yaml"
 }
 ```
 
@@ -182,51 +177,37 @@ If you prefer manual setup, create an `.eslintrc.json` file in your project root
 
 ```json
 {
-  "env": {
-    "es6": true,
-    "jest": true,
-    "node": true
-  },
-  "extends": [
-    "@elsikora/eslint-config",
-    "@elsikora/eslint-config/typescript",
-    "@elsikora/eslint-config/nest",
-    "@elsikora/eslint-config/react",
-    "@elsikora/eslint-config/json",
-    "@elsikora/eslint-config/yml"
-  ],
-  "ignorePatterns": [
-    ".eslintrc.json"
-  ],
-  "overrides": [
-    {
-      "files": [
-        "*.ts"
-      ],
-      "parser": "@typescript-eslint/parser",
-      "parserOptions": {
-        "ecmaVersion": "latest",
-        "sourceType": "module",
-        "project": "tsconfig.json",
-        "tsconfigRootDir": "./"
-      }
-    }
-  ],
-  "settings": {
-    "import/parsers": {
-      "@typescript-eslint/parser": [
-        ".ts",
-        ".tsx"
-      ]
-    },
-    "import/resolver": {
-      "typescript": {
-        "alwaysTryTypes": true,
-        "project": "./tsconfig.json"
-      }
-    }
-  },
-  "root": true
+	"env": {
+		"es6": true,
+		"jest": true,
+		"node": true
+	},
+	"extends": ["@elsikora/eslint-config", "@elsikora/eslint-config/typescript", "@elsikora/eslint-config/nest", "@elsikora/eslint-config/react", "@elsikora/eslint-config/json", "@elsikora/eslint-config/yml"],
+	"ignorePatterns": [".eslintrc.json"],
+	"overrides": [
+		{
+			"files": ["*.ts"],
+			"parser": "@typescript-eslint/parser",
+			"parserOptions": {
+				"ecmaVersion": "latest",
+				"sourceType": "module",
+				"project": "tsconfig.json",
+				"tsconfigRootDir": "./"
+			}
+		}
+	],
+	"settings": {
+		"import/parsers": {
+			"@typescript-eslint/parser": [".ts", ".tsx"]
+		},
+		"import/resolver": {
+			"typescript": {
+				"alwaysTryTypes": true,
+				"project": "./tsconfig.json"
+			}
+		}
+	},
+	"root": true
 }
 ```
 
@@ -234,11 +215,11 @@ If you prefer manual setup, create an `.eslintrc.json` file in your project root
 
 ## Project Roadmap
 
-- [X] `► Interactive CLI Setup`
-- [X] `► NestJS Configuration`
-- [X] `► React Configuration`
-- [X] `► Changesets Integration`
-- [X] `► GitHub CI Workflows`
+- [x] `► Interactive CLI Setup`
+- [x] `► NestJS Configuration`
+- [x] `► React Configuration`
+- [x] `► Changesets Integration`
+- [x] `► GitHub CI Workflows`
 - [ ] `► Next.js Configuration`
 - [ ] `► Angular Configuration`
 - [ ] `► Vue Configuration`
@@ -250,10 +231,8 @@ If you prefer manual setup, create an `.eslintrc.json` file in your project root
 Contributions are welcome! Here are several ways you can contribute:
 
 - **[Report Issues](https://github.com/ElsiKora/ESLint-Config.git/issues)**: Submit bugs found or log feature requests.
-- **[Submit Pull Requests](https://github.com/ElsiKora/ESLint-Config.git/blob/main/CONTRIBUTING.md)**: Review open PRs,
-  and submit your own PRs.
-- **[Join the Discussions](https://github.com/ElsiKora/ESLint-Config.git/discussions)**: Share your insights, provide
-  feedback, or ask questions.
+- **[Submit Pull Requests](https://github.com/ElsiKora/ESLint-Config.git/blob/main/CONTRIBUTING.md)**: Review open PRs, and submit your own PRs.
+- **[Join the Discussions](https://github.com/ElsiKora/ESLint-Config.git/discussions)**: Share your insights, provide feedback, or ask questions.
 
 <details closed>
 <summary>Contributing Guidelines</summary>
@@ -276,8 +255,7 @@ Contributions are welcome! Here are several ways you can contribute:
    ```sh
    git push origin new-feature-x
    ```
-7. **Submit a Pull Request**: Create a PR against the original project repository. Clearly describe the changes and
-   their motivations.
+7. **Submit a Pull Request**: Create a PR against the original project repository. Clearly describe the changes and their motivations.
 8. **Review**: Once your PR is reviewed and approved, it will be merged into the main branch.
 
 </details>
@@ -286,14 +264,12 @@ Contributions are welcome! Here are several ways you can contribute:
 
 ## License
 
-This project is protected under the MIT License. For more details, refer to
-the [LICENSE](https://choosealicense.com/licenses/) file.
+This project is protected under the MIT License. For more details, refer to the [LICENSE](https://choosealicense.com/licenses/) file.
 
 ---
 
 ## Acknowledgments
 
-Thanks to all contributors and users of this configuration package. Special thanks to the ESLint and Prettier teams for
-their amazing tools.
+Thanks to all contributors and users of this configuration package. Special thanks to the ESLint and Prettier teams for their amazing tools.
 
 [**Return**](#-overview)

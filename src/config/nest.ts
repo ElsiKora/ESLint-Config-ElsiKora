@@ -1,9 +1,9 @@
 import type { Linter } from "eslint";
 
-import { fixupPluginRules } from "@eslint/compat";
-import ngModuleSort from "eslint-plugin-ng-module-sort";
 // @ts-expect-error
 import nestJsTyped from "@elsikora/eslint-plugin-nestjs-typed";
+import { fixupPluginRules } from "@eslint/compat";
+import ngModuleSort from "eslint-plugin-ng-module-sort";
 import tseslint from "typescript-eslint";
 export default [
 	{

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { formatConfig, formatRuleName } from "./format";
 
 describe("formatRuleName", () => {
@@ -38,6 +39,7 @@ describe("formatConfig", () => {
 				},
 			},
 		];
+
 		const expected = [
 			{
 				plugins: {
@@ -59,6 +61,7 @@ describe("formatConfig", () => {
 				},
 			},
 		];
+
 		const expected = [
 			{
 				rules: {
@@ -94,6 +97,7 @@ describe("formatConfig", () => {
 				},
 			},
 		];
+
 		const expected = [
 			{
 				plugins: {

@@ -1,21 +1,32 @@
+import type { IDetectedFramework, IPackageJson, TFeature } from "./types";
+
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { IDetectedFramework, IPackageJson, TFeature } from "./types";
+
 import { generateIgnoreConfig, generateLintCommands } from "./framework-detection";
 
-export async function getConfigFileExtension(): Promise<string> {
-	try {
-		const packageJsonPath: string = path.resolve(process.cwd(), "package.json");
-		const packageJsonContent: string = await fs.readFile(packageJsonPath, "utf8");
-		const packageJson: IPackageJson = JSON.parse(packageJsonContent) as IPackageJson;
-		// eslint-disable-next-line @elsikora-typescript/no-unused-vars
-		const isModule: boolean = packageJson.type === "module";
+export async function checkForEslintConfigInPackageJson(): Promise<boolean> {
+	const packageJsonPath: string = path.resolve(process.cwd(), "package.json");
+	const packageJsonContent: string = await fs.readFile(packageJsonPath, "utf8");
+	const packageJson: IPackageJson = JSON.parse(packageJsonContent) as IPackageJson;
 
-		return ".js";
-		//return isModule ? ".mjs" : ".cjs";
-	} catch {
-		return ".js";
-	}
+	return Object.prototype.hasOwnProperty.call(packageJson, "eslintConfig");
+}
+
+export async function checkForPrettierConfigInPackageJson(): Promise<boolean> {
+	const packageJsonPath: string = path.resolve(process.cwd(), "package.json");
+	const packageJsonContent: string = await fs.readFile(packageJsonPath, "utf8");
+	const packageJson: IPackageJson = JSON.parse(packageJsonContent) as IPackageJson;
+
+	return Object.prototype.hasOwnProperty.call(packageJson, "prettier");
+}
+
+export async function checkForStylelintConfigInPackageJson(): Promise<boolean> {
+	const packageJsonPath: string = path.resolve(process.cwd(), "package.json");
+	const packageJsonContent: string = await fs.readFile(packageJsonPath, "utf8");
+	const packageJson: IPackageJson = JSON.parse(packageJsonContent) as IPackageJson;
+
+	return Object.prototype.hasOwnProperty.call(packageJson, "stylelint");
 }
 
 export async function createEslintConfig(features: Array<TFeature>, extension: string, detectedFramework: IDetectedFramework | null): Promise<void> {
@@ -59,87 +70,19 @@ build
 	await fs.writeFile(".prettierignore", prettierIgnoreContent, "utf-8");
 }
 
-export async function updatePackageJson(framework: IDetectedFramework | null, customPaths: Array<string>, includePrettier: boolean = false, includeStylelint?: symbol | boolean): Promise<void> {
-	const packageJsonPath: string = path.resolve(process.cwd(), "package.json");
-	const packageJsonContent: string = await fs.readFile(packageJsonPath, "utf8");
-	const packageJson: IPackageJson = JSON.parse(packageJsonContent) as IPackageJson;
+export async function getConfigFileExtension(): Promise<string> {
+	try {
+		const packageJsonPath: string = path.resolve(process.cwd(), "package.json");
+		const packageJsonContent: string = await fs.readFile(packageJsonPath, "utf8");
+		const packageJson: IPackageJson = JSON.parse(packageJsonContent) as IPackageJson;
 
-	packageJson.type = "module";
+		const isModule: boolean = packageJson.type === "module";
 
-	// Generate lint paths and commands
-	const { lintCommand, lintFixCommand }: { lintCommand: string; lintFixCommand: string } = generateLintCommands(framework, customPaths, !!includeStylelint, includePrettier);
-
-	// Generate watch commands if framework supports it
-	let watchCommands: any = {};
-	if (framework) {
-		switch (framework.framework.name) {
-			case "next":
-			case "nest":
-			case "express":
-			case "koa":
-			case "fastify":
-				watchCommands = {
-					"lint:watch": `npx eslint-watch ${framework.framework.lintPaths.join(" ")}`,
-				};
-				break;
-		}
+		return ".js";
+		// return isModule ? ".mjs" : ".cjs";
+	} catch {
+		return ".js";
 	}
-
-	// Generate framework-specific validation scripts
-	let frameworkScripts: object = {};
-	if (framework) {
-		switch (framework.framework.name) {
-			case "next":
-				frameworkScripts = {
-					"lint:types": "tsc --noEmit",
-					"lint:all": "npm run lint && npm run lint:types",
-				};
-				break;
-			case "nest":
-				frameworkScripts = {
-					"lint:types": "tsc --noEmit",
-					"lint:test": 'eslint "{src,apps,libs,test}/**/*.spec.ts"',
-					"lint:all": "npm run lint && npm run lint:types && npm run lint:test",
-				};
-				break;
-			case "angular":
-				frameworkScripts = {
-					"lint:types": "tsc --noEmit",
-					"lint:test": 'eslint "**/*.spec.ts"',
-					"lint:all": "ng lint && npm run lint:types && npm run lint:test",
-				};
-				break;
-		}
-	}
-
-	// Generate type checking script if TypeScript is used
-
-	const typeScripts: { "lint:types": string; "lint:all": string } | object = framework?.hasTypescript
-		? {
-				"lint:types": "tsc --noEmit",
-
-				"lint:all": `npm run lint${framework?.hasTypescript ? " && npm run lint:types" : ""}`,
-			}
-		: {};
-
-	// Combine all scripts
-	// @ts-ignore
-	// eslint-disable-next-line @elsikora-typescript/no-unsafe-assignment
-	packageJson.scripts = {
-		...packageJson.scripts,
-		lint: lintCommand,
-		"lint:fix": lintFixCommand,
-		...(includePrettier && {
-			format: "prettier --check .",
-			"format:fix": "prettier --write .",
-		}),
-		...watchCommands,
-		...frameworkScripts,
-		...typeScripts,
-	};
-
-	// eslint-disable-next-line @elsikora-typescript/no-magic-numbers
-	await fs.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2) + "\n", "utf-8");
 }
 
 export async function removeEslintConfigFromPackageJson(): Promise<void> {
@@ -166,13 +109,6 @@ export async function removePrettierConfigFromPackageJson(): Promise<void> {
 	}
 }
 
-export async function checkForStylelintConfigInPackageJson(): Promise<boolean> {
-	const packageJsonPath: string = path.resolve(process.cwd(), "package.json");
-	const packageJsonContent: string = await fs.readFile(packageJsonPath, "utf8");
-	const packageJson: IPackageJson = JSON.parse(packageJsonContent) as IPackageJson;
-	return Object.prototype.hasOwnProperty.call(packageJson, "stylelint");
-}
-
 export async function removeStylelintConfigFromPackageJson(): Promise<void> {
 	const packageJsonPath: string = path.resolve(process.cwd(), "package.json");
 	const packageJsonContent: string = await fs.readFile(packageJsonPath, "utf8");
@@ -185,16 +121,101 @@ export async function removeStylelintConfigFromPackageJson(): Promise<void> {
 	}
 }
 
-export async function checkForEslintConfigInPackageJson(): Promise<boolean> {
+export async function updatePackageJson(framework: IDetectedFramework | null, customPaths: Array<string>, includePrettier: boolean = false, includeStylelint?: boolean | symbol): Promise<void> {
 	const packageJsonPath: string = path.resolve(process.cwd(), "package.json");
 	const packageJsonContent: string = await fs.readFile(packageJsonPath, "utf8");
 	const packageJson: IPackageJson = JSON.parse(packageJsonContent) as IPackageJson;
-	return Object.prototype.hasOwnProperty.call(packageJson, "eslintConfig");
-}
 
-export async function checkForPrettierConfigInPackageJson(): Promise<boolean> {
-	const packageJsonPath: string = path.resolve(process.cwd(), "package.json");
-	const packageJsonContent: string = await fs.readFile(packageJsonPath, "utf8");
-	const packageJson: IPackageJson = JSON.parse(packageJsonContent) as IPackageJson;
-	return Object.prototype.hasOwnProperty.call(packageJson, "prettier");
+	packageJson.type = "module";
+
+	// Generate lint paths and commands
+	const { lintCommand, lintFixCommand }: { lintCommand: string; lintFixCommand: string } = generateLintCommands(framework, customPaths, !!includeStylelint, includePrettier);
+
+	// Generate watch commands if framework supports it
+	let watchCommands: any = {};
+
+	if (framework) {
+		switch (framework.framework.name) {
+			case "express":
+
+			case "fastify":
+
+			case "koa":
+
+			case "nest":
+
+			case "next": {
+				watchCommands = {
+					"lint:watch": `npx eslint-watch ${framework.framework.lintPaths.join(" ")}`,
+				};
+
+				break;
+			}
+		}
+	}
+
+	// Generate framework-specific validation scripts
+	let frameworkScripts: object = {};
+
+	if (framework) {
+		switch (framework.framework.name) {
+			case "angular": {
+				frameworkScripts = {
+					"lint:all": "ng lint && npm run lint:types && npm run lint:test",
+					"lint:test": 'eslint "**/*.spec.ts"',
+					"lint:types": "tsc --noEmit",
+				};
+
+				break;
+			}
+
+			case "nest": {
+				frameworkScripts = {
+					"lint:all": "npm run lint && npm run lint:types && npm run lint:test",
+					"lint:test": 'eslint "{src,apps,libs,test}/**/*.spec.ts"',
+					"lint:types": "tsc --noEmit",
+				};
+
+				break;
+			}
+
+			case "next": {
+				frameworkScripts = {
+					"lint:all": "npm run lint && npm run lint:types",
+					"lint:types": "tsc --noEmit",
+				};
+
+				break;
+			}
+		}
+	}
+
+	// Generate type checking script if TypeScript is used
+
+	const typeScripts: { "lint:all": string; "lint:types": string } | object = framework?.hasTypescript
+		? {
+				"lint:all": `npm run lint${framework?.hasTypescript ? " && npm run lint:types" : ""}`,
+
+				"lint:types": "tsc --noEmit",
+			}
+		: {};
+
+	// Combine all scripts
+	// @ts-ignore
+	// eslint-disable-next-line @elsikora-typescript/no-unsafe-assignment
+	packageJson.scripts = {
+		...packageJson.scripts,
+		lint: lintCommand,
+		"lint:fix": lintFixCommand,
+		...(includePrettier && {
+			format: "prettier --check .",
+			"format:fix": "prettier --write .",
+		}),
+		...watchCommands,
+		...frameworkScripts,
+		...typeScripts,
+	};
+
+	// eslint-disable-next-line @elsikora-typescript/no-magic-numbers
+	await fs.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2) + "\n", "utf-8");
 }

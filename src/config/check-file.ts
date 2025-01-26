@@ -1,6 +1,8 @@
 import type { ESLint, Linter } from "eslint";
+
 // @ts-expect-error
 import checkFile from "eslint-plugin-check-file";
+
 import { formatRuleName } from "../utility/format";
 
 export default [

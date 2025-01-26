@@ -1,4 +1,5 @@
 import type { Linter } from "eslint";
+
 // @ts-ignore
 import tailwind from "eslint-plugin-tailwindcss";
 

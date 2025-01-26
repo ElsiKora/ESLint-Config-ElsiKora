@@ -252,15 +252,16 @@ $RECYCLE.BIN/
 System Volume Information
 `;
 
-export async function createGitignore(): Promise<void> {
-	await fs.writeFile(".gitignore", DEFAULT_GITIGNORE_CONTENT, "utf-8");
-}
-
 export async function checkForExistingGitignore(): Promise<boolean> {
 	try {
 		await fs.access(".gitignore");
+
 		return true;
 	} catch {
 		return false;
 	}
+}
+
+export async function createGitignore(): Promise<void> {
+	await fs.writeFile(".gitignore", DEFAULT_GITIGNORE_CONTENT, "utf-8");
 }
