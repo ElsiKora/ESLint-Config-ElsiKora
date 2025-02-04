@@ -4,6 +4,12 @@
 
 ### Patch Changes
 
+- f5ff96f: Update package version to 3.2.2 and add dependencies
+
+## 3.2.3
+
+### Patch Changes
+
 - e130422: Refactor ESLint CLI and feature configurations
 
 ## 3.2.2
