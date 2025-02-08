@@ -19,6 +19,7 @@ export default tseslint.config({
 		"@elsikora-typescript": tseslint.plugin,
 	},
 	rules: {
+		"@elsikora-typescript/ no-extraneous-class": "off", // Allow the use of classes that are not explicitly used in the codebase to enable flexibility in class definitions
 		"@elsikora-typescript/adjacent-overload-signatures": "error", // Require function overloads to be consecutively placed, improving readability and organization of overloaded functions.
 		"@elsikora-typescript/array-type": ["error", { default: "generic" }], // Enforce using generic array type syntax (Array<type>) for consistency and clarity in type definitions.
 		"@elsikora-typescript/ban-ts-comment": "off", // Disable the rule that disallows `@ts-<directive>` comments to allow for flexibility in code comments.
