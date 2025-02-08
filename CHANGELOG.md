@@ -1,5 +1,11 @@
 # @elsikora/eslint-config-elsikora
 
+## 3.2.5
+
+### Patch Changes
+
+- b0a2622: Add licensing setup and improve ESLint configurations
+
 ## 3.2.3
 
 ### Patch Changes
