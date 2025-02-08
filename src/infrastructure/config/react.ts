@@ -3,7 +3,7 @@ import type { Linter } from "eslint";
 import react from "@eslint-react/eslint-plugin";
 import tseslint from "typescript-eslint";
 
-import { formatConfig } from "../utility/format";
+import { formatConfig } from "../utility/format-config.utility";
 
 export default [
 	// @ts-ignore
@@ -13,6 +13,7 @@ export default [
 		languageOptions: {
 			parserOptions: {
 				ecmaFeatures: {
+					// eslint-disable-next-line @elsikora-typescript/naming-convention
 					jsx: true,
 				},
 				ecmaVersion: "latest",
@@ -27,8 +28,8 @@ export default [
 		languageOptions: {
 			parser: tseslint.parser,
 			parserOptions: {
+				// eslint-disable-next-line @elsikora-typescript/naming-convention
 				projectService: true,
-				tsconfigRootDir: "./tsconfig.json",
 			},
 		},
 	},

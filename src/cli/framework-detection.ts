@@ -180,7 +180,46 @@ export function generateIgnoreConfig(framework: IDetectedFramework | null): {
 	ignores: Array<string>;
 	lintPaths: Array<string>;
 } {
-	const commonIgnores: Array<string> = ["**/node_modules/", "**/.git/", "**/dist/", "**/build/", "**/coverage/", "**/.vscode/", "**/.idea/", "**/*.min.js", "**/*.bundle.js"];
+	const commonIgnores: Array<string> = [
+		"**/node_modules/",
+		"**/package-lock.json",
+		"**/yarn.lock",
+		"**/pnpm-lock.yaml",
+		"**/.npm",
+		"**/.pnpm",
+		"**/.yarn",
+		"**/dist/",
+		"**/build/",
+		"**/coverage/",
+		"**/*.min.js",
+		"**/*.bundle.js",
+		"**/.vscode/",
+		"**/.idea/",
+		"**/.vs/",
+		"**/.DS_Store",
+		"**/.git/",
+		"**/.gitignore",
+		"**/tmp/",
+		"**/temp/",
+		"**/*.tmp",
+		"**/*.temp",
+		"**/._*",
+		"**/*.log",
+		"**/logs/",
+		"**/.cache/",
+		"**/.eslintcache",
+		"**/.stylelintcache",
+		"**/tsconfig.tsbuildinfo",
+		"**/.env",
+		"**/.env.*",
+		"**/*.pem",
+		"**/*.key",
+		"**/.nyc_output",
+		"**/coverage-report/",
+		"**/Thumbs.db",
+		"**/ehthumbs.db",
+		"**/desktop.ini",
+	];
 
 	if (framework) {
 		const {
@@ -219,17 +258,20 @@ export function generateLintCommands(
 	// Convert paths to directory patterns
 	const basePaths: Array<string> = framework?.framework.lintPaths ?? customPaths;
 
-	const dirPaths: Array<string> = basePaths.map((path: string) => {
+	const directoryPaths: Array<string> = basePaths.map((path: string) => {
 		// Remove file pattern from path to get directory
 		return path.split("/*")[0];
 	});
 
 	// Get unique directories
-	const uniqueDirectories: Array<string> = [...new Set(dirPaths)];
+	// eslint-disable-next-line @elsikora-sonar/no-dead-store,@elsikora-sonar/no-unused-vars,@elsikora-typescript/no-unused-vars
+	const uniqueDirectories: Array<string> = [...new Set(directoryPaths)];
 
 	const commands: { fix: Array<string>; lint: Array<string> } = {
-		fix: [`eslint ${uniqueDirectories.join(" ")} --fix`],
-		lint: [`eslint ${uniqueDirectories.join(" ")}`],
+		// fix: [`eslint ${uniqueDirectories.join(" ")} --fix`],
+		// lint: [`eslint ${uniqueDirectories.join(" ")}`],
+		fix: [`eslint ./ --fix`],
+		lint: [`eslint ./`],
 	};
 
 	if (includeStylelint) {
@@ -252,10 +294,10 @@ async function detectSourceDirectory(): Promise<Array<string>> {
 	const commonDirectories: Array<string> = ["src", "app", "source", "lib"];
 	const existingDirectories: Array<string> = [];
 
-	for (const dir of commonDirectories) {
+	for (const directory of commonDirectories) {
 		// eslint-disable-next-line no-await-in-loop
-		if (await fileExists(dir)) {
-			existingDirectories.push(dir);
+		if (await fileExists(directory)) {
+			existingDirectories.push(directory);
 		}
 	}
 

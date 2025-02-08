@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+
 import { LICENSE_CONFIGS } from "./constants";
 
 export async function checkForExistingLicense(): Promise<{
@@ -13,13 +14,29 @@ export async function checkForExistingLicense(): Promise<{
 			try {
 				const filePath = path.resolve(process.cwd(), file);
 				await fs.access(filePath);
+
 				return { exists: true, path: file };
 			} catch {}
 		}
+
 		return { exists: false };
 	} catch {
 		return { exists: false };
 	}
+}
+
+export async function createLicense(licenseType: string): Promise<void> {
+	const config = LICENSE_CONFIGS[licenseType];
+
+	if (!config) {
+		throw new Error(`Unsupported license type: ${licenseType}`);
+	}
+
+	const year = new Date().getFullYear().toString();
+	const author = await getAuthorFromPackageJson();
+
+	const licenseContent = config.template(year, author);
+	await fs.writeFile("LICENSE", licenseContent, "utf-8");
 }
 
 export async function getAuthorFromPackageJson(): Promise<string> {
@@ -32,6 +49,7 @@ export async function getAuthorFromPackageJson(): Promise<string> {
 			if (typeof packageJson.author === "string") {
 				return packageJson.author;
 			}
+
 			if (typeof packageJson.author === "object" && packageJson.author.name) {
 				return packageJson.author.name;
 			}
@@ -41,19 +59,6 @@ export async function getAuthorFromPackageJson(): Promise<string> {
 	} catch {
 		return "";
 	}
-}
-
-export async function createLicense(licenseType: string): Promise<void> {
-	const config = LICENSE_CONFIGS[licenseType];
-	if (!config) {
-		throw new Error(`Unsupported license type: ${licenseType}`);
-	}
-
-	const year = new Date().getFullYear().toString();
-	const author = await getAuthorFromPackageJson();
-
-	const licenseContent = config.template(year, author);
-	await fs.writeFile("LICENSE", licenseContent, "utf-8");
 }
 
 export function getLicenseChoices(): Array<{

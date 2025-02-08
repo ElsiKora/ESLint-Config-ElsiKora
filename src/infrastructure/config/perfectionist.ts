@@ -2,7 +2,8 @@ import type { Linter } from "eslint";
 
 import perfectionist from "eslint-plugin-perfectionist";
 
-import { formatConfig, formatRuleName } from "../utility/format";
+import { formatConfig } from "../utility/format-config.utility";
+import { formatRuleName } from "../utility/format-rule-name.utility";
 
 export default [
 	...formatConfig([perfectionist.configs["recommended-alphabetical"]]),

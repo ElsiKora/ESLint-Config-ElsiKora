@@ -2,7 +2,8 @@ import type { Linter } from "eslint";
 
 import stylistic from "@stylistic/eslint-plugin";
 
-import { formatConfig, formatRuleName } from "../utility/format";
+import { formatConfig } from "../utility/format-config.utility";
+import { formatRuleName } from "../utility/format-rule-name.utility";
 
 export default [
 	{

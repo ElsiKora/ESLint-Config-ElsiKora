@@ -3,7 +3,7 @@ import type { Linter } from "eslint";
 import typeormTypescriptRecommended from "eslint-plugin-typeorm-typescript/recommended";
 import tseslint from "typescript-eslint";
 
-import { formatConfig } from "../utility/format";
+import { formatConfig } from "../utility/format-config.utility";
 
 export default tseslint.config({
 	// @ts-ignore

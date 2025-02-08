@@ -2,7 +2,7 @@ import type { Linter } from "eslint";
 
 import unicorn from "eslint-plugin-unicorn";
 
-import { formatConfig } from "../utility/format";
+import { formatConfig } from "../utility/format-config.utility";
 
 export default [
 	...formatConfig([unicorn.configs["flat/recommended"]]),

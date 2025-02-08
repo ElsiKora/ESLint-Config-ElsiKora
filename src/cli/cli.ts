@@ -10,11 +10,12 @@ import inquirer from "inquirer";
 import color from "picocolors";
 
 import { checkForEslintConfigInPackageJson, checkForPrettierConfigInPackageJson, checkForStylelintConfigInPackageJson, createEslintConfig, createPrettierConfig, getConfigFileExtension, removeEslintConfigFromPackageJson, removePrettierConfigFromPackageJson, removeStylelintConfigFromPackageJson, updatePackageJson } from "./config-generator";
-import { ESLINT_CONFIG_FILES, FEATURE_GROUPS, FEATURES_CONFIG, GITHUB_CI_FILES, PRETTIER_CONFIG_FILES, STYLELINT_CONFIG_FILES } from "./constants";
+import { ESLINT_CONFIG_FILES, FEATURE_GROUPS, FEATURES_CONFIG, GITHUB_CI_FILES, LICENSE_CONFIGS, PRETTIER_CONFIG_FILES, STYLELINT_CONFIG_FILES } from "./constants";
 import { detectProjectStructure } from "./framework-detection";
 import { setupGitHubCIConfig } from "./github-ci-config";
 import { checkForExistingGitignore, createGitignore } from "./gitignore-config";
 import { setupVSCodeConfig, setupWebStormConfig } from "./ide-config";
+import { checkForExistingLicense, createLicense, getAuthorFromPackageJson, getLicenseChoices } from "./license-config";
 import { checkConfigInstalled, checkEslintInstalled, detectInstalledFeatures, detectTypescriptInProject, installDependencies, validateFeatureSelection } from "./package-manager";
 import { createStylelintConfig, installStylelintDependencies } from "./stylelint-config";
 import { findExistingFiles } from "./utils";
@@ -149,7 +150,7 @@ export async function runCli(): Promise<void> {
 			selectOptions.push({
 				checked: feature === "javascript" || (shouldUseDetected && detectedFeatures.includes(feature as unknown as TFeature)),
 				disabled: feature === "javascript" ? "Required" : config.requiresTypescript && !hasTypescript ? "Requires TypeScript" : false,
-				// eslint-disable-next-line @elsikora-typescript/restrict-template-expressions
+
 				name: `${feature} - ${config.description}`,
 				value: feature,
 			});
@@ -175,7 +176,6 @@ export async function runCli(): Promise<void> {
 		},
 	]);
 
-	// eslint-disable-next-line @elsikora-typescript/no-unsafe-member-access,@elsikora-typescript/no-unsafe-assignment
 	const selectedFeatures: Array<string> = answers.selectedFeatures;
 
 	if (!selectedFeatures || selectedFeatures.length === 0) {
@@ -226,7 +226,6 @@ export async function runCli(): Promise<void> {
 			note([`Detected ${framework.framework.name} project structure.`, `Will configure linting for the following paths:`, ...framework.framework.lintPaths.map((path: string) => `  - ${path}`), "", "Additional ignore patterns will be added to the configuration."].join("\n"), "Framework Detection");
 		}
 
-		// eslint-disable-next-line @elsikora-typescript/no-unsafe-argument,@elsikora-typescript/no-unsafe-return,@elsikora-typescript/no-unsafe-member-access
 		await installDependencies(selectOptions.map((option: any) => option.value));
 
 		await createEslintConfig(selectedFeatures, configExtension, framework);
@@ -348,7 +347,6 @@ export async function runCli(): Promise<void> {
 					type: "checkbox",
 					// eslint-disable-next-line @elsikora-typescript/explicit-function-return-type
 					validate(answer: any) {
-						// eslint-disable-next-line @elsikora-typescript/no-unsafe-member-access
 						if (answer.length === 0) {
 							return "You must choose at least one code editor.";
 						}
@@ -358,15 +356,12 @@ export async function runCli(): Promise<void> {
 				},
 			]);
 
-			// eslint-disable-next-line @elsikora-typescript/no-unsafe-member-access,@elsikora-typescript/no-unsafe-assignment
 			const selectedIDEs: any = ideAnswers.selectedIDEs;
 
-			// eslint-disable-next-line @elsikora-typescript/no-unsafe-member-access,@elsikora-typescript/no-unsafe-call
 			if (selectedIDEs.includes("vscode")) {
 				await setupVSCodeConfig(selectedFeatures);
 			}
 
-			// eslint-disable-next-line @elsikora-typescript/no-unsafe-member-access,@elsikora-typescript/no-unsafe-call
 			if (selectedIDEs.includes("webstorm")) {
 				await setupWebStormConfig(selectedFeatures, selectedFeatures.includes("prettier"));
 			}
@@ -422,10 +417,9 @@ export async function runCli(): Promise<void> {
 				setupSpinner.stop("GitHub CI configuration completed successfully!");
 
 				// @ts-ignore
-				// eslint-disable-next-line @elsikora-typescript/no-unsafe-return,@elsikora-typescript/no-unsafe-member-access
+
 				const selectedFileNames = ciAnswers.selectedCIFiles.map((file: any) => GITHUB_CI_FILES[file].name);
 
-				// eslint-disable-next-line @elsikora-typescript/restrict-template-expressions
 				note(["GitHub CI configuration has been created.", "", "", "Created files:", ...selectedFileNames.map((name: any) => `- ${name}`), "", "", dependabotBranch !== "dev" && ciAnswers.selectedCIFiles.includes("DEPENDABOT") ? `Dependabot configured to target '${dependabotBranch}' branch` : `Dependabot configured to target 'dev' branch`, "", "", "The workflows will be activated when you push to GitHub."].filter(Boolean).join("\n"), "GitHub CI Setup");
 			}
 		}
@@ -518,6 +512,60 @@ export async function runCli(): Promise<void> {
 			}
 		}
 
+		const setupLicense = await confirm({
+			initialValue: true,
+			message: "Would you like to set up a LICENSE file for your project?",
+		});
+
+		if (setupLicense) {
+			const { exists: hasExistingLicense, path: existingLicensePath } = await checkForExistingLicense();
+
+			if (hasExistingLicense) {
+				const shouldReplaceLicense = await confirm({
+					initialValue: false,
+					message: `An existing license file was found (${existingLicensePath}). Would you like to replace it?`,
+				});
+
+				if (!shouldReplaceLicense) {
+					note("Keeping existing license file.", "License Setup");
+
+					return;
+				}
+
+				try {
+					if (existingLicensePath) {
+						await fs.unlink(existingLicensePath);
+					}
+				} catch (error) {
+					console.error("Error deleting existing license:", error);
+
+					throw error;
+				}
+			}
+
+			const licenseAnswer = await inquirer.prompt([
+				{
+					choices: getLicenseChoices(),
+					message: "Select a license for your project:",
+					name: "selectedLicense",
+					type: "list",
+				},
+			]);
+
+			setupSpinner.start("Creating LICENSE file...");
+
+			try {
+				await createLicense(licenseAnswer.selectedLicense);
+				setupSpinner.stop("LICENSE file created successfully!");
+
+				note(["LICENSE file has been created.", "", "The license has been customized with:", `- Current year: ${new Date().getFullYear()}`, `- Author: ${(await getAuthorFromPackageJson()) || "(Not found in package.json)"}`, `- Type: ${LICENSE_CONFIGS[licenseAnswer.selectedLicense].name}`].join("\n"), "License Setup");
+			} catch (error) {
+				setupSpinner.stop("Failed to create LICENSE file");
+
+				throw error;
+			}
+		}
+
 		try {
 			const {
 				customPaths,
@@ -585,7 +633,7 @@ export async function runCli(): Promise<void> {
 			if (willSetupGitHubCI) {
 				scriptDescriptions.push("", "GitHub CI Workflows:");
 				// Map the selected CI files to their descriptions
-				// eslint-disable-next-line @elsikora-typescript/no-unsafe-member-access
+
 				ciAnswers.selectedCIFiles.forEach((file: TGitHubCIFile) => {
 					scriptDescriptions.push(`  ${GITHUB_CI_FILES[file].name} - ${GITHUB_CI_FILES[file].description}`);
 				});
@@ -604,10 +652,8 @@ export async function runCli(): Promise<void> {
 			}
 
 			if (framework) {
-				// eslint-disable-next-line @elsikora-typescript/no-unsafe-assignment
 				note(["ESLint has been configured for your project.", `Framework: ${framework.framework.name}`, framework.hasTypescript ? "TypeScript support: enabled" : "", "", ...scriptDescriptions].filter(Boolean).join("\n"), "Configuration Summary");
 			} else {
-				// eslint-disable-next-line @elsikora-typescript/no-unsafe-assignment
 				note(["ESLint has been configured for your project.", `Linting paths: ${customPaths.join(", ")}`, "", ...scriptDescriptions].join("\n"), "Configuration Summary");
 			}
 

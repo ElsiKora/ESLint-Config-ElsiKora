@@ -32,18 +32,18 @@ export async function checkForStylelintConfigInPackageJson(): Promise<boolean> {
 export async function createEslintConfig(features: Array<TFeature>, extension: string, detectedFramework: IDetectedFramework | null): Promise<void> {
 	const { ignores }: { ignores: Array<string>; lintPaths: Array<string> } = generateIgnoreConfig(detectedFramework);
 
-	const configContent: string = `import createConfig from '@elsikora/eslint-config';
+	const configContent: string = `import { createConfig } from '@elsikora/eslint-config';
 
-export default [
-  {
-    ignores: ${JSON.stringify(ignores, null, 2)}
-  },
-  ...createConfig({
-${features.map((feature: string) => `    with${feature.charAt(0).toUpperCase() + feature.slice(1)}: true`).join(",\n")}
-  })
-];
+const config = {
+  ignores: ${JSON.stringify(ignores, null, 2)}
+};
+
+export default await createConfig({
+${features.map((feature: string) => `  with${feature.charAt(0).toUpperCase() + feature.slice(1)}: true`).join(",\n")}
+});
 `;
-	await fs.writeFile(`eslint.config${extension}`, configContent, "utf-8");
+
+	await fs.writeFile(`eslint.config${extension}`, configContent, "utf8");
 }
 
 export async function createPrettierConfig(extension: string): Promise<void> {
@@ -129,7 +129,13 @@ export async function updatePackageJson(framework: IDetectedFramework | null, cu
 	packageJson.type = "module";
 
 	// Generate lint paths and commands
-	const { lintCommand, lintFixCommand }: { lintCommand: string; lintFixCommand: string } = generateLintCommands(framework, customPaths, !!includeStylelint, includePrettier);
+	const {
+		lintCommand,
+		lintFixCommand,
+	}: {
+		lintCommand: string;
+		lintFixCommand: string;
+	} = generateLintCommands(framework, customPaths, !!includeStylelint, includePrettier);
 
 	// Generate watch commands if framework supports it
 	let watchCommands: any = {};
@@ -202,7 +208,7 @@ export async function updatePackageJson(framework: IDetectedFramework | null, cu
 
 	// Combine all scripts
 	// @ts-ignore
-	// eslint-disable-next-line @elsikora-typescript/no-unsafe-assignment
+
 	packageJson.scripts = {
 		...packageJson.scripts,
 		lint: lintCommand,

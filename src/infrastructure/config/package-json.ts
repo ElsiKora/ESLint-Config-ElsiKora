@@ -2,7 +2,7 @@ import type { Linter } from "eslint";
 
 import eslintPluginPackageJson from "eslint-plugin-package-json/configs/recommended";
 
-import { formatConfig } from "../utility/format";
+import { formatConfig } from "../utility/format-config.utility";
 
 export default [
 	{

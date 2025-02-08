@@ -1,0 +1,11 @@
+import type { IDetectedFramework, TFeature } from "./types";
+export declare function checkForEslintConfigInPackageJson(): Promise<boolean>;
+export declare function checkForPrettierConfigInPackageJson(): Promise<boolean>;
+export declare function checkForStylelintConfigInPackageJson(): Promise<boolean>;
+export declare function createEslintConfig(features: Array<TFeature>, extension: string, detectedFramework: IDetectedFramework | null): Promise<void>;
+export declare function createPrettierConfig(extension: string): Promise<void>;
+export declare function getConfigFileExtension(): Promise<string>;
+export declare function removeEslintConfigFromPackageJson(): Promise<void>;
+export declare function removePrettierConfigFromPackageJson(): Promise<void>;
+export declare function removeStylelintConfigFromPackageJson(): Promise<void>;
+export declare function updatePackageJson(framework: IDetectedFramework | null, customPaths: Array<string>, includePrettier?: boolean, includeStylelint?: boolean | symbol): Promise<void>;

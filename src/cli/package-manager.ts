@@ -14,11 +14,10 @@ export async function checkConfigInstalled(): Promise<{
 	version: null | string;
 }> {
 	try {
-		// eslint-disable-next-line @elsikora-typescript/no-unsafe-assignment
 		const { stdout }: any = await exec("npm ls @elsikora/eslint-config --all --depth=0 --json");
-		// eslint-disable-next-line @elsikora-typescript/no-unsafe-assignment,@elsikora-typescript/typedef,@elsikora-typescript/no-unsafe-argument
+		// eslint-disable-next-line @elsikora-typescript/typedef
 		const npmList = JSON.parse(stdout);
-		// eslint-disable-next-line @elsikora-typescript/no-unsafe-assignment,@elsikora-typescript/no-unsafe-member-access
+
 		const configVersion: null | string = npmList.dependencies?.["@elsikora/eslint-config"]?.version || npmList.devDependencies?.["@elsikora/eslint-config"]?.version || null;
 
 		return { isInstalled: !!configVersion, version: configVersion };
@@ -32,11 +31,10 @@ export async function checkEslintInstalled(): Promise<{
 	version: null | string;
 }> {
 	try {
-		// eslint-disable-next-line @elsikora-typescript/no-unsafe-assignment
 		const { stdout }: any = await exec("npm ls eslint --all --depth=0 --json");
-		// eslint-disable-next-line @elsikora-typescript/no-unsafe-argument,@elsikora-typescript/no-unsafe-assignment
+
 		const npmList: any = JSON.parse(stdout);
-		// eslint-disable-next-line @elsikora-typescript/no-unsafe-assignment,@elsikora-typescript/no-unsafe-member-access
+
 		const eslintVersion: null | string = npmList.dependencies?.eslint?.version || npmList.devDependencies?.eslint?.version || null;
 
 		return { isInstalled: !!eslintVersion, version: eslintVersion };

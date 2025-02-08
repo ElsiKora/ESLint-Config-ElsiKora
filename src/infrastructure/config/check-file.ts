@@ -1,9 +1,9 @@
 import type { ESLint, Linter } from "eslint";
 
-// @ts-expect-error
+// @ts-ignore
 import checkFile from "eslint-plugin-check-file";
 
-import { formatRuleName } from "../utility/format";
+import { formatRuleName } from "../utility/format-rule-name.utility";
 
 export default [
 	{
@@ -40,6 +40,7 @@ export default [
 					"**/utility/**/*.{js,ts}": "KEBAB_CASE",
 					"**/validator/**/*.{js,ts}": "KEBAB_CASE",
 				},
+				// eslint-disable-next-line @elsikora-typescript/naming-convention
 				{ ignoreMiddleExtensions: true },
 			], // Enforce a specific naming convention for files in various directories, typically using KEBAB_CASE for clarity and consistency. The `ignoreMiddleExtensions` option allows ignoring file extensions in the middle of filenames, focusing on the final extension for the rule.
 			[formatRuleName("check-file/folder-match-with-fex")]: [

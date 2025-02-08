@@ -5,25 +5,29 @@ import nestJsTyped from "@elsikora/eslint-plugin-nestjs-typed";
 import { fixupPluginRules } from "@eslint/compat";
 import ngModuleSort from "eslint-plugin-ng-module-sort";
 import tseslint from "typescript-eslint";
+import { formatConfig } from "../utility/format-config.utility";
+
 export default [
 	{
 		files: ["**/*.ts"],
 		languageOptions: {
 			parser: tseslint.parser,
 			parserOptions: {
+				// eslint-disable-next-line @elsikora-typescript/naming-convention
 				projectService: true,
-				tsconfigRootDir: "./tsconfig.json",
 			},
 		},
 		plugins: {
 			"@elsikora/nest/1": fixupPluginRules(ngModuleSort),
+
 			// eslint-disable-next-line @elsikora-typescript/no-unsafe-argument
-			"@elsikora/nest/2": fixupPluginRules(nestJsTyped),
+			"@elsikora/nest/2": formatConfig([nestJsTyped.plugin])[0],
 		},
 		rules: {
 			"@elsikora/nest/1/decorator-array-items": [
 				"error",
 				{
+					// eslint-disable-next-line @elsikora-typescript/naming-convention
 					reverseSort: false,
 				},
 			],

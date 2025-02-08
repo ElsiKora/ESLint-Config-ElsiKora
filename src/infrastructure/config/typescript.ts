@@ -2,7 +2,7 @@ import type { Linter } from "eslint";
 
 import tseslint from "typescript-eslint";
 
-import { formatConfig } from "../utility/format";
+import { formatConfig } from "../utility/format-config.utility";
 
 export default tseslint.config({
 	// @ts-ignore
@@ -12,14 +12,12 @@ export default tseslint.config({
 		parser: tseslint.parser,
 		parserOptions: {
 			projectService: true,
-			tsconfigRootDir: "./tsconfig.json",
 		},
 	},
 	plugins: {
 		"@elsikora-typescript": tseslint.plugin,
 	},
 	rules: {
-		"@elsikora-typescript/ no-extraneous-class": "off", // Allow the use of classes that are not explicitly used in the codebase to enable flexibility in class definitions
 		"@elsikora-typescript/adjacent-overload-signatures": "error", // Require function overloads to be consecutively placed, improving readability and organization of overloaded functions.
 		"@elsikora-typescript/array-type": ["error", { default: "generic" }], // Enforce using generic array type syntax (Array<type>) for consistency and clarity in type definitions.
 		"@elsikora-typescript/ban-ts-comment": "off", // Disable the rule that disallows `@ts-<directive>` comments to allow for flexibility in code comments.
@@ -176,6 +174,7 @@ export default tseslint.config({
 		"@elsikora-typescript/no-empty-function": "error", // Disallow empty functions to avoid unintentionally incomplete implementations.
 		"@elsikora-typescript/no-empty-interface": "error", // Prevent the declaration of empty interfaces which can be misleading and unnecessary.
 		"@elsikora-typescript/no-explicit-any": "off", // Allow the use of 'any' type to enable flexibility in cases where strict typing is excessively restrictive.
+		"@elsikora-typescript/ no-extraneous-class": "off", // Allow the use of classes that are not explicitly used in the codebase to enable flexibility in class definitions
 		"@elsikora-typescript/no-floating-promises": "error", // Require handling of promises to avoid uncaught promise rejections and unhandled async operations.
 		"@elsikora-typescript/no-for-in-array": "error", // Disallow for-in loops over arrays because they iterate over object keys, not array elements.
 		"@elsikora-typescript/no-implied-eval": "error", // Disallow methods that can execute code strings, preventing potential security vulnerabilities.
@@ -198,7 +197,7 @@ export default tseslint.config({
 		"@elsikora-typescript/no-restricted-imports": "error", // Allow specifying imports to avoid, helping to keep the dependency graph clean and manageable.
 		"@elsikora-typescript/no-unnecessary-boolean-literal-compare": "error", // Avoid unnecessary comparisons in boolean expressions for cleaner code.
 		"@elsikora-typescript/no-unnecessary-condition": ["off", { allowRuleToRunWithoutStrictNullChecksIKnowWhatIAmDoing: true }], // Allow potentially unnecessary conditions to run, acknowledging developer intent under non-strict null checks.
-		"@elsikora-typescript/no-unused-vars": "error", // Enforce removal of variables that are declared but not used, keeping the codebase clean.
+		"@elsikora-typescript/no-unused-vars": "off", // Allow unused variables to be defined, providing flexibility for future use or debugging.
 		"@elsikora-typescript/no-useless-empty-export": "error", // Disallow empty exports that serve no purpose and clutter the module namespace.
 		"@elsikora-typescript/prefer-enum-initializers": "error", // Suggest using initializers for enums to make values explicit and clear.
 		"@elsikora-typescript/prefer-for-of": "error", // Encourage the use of for-of loops for iterable objects for clarity and simplicity.

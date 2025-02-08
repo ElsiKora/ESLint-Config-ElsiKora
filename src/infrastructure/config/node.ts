@@ -2,7 +2,8 @@ import type { Linter } from "eslint";
 
 import nPlugin from "eslint-plugin-n";
 
-import { formatConfig, formatRuleName } from "../utility/format";
+import { formatConfig } from "../utility/format-config.utility";
+import { formatRuleName } from "../utility/format-rule-name.utility";
 
 export default [
 	...formatConfig([nPlugin.configs["flat/recommended"]]),

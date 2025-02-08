@@ -24,6 +24,12 @@ export interface IFrameworkConfig {
 	packageIndicators: Array<string>;
 }
 
+export interface ILicenseConfig {
+	description: string;
+	name: string;
+	template: (year: string, author: string) => string;
+}
+
 export interface IPackageJson {
 	dependencies?: Record<string, string>;
 	devDependencies?: Record<string, string>;
